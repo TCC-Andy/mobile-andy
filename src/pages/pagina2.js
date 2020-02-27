@@ -8,7 +8,7 @@ export default class Pagina2 extends Component{
             <View>
                 <Button
         title="main"
-        routesDrawer
+        onPress={() => this.props.navigation.navigate ( 'Main' ) }
       />
                 <Text> pagina 2 test 1 </Text>
                 <Button

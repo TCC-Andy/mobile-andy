@@ -5,25 +5,41 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import DashboardRoutes from './routes/dashbords'
 import RoutesStack from './routes/routesStack'
-import Flex from './componentes/Flex'
 
 import Main from './pages/main'
 import Pagina2 from './pages/pagina2'
+import Login from './pages/login'
 import Maps from './Maps';
 
 
 const Stack = createStackNavigator();
 
 
-const menuStack = 
-<NavigationContainer>
-  <Stack.Navigator initialRouteName="pagina2">
-    <Stack.Screen name="Main" component={DashboardRoutes} options={{ title: 'pagina menu' }} />
-    <Stack.Screen name="pagina2" component={Pagina2} />
-    <Stack.Screen name="Home" component={RoutesStack} />
-    <Stack.Screen name="Maps" component={Maps} />
-  </Stack.Navigator>
-</NavigationContainer>
+const menuStack =
+  <NavigationContainer>
+    <Stack.Navigator initialRouteName="Login">
+      <Stack.Screen name="Login" component={Login}
+        options={{
+          headerShown: false}}/>
+      <Stack.Screen name="Main" component={DashboardRoutes} options={{ title: 'pagina menu' }} />
+      <Stack.Screen name="pagina2" component={Pagina2} />
+      <Stack.Screen name="Home" component={RoutesStack} />
+      <Stack.Screen name="Maps" component={Maps} />
+    </Stack.Navigator>
+  </NavigationContainer>
 
 export default App = () => menuStack
 
+
+
+/* opcoes do option
+options={{
+          title: 'login2',
+          headerStyle: {
+            backgroundColor: '#f4511e',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        } */
