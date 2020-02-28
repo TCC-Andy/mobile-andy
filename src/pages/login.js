@@ -20,14 +20,16 @@ import { server, showError, showSuccess } from '../linkApi'
 import { ScreenStackHeaderBackButtonImage } from 'react-native-screens'
 
 const initialState = {
-    name: 'bbbb',
+    name: 'bruno',
+    surname: 'pedroso',
     email: 'bbb@',
-    password: '11111111',
-    confirmPassword: '11111111',
+    password: '123456',
+    confirnPassword: '123456',
+    status: 1,
     stageNew: false
 }
 
-export default class Auth extends Component {
+export default class Login extends Component {
 
     state = {
         ...initialState
@@ -37,54 +39,48 @@ export default class Auth extends Component {
         if (this.state.stageNew) {
             this.signup()
         } else {
-            // this.signin()
+             this.signin()
         }
     }
 
     signup = async () => {
         console.log('nome', this.state.name, ' Email', this.state.email, ' senha', this.state.password, this.state.confirmPassword)
-        try {
-            await axios.post(`${server}/bla`,{
-                name: this.state.name,
-                email: this.state.email,
-                password: this.state.password,
-                confirmPassword: this.state.confirmPassword
-            })
 
-            showSuccess('Usuário cadastro!')
+        await axios.post(`${server}/auth/register`, {
+
+            nome: this.state.name,
+            sobrenome: this.state.email,
+            surname: this.state.surname,
+            status: this.state.status,
+            email: this.state.email,
+            password: this.state.password,
+            confirnPassword: this.state.confirnPassword
+
+        }).then((response) => {
+            console.log(response)
             this.setState({ ...initialState })
-        } catch (e) {
-            showError(e)
-        }
+            console.log(response)
+            return showSuccess('Usuario cadastrado com sucesso');
+        }).catch((error) => {
+            showError('Falha no cadastro')
+            // console.log(response)
+        })
     }
 
+    signin = async () => {
+        await axios.get(`${server}/auth/signin`, {
 
-    /*
-        signup = async () => {
-            console.log('nome', this.state.name, ' Email', this.state.email, ' senha', this.state.password, this.state.confirmPassword)
-    
-            const data = {
-                name: this.state.name,
-                email: this.state.email,
-                password: this.state.password,
-                confirmPassword: this.state.confirmPassword
-            }
-    
-            await api.post('/bla', data).then((response) => {
-               // console.log(response)
-                if (response.data) {
-                    this.setState({ ...initialState })
-                    return alert('usuario cadastrado com sucesso');
-                } else {
-                    console.log('erro ao cadastrar usuario');
-                }
-            }).catch((error) => {
-                console.log(error);
-            });
-        }
-    
-    */
-
+            email: this.state.email,
+            password: this.state.password,
+        }).then((response) => {
+            
+            console.log(response)
+            return showSuccess('login com sucesso' + response);
+        }).catch((error) => {
+            showError('Falha de conexao com servidor')
+            // console.log(response)
+        })
+    }
 
     render() {
         const validations = []
@@ -93,7 +89,7 @@ export default class Auth extends Component {
 
         if (this.state.stageNew) {
             validations.push(this.state.name && this.state.name.trim().length >= 3)
-            validations.push(this.state.password === this.state.confirmPassword)
+            validations.push(this.state.password === this.state.confirnPassword)
         }
 
         const validForm = validations.reduce((t, a) => t && a)
@@ -112,6 +108,12 @@ export default class Auth extends Component {
                             style={styles.input}
                             onChangeText={name => this.setState({ name })} />
                     }
+                    {this.state.stageNew &&
+                        <AuthInput icon='user' placeholder='Sobrenome'
+                            value={this.state.surname}
+                            style={styles.input}
+                            onChangeText={surname => this.setState({ surname })} />
+                    }
                     <AuthInput icon='at' placeholder='E-mail'
                         value={this.state.email}
                         style={styles.input}
@@ -123,9 +125,9 @@ export default class Auth extends Component {
                     {this.state.stageNew &&
                         <AuthInput icon='asterisk'
                             placeholder='Confirmação de Senha'
-                            value={this.state.confirmPassword}
+                            value={this.state.confirnPassword}
                             style={styles.input} secureTextEntry={true}
-                            onChangeText={confirmPassword => this.setState({ confirmPassword })} />
+                            onChangeText={confirnPassword => this.setState({ confirnPassword })} />
                     }
                     <TouchableOpacity onPress={this.signinOrSignup}
                         disabled={!validForm}>
@@ -158,7 +160,7 @@ const styles = StyleSheet.create({
         color: '#8B0000',
         borderColor: '#FFFFFF',
         borderWidth: 1,
-        fontSize: 75,
+        fontSize: 60,
         marginBottom: 10
     },
     subtitle: {
@@ -169,8 +171,8 @@ const styles = StyleSheet.create({
     },
     formContainer: {
         backgroundColor: 'rgba(0, 0, 0, 0.8)',
-        padding: 20,
-        width: '90%'
+        padding: 10,
+        width: '80%'
     },
     input: {
         marginTop: 10,
