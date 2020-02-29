@@ -3,13 +3,14 @@ import React from 'react'
 import { NavigationContainer, createNavigatorFactory } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import DashboardRoutes from './routes/dashbords'
-import RoutesStack from './routes/routesStack'
+import ButtonsHome from './buttonsHome'
+import RoutesStack from './routesStack'
 
-import Main from './pages/main'
-import Pagina2 from './pages/pagina2'
-import Login from './pages/login'
-import Maps from './Maps';
+import Main from '../pages/main'
+import Pagina2 from '../pages/pagina2'
+import Login from '../pages/login'
+import Maps from '../Maps';
+import Pagina3 from '../pages/pagina3'
 
 
 const Stack = createStackNavigator();
@@ -20,11 +21,17 @@ const menuStack =
     <Stack.Navigator initialRouteName="Login">
       <Stack.Screen name="Login" component={Login}
         options={{
-          headerShown: false}}/>
-      <Stack.Screen name="Main" component={DashboardRoutes} options={{ title: 'pagina menu' }} />
-      <Stack.Screen name="pagina2" component={Pagina2} />
-      <Stack.Screen name="Home" component={RoutesStack} />
-      <Stack.Screen name="Maps" component={Maps} />
+          headerShown: false
+        }} />
+      <Stack.Screen name="Home" component={ButtonsHome}
+        options={{
+          headerShown: true
+        }} />
+        <Stack.Screen name="Pagina3" component={Pagina3}
+        options={{
+          headerShown: true
+        }} />
+        
     </Stack.Navigator>
   </NavigationContainer>
 

@@ -30,11 +30,10 @@ const initialState = {
 }
 
 export default class Login extends Component {
-
+   
     state = {
         ...initialState
     }
-
     signinOrSignup = () => {
         if (this.state.stageNew) {
             this.signup()
@@ -75,11 +74,15 @@ export default class Login extends Component {
                 return showNotification(response.data.menssagem);
             }
         }).catch((error) => {
-            showError('Falha na conexão')
+          return this.props.navigation.navigate ( 'Home' )
+            //  showError('Falha na conexão')
         });
     }
 
     render() {
+        if (this.state.stageNew) {
+            this.props.navigation.closeDrawer();
+        }
         const validations = []
         validations.push(this.state.email && this.state.email.includes('@'))
         validations.push(this.state.email && this.state.email.includes('.'))

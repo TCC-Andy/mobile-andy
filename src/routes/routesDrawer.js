@@ -11,7 +11,7 @@ const Drawer = createDrawerNavigator();
 
 const menuDrawer = () =>
 <Drawer.Navigator>
-        <Drawer.Screen name="pagina2" component={Pagina2}  />
+        <Drawer.Screen name="Main" component={Main}  />
         <Drawer.Screen name="pagina3" component={Pagina3} />
       </Drawer.Navigator>
 
