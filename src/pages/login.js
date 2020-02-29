@@ -16,13 +16,13 @@ import backgroundImage from '../../assets/imgs/login5.jpg'
 import AuthInput from '../componentes/textInput'
 
 import api from '../service/api';
-import { server, showError, showSuccess } from '../linkApi'
+import { showError, showSuccess, showNotification } from '../utils/alertsUser'
 import { ScreenStackHeaderBackButtonImage } from 'react-native-screens'
 
 const initialState = {
     name: 'bruno',
     surname: 'pedroso',
-    email: 'bbb@',
+    email: 'bbb@noa.',
     password: '123456',
     confirnPassword: '123456',
     status: 1,
@@ -39,52 +39,50 @@ export default class Login extends Component {
         if (this.state.stageNew) {
             this.signup()
         } else {
-             this.signin()
+            this.signin()
         }
     }
 
     signup = async () => {
-        console.log('nome', this.state.name, ' Email', this.state.email, ' senha', this.state.password, this.state.confirmPassword)
-
-        await axios.post(`${server}/auth/register`, {
-
+        const data = {
             nome: this.state.name,
-            sobrenome: this.state.email,
-            surname: this.state.surname,
-            status: this.state.status,
+            sobrenome: this.state.surname,
             email: this.state.email,
-            password: this.state.password,
-            confirnPassword: this.state.confirnPassword
-
-        }).then((response) => {
-            console.log(response)
-            this.setState({ ...initialState })
-            console.log(response)
-            return showSuccess('Usuario cadastrado com sucesso');
+            senha: this.state.password,
+            status: 1
+        };
+        await api.post('/createUser', data).then((response) => {
+            if (response.data.status === 200) {
+                return showSuccess(response.data.menssagem);
+            } else {
+                return showNotification(response.data.menssagem);
+            }
         }).catch((error) => {
-            showError('Falha no cadastro')
-            // console.log(response)
-        })
+            showError('Falha na conexão')
+        });
     }
 
     signin = async () => {
-        await axios.get(`${server}/auth/signin`, {
-
+        const data = {
             email: this.state.email,
-            password: this.state.password,
-        }).then((response) => {
+            senha: this.state.password,
             
-            console.log(response)
-            return showSuccess('login com sucesso' + response);
+        };
+        await api.post('/sigin', data).then((response) => {
+            if (response.data.status === 200) {
+                return showSuccess(response.data.menssagem);
+            } else {
+                return showNotification(response.data.menssagem);
+            }
         }).catch((error) => {
-            showError('Falha de conexao com servidor')
-            // console.log(response)
-        })
+            showError('Falha na conexão')
+        });
     }
 
     render() {
         const validations = []
         validations.push(this.state.email && this.state.email.includes('@'))
+        validations.push(this.state.email && this.state.email.includes('.'))
         validations.push(this.state.password && this.state.password.length >= 6)
 
         if (this.state.stageNew) {
