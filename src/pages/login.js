@@ -80,9 +80,6 @@ export default class Login extends Component {
     }
 
     render() {
-        if (this.state.stageNew) {
-            this.props.navigation.closeDrawer();
-        }
         const validations = []
         validations.push(this.state.email && this.state.email.includes('@'))
         validations.push(this.state.email && this.state.email.includes('.'))
