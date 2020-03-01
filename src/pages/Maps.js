@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, StyleSheet,TouchableOpacity } from 'react-native';
 import MapboxGL from '@react-native-mapbox-gl/maps';
-import ModalExemplo from './componentes/ModalExemplo'
+import ModalExemplo from '../componentes/ModalExemplo'
 
 MapboxGL.setAccessToken("pk.eyJ1IjoiYnJ1bm9wZWRyb3NvIiwiYSI6ImNrNmJkY2R3dDEwODkzbW1yZmFvcHA2dzIifQ.0cwlHJwaGJpu9ZGfdyhkuQ");
 
@@ -18,24 +18,24 @@ export default class Maps extends Component {
     places: [
       {
         id: '1',
-        title: 'Casa do café',
-        description: 'Café quentinho...',
-        latitude: -27.2106710,
-        longitude: -49.6362700,
+        title: 'Casa do Bruno',
+        description: 'Proximo a BR 277...',
+        latitude: -25.45575244,
+        longitude: -49.22044516,
       },
       {
         id: '2',
-        title: 'RocketSeat',
-        description: 'Programação, empreendedorismo e mindset',
-        latitude: -27.2006710,
-        longitude: -49.6362700,
+        title: 'casa do Thiago',
+        description: 'Localizado proximo a Fapi',
+        latitude: -25.45245873,
+        longitude: -49.18684244,
       },
       {
         id: '3',
-        title: 'Casa do José',
-        description: 'José, tá em casa?',
-        latitude: -25.3529186,
-        longitude: -49.9694866,
+        title: 'Faculdade de Pinhais',
+        description: 'Um local bem localizado em Pinhais',
+        latitude: -25.44435969,
+        longitude: -49.18858051,
       }
     ]
   }
@@ -43,7 +43,7 @@ export default class Maps extends Component {
     return (
       <MapboxGL.PointAnnotation
         ref={p => (this.place = p)}
-        id={place.id}
+        key={place.id}
         coordinate={[place.longitude, place.latitude]}
       //onSelected // usar para mostra modal
       //onDeselected // para esconder modal
@@ -57,7 +57,6 @@ export default class Maps extends Component {
       </MapboxGL.PointAnnotation>
     )
   }
-/**-25.5592036,-49.7625784,9.1 */
   render() {
     return (
       <MapboxGL.MapView
@@ -71,8 +70,8 @@ export default class Maps extends Component {
       >
         
         <MapboxGL.Camera
-          centerCoordinate={[ -50.1934481,-26.8648851]}
-          zoomLevel={5}
+          centerCoordinate={[ -49.19572592,-25.4554812]}
+          zoomLevel={12}
           pitch={5}
           heading={5}
           animationMode='flyTo'

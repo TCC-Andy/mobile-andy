@@ -22,10 +22,9 @@ import { ScreenStackHeaderBackButtonImage } from 'react-native-screens'
 const initialState = {
     name: 'bruno',
     surname: 'pedroso',
-    email: 'bbb@noa.',
+    email: 'bru@pedroso.com',
     password: '123456',
     confirnPassword: '123456',
-    status: 1,
     stageNew: false
 }
 

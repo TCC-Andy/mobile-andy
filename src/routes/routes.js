@@ -1,20 +1,11 @@
 import React from 'react'
-
-import { NavigationContainer, createNavigatorFactory } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-
-import ButtonsHome from './buttonsHome'
-import RoutesStack from './routesStack'
-
-import Main from '../pages/main'
-import Pagina2 from '../pages/pagina2'
+import RoutesDrawer from './routesDrawer'
 import Login from '../pages/login'
-import Maps from '../Maps';
-import Pagina3 from '../pages/pagina3'
-
+import Maps from '../pages/Maps';
 
 const Stack = createStackNavigator();
-
 
 const menuStack =
   <NavigationContainer>
@@ -23,30 +14,19 @@ const menuStack =
         options={{
           headerShown: false
         }} />
-      <Stack.Screen name="Home" component={ButtonsHome}
+      <Stack.Screen name="Home" component={RoutesDrawer}
         options={{
-          headerShown: true
+          headerShown: false
         }} />
-        <Stack.Screen name="Pagina3" component={Pagina3}
+        <Stack.Screen name="Maps" component={Maps}
         options={{
-          headerShown: true
+          headerShown: true,
+          headerTintColor:'#FFFFFF',
+          headerStyle: {
+            backgroundColor: '#808080'
+          }
         }} />
-        
     </Stack.Navigator>
   </NavigationContainer>
 
 export default App = () => menuStack
-
-
-
-/* opcoes do option
-options={{
-          title: 'login2',
-          headerStyle: {
-            backgroundColor: '#f4511e',
-          },
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
-        } */
