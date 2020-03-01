@@ -1,24 +1,32 @@
 import React, { Component } from 'react'
-import { Alert, Button, FlatList, ImageBackground, Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, Button, Keyboard, ImageBackground, Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Avatar, Badge, SearchBar } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 
-export default props => {
+export default class Home extends Component {
 
-
-
-    //  const today = moment().locale('pt-br').format('ddd, D [de] MMMM')
-
+    state = {
+        search:''
+    }
+    updateSearch = search => {
+        this.setState({ search });
+      };
+      
+    render(){
     return (
+        
         <View style={styles.container}>
             <View style={styles.iconBar}>
-                <TouchableOpacity onPress={() => props.navigation.openDrawer()}>
+                <TouchableOpacity onPress={() => this.props.navigation.openDrawer()}>
                     <Icon name='bars'
                         size={30} color='black' />
                 </TouchableOpacity>
                 <View style={styles.viewSearch}>
                     <SearchBar containerStyle={{ backgroundColor: 'white' }}
+                    placeholder="Procurar..."
+                    onChangeText={this.updateSearch}
+                    value={this.state.search}
                     />
                 </View>
             </View>
@@ -26,7 +34,7 @@ export default props => {
             <View style={styles.corpo}>
                 <View style={styles.row1}>
                     <View style={styles.icon1}>
-                        <TouchableOpacity  onPress={() => props.navigation.navigate ( 'Maps' ) }>
+                        <TouchableOpacity  onPress={() => this.props.navigation.navigate ( 'Maps' ) }>
                             <Avatar
                                 size="large" rounded
                                 source={{
@@ -38,7 +46,7 @@ export default props => {
                         </TouchableOpacity >
                     </View>
                     <View style={styles.icon2}>
-                        <TouchableOpacity onPress={() => props.navigation.navigate ( 'Maps' )}>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate ( 'Maps' )}>
                             <Avatar
                                 size="large" rounded
                                 source={{
@@ -52,7 +60,7 @@ export default props => {
                 </View>
                 <View style={styles.row2}>
                     <View style={styles.icon3}>
-                        <TouchableOpacity onPress={() => props.navigation.navigate ( 'Maps' )}>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate ( 'Maps' )}>
                             <Avatar
                                 size="large" rounded
                                 source={{
@@ -64,7 +72,7 @@ export default props => {
                         </TouchableOpacity>
                     </View>
                     <View style={styles.icon4}>
-                        <TouchableOpacity onPress={() => props.navigation.navigate ( 'Maps' )}>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate ( 'Maps' )}>
                             <Avatar
                         size="large" rounded
                                 source={{
@@ -80,7 +88,7 @@ export default props => {
         </View>
 
 
-    )
+    )}
 }
 
 

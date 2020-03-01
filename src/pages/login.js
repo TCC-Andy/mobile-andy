@@ -17,7 +17,6 @@ import AuthInput from '../componentes/textInput'
 
 import api from '../service/api';
 import { showError, showSuccess, showNotification } from '../utils/alertsUser'
-import { ScreenStackHeaderBackButtonImage } from 'react-native-screens'
 
 const initialState = {
     name: 'bruno',
@@ -40,7 +39,7 @@ export default class Login extends Component {
             this.signin()
         }
     }
-
+    
     signup = async () => {
         const data = {
             nome: this.state.name,
@@ -64,8 +63,7 @@ export default class Login extends Component {
         const data = {
             email: this.state.email,
             senha: this.state.password,
-            
-        };
+        }
         await api.post('/sigin', data).then((response) => {
             if (response.data.status === 200) {
                 return showSuccess(response.data.menssagem);
@@ -77,7 +75,6 @@ export default class Login extends Component {
             //  showError('Falha na conexão')
         });
     }
-
     render() {
         const validations = []
         validations.push(this.state.email && this.state.email.includes('@'))
