@@ -1,13 +1,16 @@
 import React from 'react'
-import { View, TextInput, StyleSheet } from 'react-native'
+import { View, TextInput, StyleSheet, KeyboardAvoidingView} from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 export default props => {
     return (
-        <View style={[styles.container, props.style]}>
-            <Icon name={props.icon} size={20} style={styles.icon} />
-            <TextInput {...props} style={styles.input} />
-        </View>
+        <KeyboardAvoidingView
+            behavior={ null }>
+            <View style={[styles.container, props.style]}>
+                <Icon name={props.icon} size={20} style={styles.icon} />
+                <TextInput {...props} style={styles.input} />
+            </View>
+        </KeyboardAvoidingView>
     )
 }
 

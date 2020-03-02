@@ -64,13 +64,15 @@ export default class Login extends Component {
             email: this.state.email,
             senha: this.state.password,
         }
-        await api.post('/sigin', data).then((response) => {
+        await api.post('/authenticateUser', data).then((response) => {
             if (response.data.status === 200) {
-                return showSuccess(response.data.menssagem);
+                showSuccess('User logado');
+                return this.props.navigation.navigate ( 'Home' )
             } else {
                 return showNotification(response.data.menssagem);
             }
         }).catch((error) => {
+            showError('Falha na conexão')
           return this.props.navigation.navigate ( 'Home' )
             //  showError('Falha na conexão')
         });
