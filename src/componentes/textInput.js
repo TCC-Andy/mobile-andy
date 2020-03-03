@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 export default props => {
     return (
         <KeyboardAvoidingView
-            behavior={ null }>
+            behavior= 'padding'>
             <View style={[styles.container, props.style]}>
                 <Icon name={props.icon} size={20} style={styles.icon} />
                 <TextInput {...props} style={styles.input} />

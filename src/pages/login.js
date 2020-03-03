@@ -6,13 +6,15 @@ import {
     View,
     TouchableOpacity,
     Alert,
-    AsyncStorage
+    AsyncStorage,
+    ActivityIndicator
 } from 'react-native'
+import ActivIndicador from '../componentes/activIndicador'
 
 import axios from 'axios'
 //import AsyncStorage from '@react-native-community/async-storage'
 
-import backgroundImage from '../../assets/imgs/login5.jpg'
+import backgroundImage from '../../assets/imgs/login4.jpg'
 import AuthInput from '../componentes/textInput'
 
 import api from '../service/api';
@@ -28,7 +30,7 @@ const initialState = {
 }
 
 export default class Login extends Component {
-   
+
     state = {
         ...initialState
     }
@@ -39,7 +41,10 @@ export default class Login extends Component {
             this.signin()
         }
     }
-    
+    resetPassword = () => {
+        showSuccess('Sua senha sera enviada via email');
+    }
+
     signup = async () => {
         const data = {
             nome: this.state.name,
@@ -67,13 +72,13 @@ export default class Login extends Component {
         await api.post('/authenticateUser', data).then((response) => {
             if (response.data.status === 200) {
                 showSuccess('User logado');
-                return this.props.navigation.navigate ( 'Home' )
+                return this.props.navigation.navigate('Home')
             } else {
                 return showNotification(response.data.menssagem);
             }
         }).catch((error) => {
             showError('Falha na conexão')
-          return this.props.navigation.navigate ( 'Home' )
+            return this.props.navigation.navigate('Home')
             //  showError('Falha na conexão')
         });
     }
@@ -132,13 +137,22 @@ export default class Login extends Component {
                                 {this.state.stageNew ? 'Registrar' : 'Entrar'}
                             </Text>
                         </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.touchResetSenha}
+                        onPress={this.resetPassword}>
+                        {!this.state.stageNew &&
+                            <Text style={styles.textResetSenha}>
+                                Recuperar Senha ?
+                    </Text>
+                        }
                     </TouchableOpacity>
                 </View>
-                <TouchableOpacity style={{ padding: 10 }}
+                <TouchableOpacity style={{ padding: 15 }}
                     onPress={() => this.setState({ stageNew: !this.state.stageNew })} >
                     <Text style={styles.buttonText}>
                         {this.state.stageNew ? 'Já possui conta?' : 'Ainda não possui conta?'}
                     </Text>
+
                 </TouchableOpacity>
             </ImageBackground>
         )
@@ -167,7 +181,7 @@ const styles = StyleSheet.create({
     },
     formContainer: {
         backgroundColor: 'rgba(0, 0, 0, 0.8)',
-        padding: 10,
+        padding: 20,
         width: '80%'
     },
     input: {
@@ -185,9 +199,35 @@ const styles = StyleSheet.create({
         color: '#FFF',
         fontSize: 20,
     },
+    textResetSenha: {
+        width:150,
+        alignContent:'center',
+        textAlign: "right",
+        paddingEnd:10,
+        marginTop:10,
+        color: '#FFF',
+        fontSize: 18,
+        fontWeight: 'bold',
+        
+    },
+    textResetSenha: {
+        color: '#FFF',
+        fontSize: 18,
+        fontWeight: 'bold',  
+    },
+    touchResetSenha: {
+        width:156,
+        marginTop:10,
+    },
     buttonText: {
+        padding: 5,
+        textAlign: "center",
         color: '#FFF',
         fontSize: 20,
-        backgroundColor: 'rgba(192,192,192, 0.4)',
+        backgroundColor: 'rgba(128,128,128, 0.9)',
+        alignContent: 'center',
+        borderColor: '#000000',
+        color: '#FFFFFF',
+        borderWidth: 2
     }
 })
