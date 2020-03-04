@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet,TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Alert,Text } from 'react-native';
 import MapboxGL from '@react-native-mapbox-gl/maps';
 import ModalExemplo from '../componentes/ModalExemplo'
 
@@ -7,7 +7,7 @@ MapboxGL.setAccessToken("pk.eyJ1IjoiYnJ1bm9wZWRyb3NvIiwiYSI6ImNrNmJkY2R3dDEwODkz
 
 export default class Maps extends Component {
   state = {
-    showAddTask: false,
+    showModal: false,
     viewport: {
       width: 400,
       height: 400,
@@ -43,55 +43,64 @@ export default class Maps extends Component {
     return (
       <MapboxGL.PointAnnotation
         ref={p => (this.place = p)}
-        key={place.id}
+        id={place.id}
         coordinate={[place.longitude, place.latitude]}
-      //onSelected // usar para mostra modal
+        onSelected={() =>Alert.alert(place.id)}
       //onDeselected // para esconder modal
       >
-        <TouchableOpacity style={styles.annotationContainer} 
-        onPress={()=>this.setState.showAddTask=true}>
-           <ModalExemplo isVisible={this.state.showAddTask} />
-          <View style={styles.annotationFill} />
-        </TouchableOpacity>
+        <View style={styles.annotationFill} >
+          <Text>{place.id}</Text>
+        </View>
         <MapboxGL.Callout title={place.description} />
       </MapboxGL.PointAnnotation>
     )
   }
   render() {
     return (
+      <View style={styles.container}>
       <MapboxGL.MapView
         ref={m => (this.map = m)}
-        style={styles.container}
+        style={styles.containerMaps}
         showUserLocation={true}
         styleURL={MapboxGL.StyleURL.Dark}// stret/ satellite
         attributionPosition={{ top: 8, left: 8 }}  //canto superior esquerda
         logoEnabled={false} // tirar o logo do mapa
-
       >
-        
+           <ModalExemplo isVisible={this.state.showModal} />
+
         <MapboxGL.Camera
-          centerCoordinate={[ -49.19572592,-25.4554812]}
+          centerCoordinate={[-49.19572592, -25.4554812]}
           zoomLevel={12}
           pitch={5}
           heading={5}
           animationMode='flyTo'
           animationDuration={3000}
-        > 
+        >
         </MapboxGL.Camera>
         <MapboxGL.UserLocation
-        animated
-        visible={true}>
+          animated={true}
+          visible={true}
+            />
 
-        </MapboxGL.UserLocation>
         {this.state.places.map(place => this.renderAnnotations2(place))}
-          {/*this.renderAnnotations()*/}
+        {/*this.renderAnnotations()*/}
       </MapboxGL.MapView>
-    );
+      <View style={styles.markerAnotacion}> 
+        <Text>aqui vai info</Text>
+      </View>
+      </View>
+    )
   }
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1
+},
+  containerMaps: {
+    flex: 2,
+  },
+  markerAnotacion: {
     flex: 1,
   },
   annotationContainer: {
@@ -103,14 +112,27 @@ const styles = StyleSheet.create({
     borderRadius: 15,
   },
   annotationFill: {
-    width: 30,
+    width: 40,
     height: 30,
-    borderRadius: 15,
+    borderRadius: 2,
     backgroundColor: '#00FF00',
-    transform: [{ scale: 0.8 }], 
+    transform: [{ scale: 0.8 }],
   }
 });
 
+
+
+/*<TouchableOpacity style={[
+                    styles.addButton,
+                    {
+                        backgroundColor: this.getColor()
+                    }]}
+                    activeOpacity={0.7}
+                    onPress={() => this.setState({ showAddTask: true })}>
+                    <Icon name="plus" size={20}
+                        color={commonStyles.colors.secondary} />
+                </TouchableOpacity>
+visible */
 
 /*
  renderAnnotations() {
