@@ -55,6 +55,7 @@ export default class Login extends Component {
         };
         await api.post('/createUser', data).then((response) => {
             if (response.data.status === 200) {
+                this.setState({ stageNew: !this.state.stageNew })
                 return showSuccess(response.data.menssagem);
             } else {
                 return showNotification(response.data.menssagem);
@@ -134,7 +135,7 @@ export default class Login extends Component {
                         disabled={!validForm}>
                         <View style={[styles.button, validForm ? {} : { backgroundColor: '#AAA' }]}>
                             <Text style={styles.textBotton}>
-                                {this.state.stageNew ? 'Registrar' : 'Entrar'}
+                                {this.state.stageNew ? 'Registrarr' : 'Entrar'}
                             </Text>
                         </View>
                         </TouchableOpacity>
@@ -197,7 +198,7 @@ const styles = StyleSheet.create({
     },
     textBotton: {
         color: '#FFF',
-        fontSize: 20,
+        fontSize: 40,
     },
     textResetSenha: {
         width:150,
