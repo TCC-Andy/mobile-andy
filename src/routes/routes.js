@@ -4,7 +4,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import RoutesDrawer from './routesDrawer'
 import Login from '../pages/login'
 import Maps from '../pages/Maps';
-
 const Stack = createStackNavigator();
 
 const menuStack =

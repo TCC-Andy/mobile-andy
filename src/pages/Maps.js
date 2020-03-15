@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, TouchableOpacity, Alert, Text } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Alert, Text,FlatList, Dimensions } from 'react-native';
 import MapboxGL from '@react-native-mapbox-gl/maps';
-import ModalExemplo from '../componentes/ModalExemplo'
+import ModalExemplo from '../componentes/ModalExemplo';
+import SliderLocations from './sliderLocations';
+import Icon from 'react-native-vector-icons/FontAwesome'
 
 MapboxGL.setAccessToken("pk.eyJ1IjoiYnJ1bm9wZWRyb3NvIiwiYSI6ImNrNmJkY2R3dDEwODkzbW1yZmFvcHA2dzIifQ.0cwlHJwaGJpu9ZGfdyhkuQ");
 
 export default class Maps extends Component {
   state = {
-    showModal: false,
     viewport: {
       width: 400,
       height: 400,
@@ -21,38 +22,49 @@ export default class Maps extends Component {
     },
     places: [
       {
-        id: '1',
-        title: 'Casa do Bruno',
+        id: '1',// id poara busaca servico depois
+        title: 'Casa do Bruno',//E Nome Empresa -> so agora pensei nisso
         description: 'Proximo a BR 277...',
+        cidade:'Curitiba',
+        bairro:'Cajuru',
+        rua:'Rua Goiania',
+        numero:'696',
+        complemento:'casa',
         coordenadas: [-49.22044516, -25.45575244],
       },
       {
         id: '2',
         title: 'casa do Thiago',
         description: 'Localizado proximo a Fapi',
+        cidade:'Pinhais',
+        bairro:'Weissopolis',
+        rua:'Rua do Thiago',
+        numero:'500',
+        complemento:'casa',
         coordenadas: [-49.18684244, -25.45245873],
 
       },
       {
         id: '3',
         title: 'Faculdade de Pinhais',
+        cidade:'Pinhais',
+        bairro:'Nao sei o bairro',
+        rua:'Av Camilo de lelis',
+        complemento:'Predio',
+        numero:'1151',
         description: 'Um local bem localizado em Pinhais',
         coordenadas: [-49.18858051, -25.44435969],
       }
     ]
   }
   alterCoordenadas = (place) => {
-    Alert.alert(place.title)
-
+   // Alert.alert(place.title)
     let camera = null
    // camera = [...this.state.camera]
-    
     camera = {
       coordenadas : place.coordenadas,
       zoom : 15
-    }
-    
-    
+    }   
 
     this.setState({ camera })
   }
@@ -66,25 +78,14 @@ export default class Maps extends Component {
       //onDeselected // para esconder modal
       >
         <View style={styles.annotationFill} >
-          <Text>{place.id}</Text>
+        <Icon name="map-marker" color={'#FFFFFF'} size={20} />
+          <Text style={styles.texAnnotation}>{place.id}</Text>
         </View>
         <MapboxGL.Callout title={place.description} />
       </MapboxGL.PointAnnotation>
     )
   }
-  renderMarker(place) {
-    return (
-      <MapboxGL.MarkerView
-        ref={p => (this.place = p)}
-        id={place.id}
-        coordinate={[place.longitude, place.latitude]}
-      // onSelected={() =>Alert.alert(place.id)}
-      //onDeselected // para esconder modal
-      >
-        <anotationContnt title={'Minha market'} />
-      </MapboxGL.MarkerView>
-    )
-  }
+  
   render() {
     return (
       <View style={styles.container}>
@@ -96,7 +97,6 @@ export default class Maps extends Component {
           attributionPosition={{ top: 8, left: 8 }}  //canto superior esquerda
           logoEnabled={false} // tirar o logo do mapa
         >
-          <ModalExemplo isVisible={this.state.showModal} />
 
           <MapboxGL.Camera
             centerCoordinate={this.state.camera.coordenadas}
@@ -114,7 +114,7 @@ export default class Maps extends Component {
           {/*this.renderAnnotations()*/}
         </MapboxGL.MapView>
         <View style={styles.markerAnotacion}>
-          <Text>aqui vai info</Text>
+        <SliderLocations data = {this.state.places} alterCoordenadas={this.alterCoordenadas.bind(this)}/>
         </View>
       </View>
     )
@@ -129,7 +129,8 @@ const styles = StyleSheet.create({
     flex: 2,
   },
   markerAnotacion: {
-    flex: 1,
+    backgroundColor:'#C0C0C0',
+    flex:1
   },
   annotationContainer: {
     width: 30,
@@ -140,27 +141,12 @@ const styles = StyleSheet.create({
     borderRadius: 15,
   },
   annotationFill: {
-    width: 40,
-    height: 30,
-    borderRadius: 2,
-    backgroundColor: '#00FF00',
     transform: [{ scale: 0.8 }],
+  },
+  texAnnotation: {
+    color:'#FFFFFF',
   }
 });
-
-
-
-/*<TouchableOpacity style={[
-                    styles.addButton,
-                    {
-                        backgroundColor: this.getColor()
-                    }]}
-                    activeOpacity={0.7}
-                    onPress={() => this.setState({ showAddTask: true })}>
-                    <Icon name="plus" size={20}
-                        color={commonStyles.colors.secondary} />
-                </TouchableOpacity>
-visible */
 
 /*
  renderAnnotations() {

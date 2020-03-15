@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
     },
     textBotton: {
         color: '#FFF',
-        fontSize: 40,
+        fontSize: 20,
     },
     textResetSenha: {
         width:150,
