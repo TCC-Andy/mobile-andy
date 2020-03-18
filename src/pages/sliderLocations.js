@@ -15,14 +15,17 @@ export default class SliderLocations extends Component {
     const t = Dimensions.get('window').width;
     return (
       <FlatList 
+      ref={l => (this.list = l)}
       initialScrollIndex
       onMomentumScrollEnd={(e) => {
-        const posicao =  (e.nativeEvent.contentOffset.x > 0)
+        let posicao =  (e.nativeEvent.contentOffset.x > 0)
         ? e.nativeEvent.contentOffset.x / Dimensions.get('window').width
         : 0;
+        
         setTimeout(() => {
-         //Alert.alert(valor)
+         if(posicao > 0 && posicao < this.state.data.length){
          this.props.alterCoordenadas(this.state.data[posicao])
+         }
         }, 500)
       }}
       pagingEnabled={true}
@@ -39,7 +42,7 @@ export default class SliderLocations extends Component {
 
                 <View style={styles.header}>
                   <Text style={styles.title} >
-                    {rowData.title}
+                    {rowData.nome}
                   </Text>
                   <TouchableOpacity style={styles.buttonServices}
                     onPress={() => this.setState({ showModal: true })}>
@@ -58,7 +61,7 @@ export default class SliderLocations extends Component {
                 </View>
 
                 <View style={styles.description}>
-                  <Text>{rowData.description} </Text>
+                  <Text>{rowData.descricao} </Text>
                 </View>
 
                 <View style={styles.City}>
@@ -66,7 +69,7 @@ export default class SliderLocations extends Component {
                 </View>
 
                 <View style={styles.footer}>
-                  <Text>{rowData.rua }-{rowData.numero }-{rowData.complemento}</Text>
+                  <Text>{rowData.rua }-{rowData.status }-</Text>
                 </View>
 
               </View>
