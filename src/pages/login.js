@@ -8,7 +8,8 @@ import {
     TouchableWithoutFeedback,
     Modal,
     AsyncStorage,
-    Dimensions
+    Dimensions,
+    Alert
 } from 'react-native'
 import ActivIndicador from '../componentes/activIndicador'
 import axios from 'axios'
@@ -37,6 +38,24 @@ export default class Login extends Component {
     state = {
         ...initialState
     }
+    _storeData = async () => {
+        try {
+            await AsyncStorage.setItem('nome', this.state.nome);
+            console.log( this.state.nome);
+        } catch (error) {
+            showError('Falha na conexão')
+        }
+    }
+    _retrieveData = async () => {
+        try {
+            const user = await AsyncStorage.getItem('nome');
+            if (user !== null) {
+                console.log(user);
+            }
+        } catch (error) {
+            console.log(error.message);
+        }
+    };
     signinOrSignup = () => {
         if (this.state.stageNew) {
             this.setState({ activIndicador: !this.state.activIndicador })
@@ -95,6 +114,7 @@ export default class Login extends Component {
         }
         await api.post('/authenticateUser', data).then((response) => {
             if (response.data.status === 200) {
+                this._storeData
                 this.setState({ activIndicador: !this.state.activIndicador })
                 return this.props.navigation.navigate('Home')
             } else {
@@ -102,8 +122,6 @@ export default class Login extends Component {
             }
         }).catch((error) => {
             showError('Falha na conexão')
-            return this.props.navigation.navigate('Home')
-            //  showError('Falha na conexão')
         });
     }
     render() {
@@ -123,14 +141,19 @@ export default class Login extends Component {
             <ImageBackground source={backgroundImage}
                 style={styles.background}>
                 <Modal transparent={true} visible={this.state.opemResetPass}
-                    animationType='slide'>
-                    <TouchableWithoutFeedback onPress={() => this.setState({ opemResetPass: !this.state.opemResetPass })}
-                    >
+                    animationType='slide' >
+                    <TouchableWithoutFeedback onPress={() => this.setState({ opemResetPass: !this.state.opemResetPass })}>
                         <View style={styles.modalHeader} ></View>
                     </TouchableWithoutFeedback>
                     <View style={styles.modalContainer}>
                         <View style={styles.resetPass}>
-                            <Text style={{ color: '#FFFFFF', fontSize: 20, marginBottom: 25 }}>
+                            <TouchableOpacity onPress={() => this.setState({ opemResetPass: !this.state.opemResetPass })}
+                                style={styles.closeModal}  >
+                                <Text style={{ color: '#FFFFFF', fontSize: 20 }} >
+                                    x
+                            </Text>
+                            </TouchableOpacity>
+                            <Text style={{ color: '#FFFFFF', fontSize: 20, marginBottom: 35 }}>
                                 Digite seu seu e-mail</Text>
                             <AuthInput icon='at' placeholder='E-mail'
                                 value={this.state.email}
@@ -138,7 +161,7 @@ export default class Login extends Component {
                                 onChangeText={email => this.setState({ email })} />
                             <TouchableOpacity onPress={this.resetPassword} >
                                 <View style={styles.btResetPass}>
-                                    <Text style={{ color: '#FFFFFF', fontSize: 17 }}>
+                                    <Text style={{ color: '#FFFFFF', fontSize: 18, marginTop: 5 }}>
                                         Enviar
                             </Text>
                                 </View>
@@ -284,35 +307,41 @@ const styles = StyleSheet.create({
     },
     btResetPass: {
         alignContent: "center",
-        width: 80,
+        width: 150,
+        height: 40,
         color: '#ffffff',
         backgroundColor: '#080',
-        marginTop: 30,
+        marginTop: 40,
         alignItems: 'center',
         borderRadius: 7
     },
     resetPass: {
-        backgroundColor: 'rgba(0,0,0, 0.9)',
+        backgroundColor: 'rgba(105,105,105, 0.9)',
         width: Dimensions.get('window').width - 40,
         marginLeft: 20,
-        paddingTop: 10,
+        paddingBottom: 65,
         alignItems: 'center',
         justifyContent: 'center',
         alignContent: "center",
         borderRadius: 7,
-        height: 200
+        height: 250,
+        padding: 15,
 
     },
     modalHeader: {
         flex: 1,
-        backgroundColor: 'rgba(0,0,0, 0.4)',
+        backgroundColor: 'rgba(0,0,0, 0.5)',
     },
     modalFooter: {
-        flex: 1,
-        backgroundColor: 'rgba(0,0,0, 0.4)',
+        flex: 2,
+        backgroundColor: 'rgba(0,0,0, 0.5)',
     },
     modalContainer: {
-        flex: 2,
-        backgroundColor: 'rgba(0,0,0, 0.4)',
+        flex: 3,
+        backgroundColor: 'rgba(0,0,0, 0.5)',
+    },
+    closeModal: {
+        width: 10,
+        marginLeft: Dimensions.get('window').width / 2 + 110,
     }
 })

@@ -142,7 +142,7 @@ export default class ModalExemplo extends Component {
                 </TouchableWithoutFeedback>
                 <View style={styles.container}>
                     <View style={styles.header}>
-                        <Text style={styles.title}>Nova Tarefa</Text>
+                        <Text style={styles.title}>Serviços</Text>
                         <TouchableOpacity style={styles.close}
                             onPress={this.props.closeModal} >
                             <Text style={{ right: 10, color: '#ffffff', fontSize: 15 }}>x</Text>
@@ -217,7 +217,7 @@ export default class ModalExemplo extends Component {
 
 const styles = StyleSheet.create({
     backgroundHeader: {
-        flex: 2,
+        flex: 1,
         backgroundColor: 'rgba(0, 0, 0, 0.3)'
     },
     backgroundFooter: {
@@ -232,12 +232,11 @@ const styles = StyleSheet.create({
         borderColor: '#696969'
     },
     header: {
-        flex: 1,
         flexDirection: "row",
         backgroundColor: '#696969',
     },
     title: {
-        flex: 20,
+        flex: 10,
         textAlign: 'center',
         padding: 14,
         fontSize: 17,

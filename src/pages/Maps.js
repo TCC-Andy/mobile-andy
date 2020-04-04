@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, StyleSheet, TouchableOpacity, Alert, Text, FlatList, Dimensions } from 'react-native';
 import MapboxGL from '@react-native-mapbox-gl/maps';
 import ModalExemplo from '../componentes/ModalExemplo';
-import SliderLocations from './sliderLocations';
+import SliderLocations from '../componentes/sliderLocations';
 import Icon from 'react-native-vector-icons/FontAwesome'
 import api from '../service/api';
 import { showError, showSuccess, showNotification } from '../utils/alertsUser'
@@ -81,6 +81,7 @@ export default class Maps extends Component {
       <MapboxGL.PointAnnotation
         ref={p => (this.place = p)}
         id={place._id}
+        key={place._id}
         coordinate={place.coordenadas}
         onSelected={() => this.alterCoordenadas(place)}
       //onDeselected // para esconder modal
@@ -88,7 +89,6 @@ export default class Maps extends Component {
         <View style={styles.annotationFill} >
         {this.state.textView &&
           <View style={styles.viewAnnotation} >
-            <Text style={styles.texAnnotation}>{place.nome}</Text>
           </View>
            }
           <Icon name="map-marker" color={'#DC143C'} size={20} />
@@ -178,30 +178,8 @@ state = {
       coordenadas: [-49.219982, -25.455471],
       zoom: 12
     },
-    places: [
-      {       //","
-        id: '1',// id poara busaca servico depois
-        title: 'Casa do Bruno',//E Nome Empresa -> so agora pensei nisso
-        description: 'Proximo a BR 277...',
-        cidade:'Curitiba',
-        bairro:'Cajuru',
-        rua:'Rua Goiania',
-        numero:'696',
-        complemento:'casa',
-        coordenadas: [-49.22044516, -25.45575244],
-      },
-      {
-        id: '2',
-        title: 'casa do Thiago',
-        description: 'Localizado proximo a Fapi',
-        cidade:'Pinhais',
-        bairro:'Weissopolis',
-        rua:'Rua do Thiago',
-        numero:'500',
-        complemento:'casa',    //"",""
-        coordenadas: [-49.188162, -25.452379],
+    places: [   
 
-      },
       {
         id: '3',
         title: 'Faculdade de Pinhais',
