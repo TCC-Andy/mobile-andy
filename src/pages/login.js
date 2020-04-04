@@ -5,28 +5,31 @@ import {
     StyleSheet,
     View,
     TouchableOpacity,
-    Alert,
+    TouchableWithoutFeedback,
+    Modal,
     AsyncStorage,
-    ActivityIndicator
+    Dimensions
 } from 'react-native'
 import ActivIndicador from '../componentes/activIndicador'
-
 import axios from 'axios'
 //import AsyncStorage from '@react-native-community/async-storage'
 
-import backgroundImage from '../../assets/imgs/login4.jpg'
+import backgroundImage from '../../assets/imgs/login4.jpg'//LOGIN4
 import AuthInput from '../componentes/textInput'
 
 import api from '../service/api';
 import { showError, showSuccess, showNotification } from '../utils/alertsUser'
+import { color } from 'react-native-reanimated'
 
 const initialState = {
     name: 'bruno',
     surname: 'pedroso',
-    email: 'bru@pedroso.com',
+    email: 'bruno.1301817@fapi-pinhais.edu.br',
     password: '123456',
     confirnPassword: '123456',
-    stageNew: false
+    stageNew: false,
+    activIndicador: false,
+    opemResetPass: false,
 }
 
 export default class Login extends Component {
@@ -36,13 +39,31 @@ export default class Login extends Component {
     }
     signinOrSignup = () => {
         if (this.state.stageNew) {
+            this.setState({ activIndicador: !this.state.activIndicador })
             this.signup()
         } else {
+            this.setState({ activIndicador: !this.state.activIndicador })
             this.signin()
         }
     }
-    resetPassword = () => {
-        showSuccess('Sua senha sera enviada via email');
+    resetPassword = async () => {
+        this.setState({ opemResetPass: !this.state.opemResetPass })
+        this.setState({ activIndicador: !this.state.activIndicador })
+        const data = {
+            email: this.state.email,
+
+        };
+        await api.post('/sendPassReset', data).then((response) => {
+            if (response.data.status === 200) {
+                this.setState({ activIndicador: !this.state.activIndicador })
+                return showSuccess(response.data.menssagem);
+            } else {
+                this.setState({ activIndicador: !this.state.activIndicador })
+                return showNotification(response.data.menssagem);
+            }
+        }).catch((error) => {
+            showError('Falha na conexão')
+        });
     }
 
     signup = async () => {
@@ -56,8 +77,10 @@ export default class Login extends Component {
         await api.post('/createUser', data).then((response) => {
             if (response.data.status === 200) {
                 this.setState({ stageNew: !this.state.stageNew })
+                this.setState({ activIndicador: !this.state.activIndicador })
                 return showSuccess(response.data.menssagem);
             } else {
+                this.setState({ activIndicador: !this.state.activIndicador })
                 return showNotification(response.data.menssagem);
             }
         }).catch((error) => {
@@ -72,7 +95,7 @@ export default class Login extends Component {
         }
         await api.post('/authenticateUser', data).then((response) => {
             if (response.data.status === 200) {
-                showSuccess('User logado');
+                this.setState({ activIndicador: !this.state.activIndicador })
                 return this.props.navigation.navigate('Home')
             } else {
                 return showNotification(response.data.menssagem);
@@ -99,6 +122,34 @@ export default class Login extends Component {
         return (
             <ImageBackground source={backgroundImage}
                 style={styles.background}>
+                <Modal transparent={true} visible={this.state.opemResetPass}
+                    animationType='slide'>
+                    <TouchableWithoutFeedback onPress={() => this.setState({ opemResetPass: !this.state.opemResetPass })}
+                    >
+                        <View style={styles.modalHeader} ></View>
+                    </TouchableWithoutFeedback>
+                    <View style={styles.modalContainer}>
+                        <View style={styles.resetPass}>
+                            <Text style={{ color: '#FFFFFF', fontSize: 20, marginBottom: 25 }}>
+                                Digite seu seu e-mail</Text>
+                            <AuthInput icon='at' placeholder='E-mail'
+                                value={this.state.email}
+                                style={styles.input}
+                                onChangeText={email => this.setState({ email })} />
+                            <TouchableOpacity onPress={this.resetPassword} >
+                                <View style={styles.btResetPass}>
+                                    <Text style={{ color: '#FFFFFF', fontSize: 17 }}>
+                                        Enviar
+                            </Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                    <TouchableWithoutFeedback onPress={() => this.setState({ opemResetPass: !this.state.opemResetPass })}>
+                        <View style={styles.modalFooter} ></View>
+                    </TouchableWithoutFeedback>
+                </Modal>
+                <ActivIndicador animating={this.state.activIndicador} />
                 <Text style={styles.title}>Andy</Text>
                 <View style={styles.formContainer}>
                     <Text style={styles.subtitle}>
@@ -138,9 +189,9 @@ export default class Login extends Component {
                                 {this.state.stageNew ? 'Registrarr' : 'Entrar'}
                             </Text>
                         </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.touchResetSenha}
-                        onPress={this.resetPassword}>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.touchResetSenha}
+                        onPress={() => this.setState({ opemResetPass: !this.state.opemResetPass })}>
                         {!this.state.stageNew &&
                             <Text style={styles.textResetSenha}>
                                 Recuperar Senha ?
@@ -181,13 +232,13 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     formContainer: {
-        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        backgroundColor: 'rgba(0,0,0, 0.7)',
         padding: 20,
         width: '80%'
     },
     input: {
         marginTop: 10,
-        backgroundColor: '#FFF'
+        backgroundColor: '#FFfffF'
     },
     button: {
         backgroundColor: '#080',
@@ -201,24 +252,24 @@ const styles = StyleSheet.create({
         fontSize: 20,
     },
     textResetSenha: {
-        width:150,
-        alignContent:'center',
+        width: 150,
+        alignContent: 'center',
         textAlign: "right",
-        paddingEnd:10,
-        marginTop:10,
+        paddingEnd: 10,
+        marginTop: 10,
         color: '#FFF',
         fontSize: 18,
         fontWeight: 'bold',
-        
+
     },
     textResetSenha: {
         color: '#FFF',
         fontSize: 18,
-        fontWeight: 'bold',  
+        fontWeight: 'bold',
     },
     touchResetSenha: {
-        width:156,
-        marginTop:10,
+        width: 156,
+        marginTop: 10,
     },
     buttonText: {
         padding: 5,
@@ -230,5 +281,38 @@ const styles = StyleSheet.create({
         borderColor: '#000000',
         color: '#FFFFFF',
         borderWidth: 2
+    },
+    btResetPass: {
+        alignContent: "center",
+        width: 80,
+        color: '#ffffff',
+        backgroundColor: '#080',
+        marginTop: 30,
+        alignItems: 'center',
+        borderRadius: 7
+    },
+    resetPass: {
+        backgroundColor: 'rgba(0,0,0, 0.9)',
+        width: Dimensions.get('window').width - 40,
+        marginLeft: 20,
+        paddingTop: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignContent: "center",
+        borderRadius: 7,
+        height: 200
+
+    },
+    modalHeader: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0, 0.4)',
+    },
+    modalFooter: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0, 0.4)',
+    },
+    modalContainer: {
+        flex: 2,
+        backgroundColor: 'rgba(0,0,0, 0.4)',
     }
 })

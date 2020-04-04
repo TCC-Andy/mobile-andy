@@ -6,12 +6,14 @@ import SliderLocations from './sliderLocations';
 import Icon from 'react-native-vector-icons/FontAwesome'
 import api from '../service/api';
 import { showError, showSuccess, showNotification } from '../utils/alertsUser'
+import ActivIndicador from '../componentes/activIndicador'
 
 
 MapboxGL.setAccessToken("pk.eyJ1IjoiYnJ1bm9wZWRyb3NvIiwiYSI6ImNrNmJkY2R3dDEwODkzbW1yZmFvcHA2dzIifQ.0cwlHJwaGJpu9ZGfdyhkuQ");
 
 export default class Maps extends Component {
   state = {
+    activIndicador:false,
     textView: false,
     viewport: {
       width: 400,
@@ -28,6 +30,7 @@ export default class Maps extends Component {
   }
 
   async componentDidMount() {
+    this.setState({ activIndicador: !this.state.activIndicador })
     const data = {
       categoria: 'cabelereiro'
     }
@@ -44,9 +47,10 @@ export default class Maps extends Component {
           console.log(places);
         });
         this.setState({ places: places })
-        showSuccess(places[0].categoria);
+        this.setState({ activIndicador: !this.state.activIndicador })
 
       } else {
+        this.setState({ activIndicador: !this.state.activIndicador })
         return showNotification(response.data.menssagem);
       }
     }).catch((error) => {
@@ -98,6 +102,7 @@ export default class Maps extends Component {
   render() {
     return (
       <View style={styles.container}>
+         <ActivIndicador animating ={ this.state.activIndicador}/>
         <MapboxGL.MapView
           ref={m => (this.map = m)}
           style={styles.containerMaps}

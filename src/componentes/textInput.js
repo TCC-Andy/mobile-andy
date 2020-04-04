@@ -7,7 +7,7 @@ export default props => {
         <KeyboardAvoidingView
             behavior= 'padding'>
             <View style={[styles.container, props.style]}>
-                <Icon name={props.icon} size={20} style={styles.icon} />
+                <Icon name={props.icon} size={19} style={styles.icon} />
                 <TextInput {...props} style={styles.input} />
             </View>
         </KeyboardAvoidingView>
@@ -25,10 +25,10 @@ const styles = StyleSheet.create({
     },
     icon: {
         color: '#333',
-        marginLeft: 20
+        marginLeft: 10
     },
     input: {
-        marginLeft: 20,
-        width: '70%'
+        marginLeft: -5,
+        width: '92%'
     }
 })
