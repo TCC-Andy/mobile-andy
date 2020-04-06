@@ -9,7 +9,10 @@ import {
     Modal,
     AsyncStorage,
     Dimensions,
-    Alert
+    Alert,
+    KeyboardAvoidingView,
+    Platform,
+    ScrollView,
 } from 'react-native'
 import ActivIndicador from '../componentes/activIndicador'
 import axios from 'axios'
@@ -41,7 +44,7 @@ export default class Login extends Component {
     _storeData = async () => {
         try {
             await AsyncStorage.setItem('nome', this.state.nome);
-            console.log( this.state.nome);
+            console.log(this.state.nome);
         } catch (error) {
             showError('Falha na conexão')
         }
@@ -140,95 +143,98 @@ export default class Login extends Component {
         return (
             <ImageBackground source={backgroundImage}
                 style={styles.background}>
-                <Modal transparent={true} visible={this.state.opemResetPass}
-                    animationType='slide' >
-                    <TouchableWithoutFeedback onPress={() => this.setState({ opemResetPass: !this.state.opemResetPass })}>
-                        <View style={styles.modalHeader} ></View>
-                    </TouchableWithoutFeedback>
-                    <View style={styles.modalContainer}>
-                        <View style={styles.resetPass}>
-                            <TouchableOpacity onPress={() => this.setState({ opemResetPass: !this.state.opemResetPass })}
-                                style={styles.closeModal}  >
-                                <Text style={{ color: '#FFFFFF', fontSize: 20 }} >
-                                    x
+                <ScrollView contentContainerStyle={styles.contentContainer}>
+                    <Modal transparent={true} visible={this.state.opemResetPass}
+                        animationType='slide' >
+                        <TouchableWithoutFeedback onPress={() => this.setState({ opemResetPass: !this.state.opemResetPass })}>
+                            <View style={styles.modalHeader} ></View>
+                        </TouchableWithoutFeedback>
+                        <View style={styles.modalContainer}>
+                            <View style={styles.resetPass}>
+                                <TouchableOpacity onPress={() => this.setState({ opemResetPass: !this.state.opemResetPass })}
+                                    style={styles.closeModal}  >
+                                    <Text style={{ color: '#FFFFFF', fontSize: 20 }} >
+                                        x
                             </Text>
-                            </TouchableOpacity>
-                            <Text style={{ color: '#FFFFFF', fontSize: 20, marginBottom: 35 }}>
-                                Digite seu seu e-mail</Text>
-                            <AuthInput icon='at' placeholder='E-mail'
-                                value={this.state.email}
+                                </TouchableOpacity>
+                                <Text style={{ color: '#FFFFFF', fontSize: 20, marginBottom: 35 }}>
+                                    Digite seu seu e-mail</Text>
+                                <AuthInput icon='at' placeholder='E-mail' keyboardType='email-address'
+                                    value={this.state.email}
+                                    style={styles.input}
+                                    onChangeText={email => this.setState({ email })} />
+                                <TouchableOpacity onPress={this.resetPassword} >
+                                    <View style={styles.btResetPass}>
+                                        <Text style={{ color: '#FFFFFF', fontSize: 18, marginTop: 5 }}>
+                                            Enviar
+                            </Text>
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                        <TouchableWithoutFeedback onPress={() => this.setState({ opemResetPass: !this.state.opemResetPass })}>
+                            <View style={styles.modalFooter} ></View>
+                        </TouchableWithoutFeedback>
+                    </Modal>
+                    <ActivIndicador animating={this.state.activIndicador} />
+                    <Text style={styles.title}>Andy</Text>
+                    <View style={styles.formContainer}>
+                        <Text style={styles.subtitle}>
+                            {this.state.stageNew ? 'Crie a sua conta' : 'Informe seus dados'}
+                        </Text>
+                        {this.state.stageNew &&
+                            <AuthInput icon='user' placeholder='Nome'
+                                value={this.state.name}
                                 style={styles.input}
-                                onChangeText={email => this.setState({ email })} />
-                            <TouchableOpacity onPress={this.resetPassword} >
-                                <View style={styles.btResetPass}>
-                                    <Text style={{ color: '#FFFFFF', fontSize: 18, marginTop: 5 }}>
-                                        Enviar
-                            </Text>
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                    <TouchableWithoutFeedback onPress={() => this.setState({ opemResetPass: !this.state.opemResetPass })}>
-                        <View style={styles.modalFooter} ></View>
-                    </TouchableWithoutFeedback>
-                </Modal>
-                <ActivIndicador animating={this.state.activIndicador} />
-                <Text style={styles.title}>Andy</Text>
-                <View style={styles.formContainer}>
-                    <Text style={styles.subtitle}>
-                        {this.state.stageNew ? 'Crie a sua conta' : 'Informe seus dados'}
-                    </Text>
-                    {this.state.stageNew &&
-                        <AuthInput icon='user' placeholder='Nome'
-                            value={this.state.name}
-                            style={styles.input}
-                            onChangeText={name => this.setState({ name })} />
-                    }
-                    {this.state.stageNew &&
-                        <AuthInput icon='user' placeholder='Sobrenome'
-                            value={this.state.surname}
-                            style={styles.input}
-                            onChangeText={surname => this.setState({ surname })} />
-                    }
-                    <AuthInput icon='at' placeholder='E-mail'
-                        value={this.state.email}
-                        style={styles.input}
-                        onChangeText={email => this.setState({ email })} />
-                    <AuthInput icon='lock' placeholder='Senha'
-                        value={this.state.password}
-                        style={styles.input} secureTextEntry={true}
-                        onChangeText={password => this.setState({ password })} />
-                    {this.state.stageNew &&
-                        <AuthInput icon='asterisk'
-                            placeholder='Confirmação de Senha'
-                            value={this.state.confirnPassword}
-                            style={styles.input} secureTextEntry={true}
-                            onChangeText={confirnPassword => this.setState({ confirnPassword })} />
-                    }
-                    <TouchableOpacity onPress={this.signinOrSignup}
-                        disabled={!validForm}>
-                        <View style={[styles.button, validForm ? {} : { backgroundColor: '#AAA' }]}>
-                            <Text style={styles.textBotton}>
-                                {this.state.stageNew ? 'Registrarr' : 'Entrar'}
-                            </Text>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.touchResetSenha}
-                        onPress={() => this.setState({ opemResetPass: !this.state.opemResetPass })}>
-                        {!this.state.stageNew &&
-                            <Text style={styles.textResetSenha}>
-                                Recuperar Senha ?
-                    </Text>
+                                onChangeText={name => this.setState({ name })} />
                         }
-                    </TouchableOpacity>
-                </View>
-                <TouchableOpacity style={{ padding: 15 }}
-                    onPress={() => this.setState({ stageNew: !this.state.stageNew })} >
-                    <Text style={styles.buttonText}>
-                        {this.state.stageNew ? 'Já possui conta?' : 'Ainda não possui conta?'}
+                        {this.state.stageNew &&
+                            <AuthInput icon='user' placeholder='Sobrenome'
+                                value={this.state.surname}
+                                style={styles.input}
+                                onChangeText={surname => this.setState({ surname })} />
+                        }
+                        <AuthInput icon='at' placeholder='E-mail' keyboardType='email-address'
+                            value={this.state.email}
+                            style={styles.input}
+                            onChangeText={email => this.setState({ email })} />
+                        <AuthInput icon='lock' placeholder='Senha'
+                            value={this.state.password}
+                            style={styles.input} secureTextEntry={true}
+                            onChangeText={password => this.setState({ password })} />
+                        {this.state.stageNew &&
+                            <AuthInput icon='asterisk'
+                                placeholder='Confirmação de Senha'
+                                value={this.state.confirnPassword}
+                                style={styles.input} secureTextEntry={true}
+                                onChangeText={confirnPassword => this.setState({ confirnPassword })} />
+                        }
+                        <TouchableOpacity onPress={this.signinOrSignup}
+                            disabled={!validForm}>
+                            <View style={[styles.button, validForm ? {} : { backgroundColor: '#AAA' }]}>
+                                <Text style={styles.textBotton}>
+                                    {this.state.stageNew ? 'Registrarr' : 'Entrar'}
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.touchResetSenha}
+                            onPress={() => this.setState({ opemResetPass: !this.state.opemResetPass })}>
+                            {!this.state.stageNew &&
+                                <Text style={styles.textResetSenha}>
+                                    Recuperar Senha ?
                     </Text>
+                            }
+                        </TouchableOpacity>
 
-                </TouchableOpacity>
+                    </View>
+                    <TouchableOpacity style={{ padding: 15 }}
+                        onPress={() => this.setState({ stageNew: !this.state.stageNew })} >
+                        <Text style={styles.buttonText}>
+                            {this.state.stageNew ? 'Já possui conta?' : 'Ainda não possui conta?'}
+                        </Text>
+
+                    </TouchableOpacity>
+                </ScrollView>
             </ImageBackground>
         )
     }
@@ -238,8 +244,12 @@ const styles = StyleSheet.create({
     background: {
         flex: 1,
         width: '100%',
+        
+    },
+    contentContainer: {
+        paddingTop:60,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     title: {
         color: '#8B0000',
@@ -303,7 +313,8 @@ const styles = StyleSheet.create({
         alignContent: 'center',
         borderColor: '#000000',
         color: '#FFFFFF',
-        borderWidth: 2
+        borderWidth: 2,
+        borderRadius: 4,
     },
     btResetPass: {
         alignContent: "center",
@@ -316,7 +327,7 @@ const styles = StyleSheet.create({
         borderRadius: 7
     },
     resetPass: {
-        backgroundColor: 'rgba(105,105,105, 0.9)',
+        backgroundColor: 'rgba(0,0,0, 0.9)',
         width: Dimensions.get('window').width - 40,
         marginLeft: 20,
         paddingBottom: 65,
@@ -329,7 +340,7 @@ const styles = StyleSheet.create({
 
     },
     modalHeader: {
-        flex: 1,
+        flex: 3,
         backgroundColor: 'rgba(0,0,0, 0.5)',
     },
     modalFooter: {
@@ -337,11 +348,12 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0,0,0, 0.5)',
     },
     modalContainer: {
-        flex: 3,
+        flex: 4,
         backgroundColor: 'rgba(0,0,0, 0.5)',
     },
     closeModal: {
         width: 10,
-        marginLeft: Dimensions.get('window').width / 2 + 110,
+        marginLeft: Dimensions.get('window').width / 2 + 118,
+        marginTop: 10
     }
 })

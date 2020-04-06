@@ -25,10 +25,10 @@ const styles = StyleSheet.create({
     },
     icon: {
         color: '#333',
-        marginLeft: 10
+        marginLeft: 8
     },
     input: {
-        marginLeft: -5,
+        marginLeft: 5,
         width: '92%'
     }
 })
