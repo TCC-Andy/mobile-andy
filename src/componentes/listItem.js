@@ -87,7 +87,7 @@ handleDateAndroidChanged = () => {
                             <View style={styles.modalTimes}>
                                 <TouchableOpacity onPress={() => this.setState({ opemTimes: !this.state.opemTimes })}
                                     style={styles.closeModal}  >
-                                    <Text style={{ color: '#FFFFFF', fontSize: 20 }} >
+                                    <Text style={{ color: '#000000', fontSize: 20 }} >
                                         x
                             </Text>
                                 </TouchableOpacity>
