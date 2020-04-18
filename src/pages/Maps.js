@@ -119,7 +119,7 @@ export default class Maps extends Component {
     return (
       <MapboxGL.PointAnnotation
         ref={p => (this.place = p)}
-        id={String(place._id)}
+        id={place._id}
         key={place._id}
         coordinate={place.coordenadas}
         onSelected={() => this.alterCoordenadas(place)}

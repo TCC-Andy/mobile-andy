@@ -125,6 +125,7 @@ export default class Login extends Component {
             }
         }).catch((error) => {
             showError('Falha na conexão')
+            this.setState({ activIndicador: !this.state.activIndicador })
         });
     }
     render() {
@@ -265,9 +266,11 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     formContainer: {
-        backgroundColor: 'rgba(0,0,0, 0.7)',
+        backgroundColor: 'rgba(0,0,0, 0.8)',
         padding: 20,
-        width: '80%'
+        width: '80%',
+        borderRadius: 7
+
     },
     input: {
         marginTop: 10,

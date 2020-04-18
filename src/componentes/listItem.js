@@ -11,14 +11,35 @@ import {
     Dimensions,
     FlatList,
     SectionList,
-    Alert
+    Alert,
+    DatePickerAndroid
 } from 'react-native'
 import { Card } from "react-native-elements";
 import { Avatar, Badge, SearchBar,Overlay } from 'react-native-elements'
 import Padrao from '../estilo/Padrao'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import moment from 'moment'
+import 'moment/locale/pt-br'
+moment.locale('pt-BR')
 
 export default class ListItem extends Component {
-
+state={
+    date:new Date(),
+    opemTimes:false
+}
+handleDateAndroidChanged = () => {
+    DatePickerAndroid.open({
+        date: this.state.date
+    }).then(e => {
+        if (e.action !== DatePickerAndroid.dismissedAction) {
+            const momentDate = moment(this.state.date)
+            momentDate.date(e.day)
+            momentDate.month(e.month)
+            momentDate.year(e.year)
+            this.setState({ date: momentDate.toDate() })
+        }
+    })
+}
     render(){
         //console.log(this.props)
         return(
@@ -42,23 +63,44 @@ export default class ListItem extends Component {
                     Preço: {this.props.service.preco} R$ - Duração: {this.props.service.tempo} minutos
                     </Text>
                 <View>
-                    <Text>
-                        Horarios Disponiveis
+              
+                <TouchableOpacity onPress={this.handleDateAndroidChanged}>
+                    <Text style={styles.date}>
+                    <Icon name="calendar" color={'#000000'} size={20} style={{marginLeft:10}} /> - 
+                        {moment(this.state.date).format('ddd, D [de] MMMM [de] YYYY')}
                     </Text>
-                    <Text>
-                        Funcionario :Joao
-                        </Text>
-                    <Text>
-                        -       10:00  10:30  11:00  12:00  13:00
-                        </Text>
-                    <Text>
-                        Funcionario : Jose Maria
-                        </Text>
-                    <Text>
-                        -      10:00  10:30  12:00  17:00
-                        </Text>
-                </View>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.btHorarios} 
+                 onPress={() => this.setState({ opemTimes: !this.state.opemTimes })}>
+                    <Text style={styles.horarios}>
+                        Verificar Horarios
+                    </Text>
+                </TouchableOpacity>
 
+                </View>
+                <Modal transparent={true} visible={this.state.opemTimes}
+                        animationType='slide' >
+                        <TouchableWithoutFeedback onPress={() => this.setState({ opemTimes: !this.state.opemTimes })}>
+                            <View style={styles.modalHeader} ></View>
+                        </TouchableWithoutFeedback>
+                        <View style={styles.modalContainer}>
+                            <View style={styles.modalTimes}>
+                                <TouchableOpacity onPress={() => this.setState({ opemTimes: !this.state.opemTimes })}
+                                    style={styles.closeModal}  >
+                                    <Text style={{ color: '#FFFFFF', fontSize: 20 }} >
+                                        x
+                            </Text>
+                                </TouchableOpacity>
+                                {/* corpo */}
+                                 <TouchableOpacity onPress={this.opemTimes} >
+                                    
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                        <TouchableWithoutFeedback onPress={() => this.setState({ opemTimes: !this.state.opemTimes })}>
+                            <View style={styles.modalFooter} ></View>
+                        </TouchableWithoutFeedback>
+                    </Modal>
             </View>
         </Card>
            
@@ -123,4 +165,56 @@ const styles = StyleSheet.create({
     horarios: {
         backgroundColor: '#87CEEB',
     },
+    date: {
+        backgroundColor:'#FFFFFF',
+        fontSize: 15,
+        marginTop: 10,
+        borderWidth: 2,
+        borderColor: 'rgba(0,0,0,0.7)',
+        //textAlign: 'center',
+    },
+    horarios:{
+        fontSize: 17,
+        textAlign: 'center',
+    },
+    btHorarios:{
+        borderWidth: 1,
+        borderColor: 'rgba(0,0,0,0.7)',
+        marginLeft: Dimensions.get('window').width /2 - 108,
+        borderRadius:3,
+        width:140,
+        height:30,
+        backgroundColor:'#080',
+        marginTop: 20,
+    },
+    modalTimes: {
+        backgroundColor: 'rgba(255,255,255, 0.9)',
+        width: Dimensions.get('window').width - 40,
+        marginLeft: 20,
+        paddingBottom: 65,
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignContent: "center",
+        borderRadius: 7,
+        height: 250,
+        padding: 15,
+
+    },
+    modalHeader: {
+        flex: 3,
+        backgroundColor: 'rgba(0,0,0, 0.5)',
+    },
+    modalFooter: {
+        flex: 2,
+        backgroundColor: 'rgba(0,0,0, 0.5)',
+    },
+    modalContainer: {
+        flex: 4,
+        backgroundColor: 'rgba(0,0,0, 0.5)',
+    },
+    closeModal: {
+        width: 10,
+        marginLeft: Dimensions.get('window').width / 2 + 118,
+        marginTop: 10
+    }
 })

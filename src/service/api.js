@@ -7,6 +7,6 @@ Link do servidor : http://tccandyapi.herokuapp.com  //tempo de resposta maior
 */
 
 export default axios.create({
-    baseURL: 'http://tccandyapi.herokuapp.com',
+    baseURL: 'http://10.0.3.2:3001',
     responseType: 'json'
 });
