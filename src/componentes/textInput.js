@@ -1,15 +1,17 @@
 import React from 'react'
 import { View, TextInput, StyleSheet, KeyboardAvoidingView} from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import * as Animatable from 'react-native-animatable';
 
 export default props => {
     return (
         <KeyboardAvoidingView
             behavior= 'padding'>
-            <View style={[styles.container, props.style]}>
+            <Animatable.View animation={props.ani} duration ={props.dur}
+            style={[styles.container, props.style]}>
                 <Icon name={props.icon} size={19} style={styles.icon} />
                 <TextInput {...props} style={styles.input} />
-            </View>
+            </Animatable.View>
         </KeyboardAvoidingView>
     )
 }

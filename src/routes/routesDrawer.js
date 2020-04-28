@@ -6,6 +6,7 @@ import Main from '../pages/main'
 import Pagina3 from '../pages/pagina3'
 import Login from '../pages/login'
 import ButtonsHome from './buttonsHome'
+import ExempploLISt from '../componentes/ex/ExFlastList'
 
 const Drawer = createDrawerNavigator();
 
@@ -16,6 +17,7 @@ const menuDrawer = () =>
     <Drawer.Screen name="Main" component={Main} />
     <Drawer.Screen name="pagina3" component={Pagina3} />
     <Drawer.Screen name="SAIR" component={Login} />
+    <Drawer.Screen name="EXEMPLO" component={ExempploLISt} />
   </Drawer.Navigator>
 
 export default menuDrawer

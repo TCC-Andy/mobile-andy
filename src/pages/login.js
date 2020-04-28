@@ -7,13 +7,15 @@ import {
     TouchableOpacity,
     TouchableWithoutFeedback,
     Modal,
-    AsyncStorage,
     Dimensions,
     Alert,
     KeyboardAvoidingView,
     Platform,
     ScrollView,
+    StatusBar
 } from 'react-native'
+import AsyncStorage from '@react-native-community/async-storage';
+import * as Animatable from 'react-native-animatable';
 import ActivIndicador from '../componentes/activIndicador'
 import axios from 'axios'
 //import AsyncStorage from '@react-native-community/async-storage'
@@ -41,23 +43,38 @@ export default class Login extends Component {
     state = {
         ...initialState
     }
-    _storeData = async () => {
+    _storeData = async (userSet) => {
+        console.log('oi storeData')
+
+        console.log(userSet);
         try {
-            await AsyncStorage.setItem('nome', this.state.nome);
-            console.log(this.state.nome);
+            var user = JSON.stringify(userSet);
+            await AsyncStorage.setItem('user', user);
+            console.log(user);
+            this.setState({ activIndicador: !this.state.activIndicador })
+            //  this._retrieveData()
+            return this.props.navigation.navigate('Home')
         } catch (error) {
-            showError('Falha na conexão')
+            console.log(err)
+            showError('Falha ao iniciar uma nova sessao')
         }
+        console.log('tchau storeData')
+        return 1;
     }
-    _retrieveData = async () => {
+    _retrieData = async () => {
         try {
-            const user = await AsyncStorage.getItem('nome');
-            if (user !== null) {
-                console.log(user);
+            console.log("_retrieveData")
+            const userGet = await AsyncStorage.getItem('user');
+
+            if (userGet !== null) {
+                // Converte este json para objeto
+                //var user = JSON.parse(userGet);
+                console.log("oi _retrieveData", userGet);
             }
         } catch (error) {
             console.log(error.message);
         }
+        console.log("tchau  _retrieveData")
     };
     signinOrSignup = () => {
         if (this.state.stageNew) {
@@ -117,9 +134,15 @@ export default class Login extends Component {
         }
         await api.post('/authenticateUser', data).then((response) => {
             if (response.data.status === 200) {
-                this._storeData
-                this.setState({ activIndicador: !this.state.activIndicador })
-                return this.props.navigation.navigate('Home')
+                console.log("resdponse ", response)
+                const user = {
+                    _id: response.data.usuario._id,
+                    name: response.data.usuario.nome,
+                    surname: response.data.usuario.sobrenome,
+                    email: response.data.usuario.email,
+                }
+
+                this._storeData(user)
             } else {
                 return showNotification(response.data.menssagem);
             }
@@ -145,12 +168,13 @@ export default class Login extends Component {
             <ImageBackground source={backgroundImage}
                 style={styles.background}>
                 <ScrollView contentContainerStyle={styles.contentContainer}>
+                <StatusBar barStyle="dark-content"/>
                     <Modal transparent={true} visible={this.state.opemResetPass}
                         animationType='slide' >
                         <TouchableWithoutFeedback onPress={() => this.setState({ opemResetPass: !this.state.opemResetPass })}>
                             <View style={styles.modalHeader} ></View>
                         </TouchableWithoutFeedback>
-                        <View style={styles.modalContainer}>
+                        <Animatable.View animation="rubberBand" style={styles.modalContainer}>
                             <View style={styles.resetPass}>
                                 <TouchableOpacity onPress={() => this.setState({ opemResetPass: !this.state.opemResetPass })}
                                     style={styles.closeModal}  >
@@ -172,71 +196,86 @@ export default class Login extends Component {
                                     </View>
                                 </TouchableOpacity>
                             </View>
-                        </View>
+                        </Animatable.View>
                         <TouchableWithoutFeedback onPress={() => this.setState({ opemResetPass: !this.state.opemResetPass })}>
                             <View style={styles.modalFooter} ></View>
                         </TouchableWithoutFeedback>
                     </Modal>
                     <ActivIndicador animating={this.state.activIndicador} />
-                    <Text style={styles.title}>Andy</Text>
-                    <View style={styles.formContainer}>
-                        <Text style={styles.subtitle}>
+                    <Animatable.Text animation="fadeInUpBig" duration={2000} style={styles.title}>Andy</Animatable.Text>
+                    <Animatable.View animation="swing"
+                        style={styles.formContainer}>
+                        <Animatable.Text animation="pulse" duration={2000} style={styles.subtitle}>
                             {this.state.stageNew ? 'Crie a sua conta' : 'Informe seus dados'}
-                        </Text>
+                        </Animatable.Text>
                         {this.state.stageNew &&
                             <AuthInput icon='user' placeholder='Nome'
+                                ani="fadeInUpBig"
+                                dur={1500}
                                 value={this.state.name}
                                 style={styles.input}
                                 onChangeText={name => this.setState({ name })} />
                         }
                         {this.state.stageNew &&
                             <AuthInput icon='user' placeholder='Sobrenome'
+                                ani="fadeInLeft"
+                                dur={1000}
                                 value={this.state.surname}
                                 style={styles.input}
                                 onChangeText={surname => this.setState({ surname })} />
                         }
                         <AuthInput icon='at' placeholder='E-mail' keyboardType='email-address'
+                            ani="fadeInLeft"
+                            dur={1000}
                             value={this.state.email}
                             style={styles.input}
                             onChangeText={email => this.setState({ email })} />
                         <AuthInput icon='lock' placeholder='Senha'
+                            ani="fadeInRightBig"
+                            dur={1500}
                             value={this.state.password}
                             style={styles.input} secureTextEntry={true}
                             onChangeText={password => this.setState({ password })} />
                         {this.state.stageNew &&
                             <AuthInput icon='asterisk'
+                                ani="fadeInRightBig"
+                                dur={1500}
                                 placeholder='Confirmação de Senha'
                                 value={this.state.confirnPassword}
                                 style={styles.input} secureTextEntry={true}
                                 onChangeText={confirnPassword => this.setState({ confirnPassword })} />
                         }
-                        <TouchableOpacity onPress={this.signinOrSignup}
-                            disabled={!validForm}>
-                            <View style={[styles.button, validForm ? {} : { backgroundColor: '#AAA' }]}>
-                                <Text style={styles.textBotton}>
-                                    {this.state.stageNew ? 'Registrarr' : 'Entrar'}
-                                </Text>
-                            </View>
-                        </TouchableOpacity>
+                        <Animatable.View animation="fadeInUpBig" duration={2000}>
+                            <TouchableOpacity onPress={this.signinOrSignup}
+                                disabled={!validForm}>
+                                <View style={[styles.button, validForm ? {} : { backgroundColor: '#AAA' }]}>
+                                    <Text style={styles.textBotton}>
+                                        {this.state.stageNew ? 'Registrarr' : 'Entrar'}
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
+                        </Animatable.View>
+                        <Animatable.View animation="lightSpeedIn" duration={1800}>
                         <TouchableOpacity style={styles.touchResetSenha}
                             onPress={() => this.setState({ opemResetPass: !this.state.opemResetPass })}>
                             {!this.state.stageNew &&
                                 <Text style={styles.textResetSenha}>
                                     Recuperar Senha ?
-                    </Text>
+                                </Text>
                             }
                         </TouchableOpacity>
-
-                    </View>
+                        </Animatable.View>
+                    </Animatable.View>
+                    <Animatable.View animation="slideInUp" duration={2000}>
                     <TouchableOpacity style={{ padding: 15 }}
                         onPress={() => this.setState({ stageNew: !this.state.stageNew })} >
                         <Text style={styles.buttonText}>
                             {this.state.stageNew ? 'Já possui conta?' : 'Ainda não possui conta?'}
                         </Text>
-
                     </TouchableOpacity>
+                    </Animatable.View>
                 </ScrollView>
-            </ImageBackground>
+            </ImageBackground >
         )
     }
 }
@@ -245,10 +284,10 @@ const styles = StyleSheet.create({
     background: {
         flex: 1,
         width: '100%',
-        
+
     },
     contentContainer: {
-        paddingTop:60,
+        paddingTop: 60,
         alignItems: 'center',
         justifyContent: 'center',
     },

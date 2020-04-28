@@ -17,15 +17,12 @@ import { Card } from "react-native-elements";
 import api from '../service/api';
 import { showError, showSuccess, showNotification } from '../utils/alertsUser'
 import ActivIndicador from '../componentes/activIndicador'
-import * as Animatable from 'react-native-animatable';
-
 
 
 MapboxGL.setAccessToken("pk.eyJ1IjoiYnJ1bm9wZWRyb3NvIiwiYSI6ImNrNmJkY2R3dDEwODkzbW1yZmFvcHA2dzIifQ.0cwlHJwaGJpu9ZGfdyhkuQ");
 
 export default class Maps extends Component {
   state = {
-    index: null,
     id_conpanies:null,
     showModal:false,
     activIndicador: false,
@@ -118,21 +115,6 @@ export default class Maps extends Component {
     }
     this.setState({ camera })
   }
-  alterCoordenadas2 = (place) => {
-    // Alert.alert(place.title)
-    // let camera = null
-    // // camera = [...this.state.camera]
-    // if (this.state.places.zoom < 11) {
-    //   this.state.textView = false
-    // } else {
-    //   this.state.textView = true
-    // }
-    // camera = {
-    //   coordenadas: place.coordenadas,
-    //   zoom: 15
-    // }
-    // this.setState({ camera })
-  }
   renderAnnotations2(place) {
     return (
       <MapboxGL.PointAnnotation
@@ -140,14 +122,18 @@ export default class Maps extends Component {
         id={place._id.toString()}
         key={place._id.toString()}
         coordinate={place.coordenadas}
-       // onDeselected={() => this.alterCoordenadas2()}
         onSelected={() => this.alterCoordenadas(place)}
+      //onDeselected // para esconder modal
       >
         <View style={styles.annotationFill} >
+          {this.state.textView &&
+            <View style={styles.viewAnnotation} >
+            </View>
+          }
           <Icon name="map-marker" color={'#DC143C'} size={20} />
 
         </View>
-        <MapboxGL.Callout style={{height:100,width:100}} title={place.descricao} />
+        <MapboxGL.Callout title={place.descricao} />
       </MapboxGL.PointAnnotation>
     )
   }
@@ -202,32 +188,6 @@ export default class Maps extends Component {
       closeModal={() => this.setState({ showModal: false })} />
   </Card>
   );
-  // componentDidMount() {
-  //   this.list.scrollToIndex({ animated: true,index: this.props.scrollToIndex + 2 });
-  // }
-  itemSeparatorComponent = (item,data) => {console.log("separeator ",data," itmm", item)
-    return <View style = {
-      
-        {
-            height: '100%',
-            width: 100,
-            backgroundColor: 'red',
-        }
-    }
-    >
-      <Text
-      style = {
-        {
-            backgroundColor: 'white',
-        }}></Text> 
-    </View>
-    }
-  getItemLayout = (data, index) => (
-    //this.state.index = index
-    this.state.index ={ length: 150, offset: 150 * index, index }
-      //  console.log('iu')
-    
-  );
 
   render() {
     return (
@@ -258,25 +218,21 @@ export default class Maps extends Component {
         <View style={styles.markerAnotacion}>
           <FlatList
           horizontal
-          onScroll={(e) => { console.log('onScroll', e.nativeEvent); console.log("indexx",this.state.index)}}
-          ref={(ref) => { this.list = ref; }}
             pagingEnabled={true}
             onMomentumScrollEnd={(e) => {
               let posicao =  (e.nativeEvent.contentOffset.x > 0)
               ? e.nativeEvent.contentOffset.x / Dimensions.get('window').width
               : 0;
-        
-             // setTimeout(() => {
+              
+              setTimeout(() => {
                if(posicao > 0 && posicao < this.state.places.length){
                this.alterCoordenadas(this.state.places[posicao])
                }
-             // })
+              }, 500)
             }}
             data={this.state.places}
             renderItem={this.renderItem}
-            keyExtractor={item => item._id}
-            getItemLayout={this.getItemLayout}
-            //ItemSeparatorComponent={this.itemSeparatorComponent}
+            keyExtractor={item => item._id.toString()}
           />
         </View>
       </View>

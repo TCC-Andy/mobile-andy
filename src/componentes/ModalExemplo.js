@@ -11,19 +11,26 @@ import {
     Dimensions,
     FlatList,
     SectionList,
-    Alert
+    Alert,
+    ScrollView,
+    Switch,
 } from 'react-native'
 import api from '../service/api';
-import { Card } from "react-native-elements";
+import Icon from 'react-native-vector-icons/FontAwesome'
 import ActivIndicador from './activIndicador'
 import { showError, showSuccess, showNotification } from '../utils/alertsUser'
 import ListItem from '../componentes/listItem';
-
+import Accordion from 'react-native-collapsible/Accordion';
+import * as Animatable from 'react-native-animatable';
+//import for the animation of Collapse and Expand
+import Collapsible from 'react-native-collapsible';
 
 export default class ModalExemplo extends Component {
     state = {
         activIndicador: false,
-        services: this.props.services
+        services: this.props.services,
+        //default active selector
+        activeSections: [],
     }
 
     showServices = async () => {
@@ -57,33 +64,105 @@ export default class ModalExemplo extends Component {
             //  showError('Falha na conexão')
         });
     }
-    agendaDisponivel = (data) => {
-        <FlatList
-            initialScrollIndex
-            data={data}
-            horizontal
-            renderItem={({ item: rowData }) => {
+    agendaDisponivel = (id_service) => {
+        Alert.alert('oiii vamo', id_service)
+        // <FlatList
+        //     initialScrollIndex
+        //     data={data}
+        //     horizontal
+        //     renderItem={({ item: rowData }) => {
 
-                return (
-                    <Text style={styles.horarios}>
-                        {rowData.inicio}
+        //         return (
+        //             <Text style={styles.horarios}>
+        //                 {rowData.inicio}
+        //             </Text>
+
+        //         );
+        //     }}
+        //     keyExtractor={(item, index) => index}
+        // />
+    }
+
+    setSections = sections => {
+        //setting up a active section state
+        this.setState({
+            activeSections: sections.includes(undefined) ? [] : sections,
+        });
+    };
+
+    renderHeader = (section, _, isActive) => {
+        //Accordion Header view
+        // if (isActive) {
+        //     console.log('setSelection oio ', section)
+        //     this.agendaDisponivel(section._id)
+        // }
+        return (
+            <Animatable.View
+                duration={1}
+                style={[styles.headerList, isActive ? styles.active : styles.inactive]}
+                transition="backgroundColor">
+                <View style={styles.headerTitle}>
+                    <View style={styles.nome}>
+                        <Text style={styles.headerText}>{section.nome} - {section.tempo} min</Text>
+                    </View>
+                    <View style={styles.preco}>
+                        <Text style={styles.headerText}>{section.preco} R$ </Text>
+                    </View>
+                </View>
+                <View>
+                    <Text>
+                        {section.descricao}
                     </Text>
+                </View>
 
-                );
-            }}
-            keyExtractor={(item, index) => index}
-        />
+                <View style={styles.btHorarios} >
+                    <Text style={styles.horarios}>
+                        Horarios Disponiveis
+                     </Text>
+                    <Text style={styles.icom}>
+                        <Icon name="angle-down" color={'#000000'} size={18} style={{ marginLeft: 50 }} />
+                    </Text>
+                </View>
+
+            </Animatable.View>
+        );
+    };
+
+    renderContent(section, _, isActive) {
+        //Accordion Content view
+        return (
+            <Animatable.View
+                duration={1}
+                style={styles.content}
+                transition="backgroundColor">
+                <Animatable.View
+                    animation={isActive ? 'bounceIn' : undefined}>
+                       <Text>
+                        funcionario 1
+                        13:00 13:10 :13:30
+                        </Text>
+                        <Text>
+                        funcionario 2
+                        10:00 10:10 :13:30
+                        </Text>
+                        <Text>
+                        funcionario 3
+                        17:00 18:10 :19:30
+                        </Text>
+                </Animatable.View>
+            </Animatable.View>
+        )
     }
 
     render() {
 
-        if (this.state.services != null) {
-          //  console.log("----------------------------------------")
-          //  console.log("cooppanieee", this.state.services)
-          //  console.log("----------------------------------------")
-           // console.log("prosppppppp", this.props.services)
-        }
-       
+        // if (this.state.services != null) {
+        //     console.log("----------------------------------------")
+        //     console.log("cooppanieee", this.state.services)
+        //     //  console.log("----------------------------------------")
+        //     // console.log("prosppppppp", this.props.services)
+        // }
+        const { activeSections } = this.state;
         return (
             <Modal transparent={true} visible={this.props.isVisible}
                 onRequestClose={this.props.closeModal}
@@ -101,9 +180,44 @@ export default class ModalExemplo extends Component {
                         </TouchableOpacity>
                     </View>
                     <View style={styles.body}>
+                        <ListItem />
 
+                        <View style={styles.container}>
+                            <ScrollView contentContainerStyle={{ paddingTop: 10 }}>
 
-                        <View style={{ marginTop: (Platform.OS) == 'ios' ? 20 : 0 }}>
+                                {/*Code for Selector starts here*/}
+                                <View style={styles.selectors}>
+
+                                </View>
+                                {/*Code for Selector ends here*/}
+
+                                {/*Code for Accordion/Expandable List starts here*/}
+                                <Accordion
+                                    activeSections={activeSections}
+                                    //for any default active section
+                                    sections={this.props.services}
+                                    //title and content of accordion
+                                    touchableComponent={TouchableOpacity}
+                                    //which type of touchable component you want
+                                    //It can be the following Touchables
+                                    //TouchableHighlight, TouchableNativeFeedback
+                                    //TouchableOpacity , TouchableWithoutFeedback
+                                    expandMultiple={false}
+                                    //Do you want to expand mutiple at a time or single at a time
+                                    renderHeader={this.renderHeader}
+                                    //Header Component(View) to render
+                                    renderContent={this.renderContent}
+                                    //Content Component(View) to render
+                                    duration={500}
+                                    //Duration for Collapse and expand
+                                    onChange={this.setSections}
+                                //setting the state of active sections
+                                />
+                                {/*Code for Accordion/Expandable List ends here*/}
+                            </ScrollView>
+                        </View>
+
+                        {/* <View style={{ marginTop: (Platform.OS) == 'ios' ? 20 : 0 }}>
 
                             <SectionList
 
@@ -121,61 +235,7 @@ export default class ModalExemplo extends Component {
 
                             />
 
-                        </View>
-
-                        {/* <FlatList
-                        initialScrollIndex
-                        data={this.props.services}
-                        renderItem={({ item: rowData }) => {
-
-                            return (
-                                <Card containerStyle={styles.card}>
-                                    <View>
-
-                                        <Text>
-                                            Serviço: {rowData.nome}
-                                        </Text>
-                                    </View>
-                                    <View>
-                                        <Text>
-                                            DESCRIÇÃO
-                                            </Text>
-                                        <Text>
-                                            {rowData.descricao}
-                                        </Text>
-                                    </View>
-                                    <View>
-                                        <Text>
-                                            Preço: {rowData.preco} R$ - Duração: {rowData.tempo} minutos
-                                            </Text>
-                                        <View>
-                                            <Text>
-                                                Horarios Disponiveis
-                                            </Text>
-                                            <Text>
-                                                Funcionario :Joao
-                                                </Text>
-                                            <Text>
-                                                -       10:00  10:30  11:00  12:00  13:00
-                                                </Text>
-                                            <Text>
-                                                Funcionario : Jose Maria
-                                                </Text>
-                                            <Text>
-                                                -      10:00  10:30  12:00  17:00
-                                                </Text>
-                                        </View>
-
-                                    </View>
-                                </Card>
-
-                            );
-                        }}
-                        keyExtractor={(item, index) => index}
-                    /> */}
-
-
-
+                        </View> */}
                     </View>
                 </View>
                 <TouchableWithoutFeedback onPress={this.props.closeModal} >
@@ -188,7 +248,7 @@ export default class ModalExemplo extends Component {
 
 const styles = StyleSheet.create({
     backgroundHeader: {
-        flex: 1,
+        flex: 2,
         backgroundColor: 'rgba(0, 0, 0, 0.3)'
     },
     backgroundFooter: {
@@ -196,20 +256,22 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.3)'
     },
     container: {
-        flex: 7,
+        flex: 15,
         // height:  Dimensions.get('window').height - 300
+        marginTop: 10,
         borderWidth: 5,
-        borderRadius: 10,
+        borderRadius: 3,
         borderColor: '#696969'
     },
     header: {
         flexDirection: "row",
         backgroundColor: '#696969',
+        height:40
     },
     title: {
         flex: 10,
         textAlign: 'center',
-        padding: 14,
+        marginBottom: 10,
         fontSize: 17,
         color: '#ffffff',
     },
@@ -234,6 +296,81 @@ const styles = StyleSheet.create({
     horarios: {
         backgroundColor: '#87CEEB',
     },
+    titleList: {
+        textAlign: 'center',
+        fontSize: 18,
+        fontWeight: '300',
+        marginBottom: 20,
+    },
+    headerList: {
+        backgroundColor: '#708090',
+        padding: 10,
+    },
+    headerTitle: {
+        flexDirection: "row",
+    },
+    nome: {
+        flex: 4
+    },
+    preco: {
+        flex: 1
+    },
+    headerText: {
+        fontSize: 16,
+        fontWeight: '500',
+    },
+    content: {
+        padding: 20,
+        backgroundColor: 'rgba(211,211,211,1)',
+    },
+    active: {
+        backgroundColor: 'rgba(128,128,128,1)',
+    },
+    inactive: {
+        backgroundColor: 'rgba(245,252,255,1)',
+        borderWidth: 1,
+        borderColor: '#000000',
+    },
+    selectors: {
+        marginBottom: 10,
+        flexDirection: 'row',
+        justifyContent: 'center',
+    },
+    selector: {
+        backgroundColor: '#F5FCFF',
+        padding: 10,
+    },
+    activeSelector: {
+        fontWeight: 'bold',
+    },
+    selectTitle: {
+        fontSize: 14,
+        fontWeight: '500',
+        padding: 10,
+        textAlign: 'center',
+    },
+    btHorarios: {
+        flexDirection: "row",
+        borderWidth: 1,
+        borderColor: 'rgba(0,0,0,0.7)',
+        // marginLeft: 15,
+        borderRadius: 3,
+        //width: 140,
+        paddingLeft: 5,
+        paddingRight: 5,
+        paddingTop: 3,
+        height: 30,
+        backgroundColor: '#080',
+        marginTop: 8,
+    },
+    horarios: {
+        flex: 22,
+        textAlign: "center",
+        backgroundColor: '#080',
+    },
+    icom: {
+        flex: 1
+    }
 })
 
 /*

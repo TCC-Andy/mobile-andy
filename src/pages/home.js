@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Alert, Button, KeyboardAvoidingView, ImageBackground, Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Avatar, Badge, SearchBar } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import * as Animatable from 'react-native-animatable';
 
 
 export default class Home extends Component {
@@ -36,7 +37,8 @@ export default class Home extends Component {
 
                 <View style={styles.corpo}>
                     <View style={styles.row1}>
-                        <View style={styles.icon1}>
+                        <Animatable.View
+                            animation="zoomInDown" duration={3000} style={styles.icon1}>
                             <TouchableOpacity onPress={() => this.props.navigation.navigate('Maps')}>
                                 <Avatar
                                     size="xlarge" rounded
@@ -47,8 +49,9 @@ export default class Home extends Component {
                                 />
                                 <Text style={styles.texto}>Barbearia</Text>
                             </TouchableOpacity >
-                        </View>
-                        <View style={styles.icon2}>
+                        </Animatable.View>
+                        <Animatable.View
+                            animation="zoomInDown" duration={3000} style={styles.icon2}>
                             <TouchableOpacity onPress={() => this.props.navigation.navigate('Maps')}>
                                 <Avatar
                                     size="xlarge" rounded
@@ -59,10 +62,11 @@ export default class Home extends Component {
                                 />
                                 <Text style={styles.texto}>Salao</Text>
                             </TouchableOpacity>
-                        </View>
+                        </Animatable.View>
                     </View>
                     <View style={styles.row2}>
-                        <View style={styles.icon3}>
+                        <Animatable.View
+                            animation="zoomInDown" duration={3000} style={styles.icon3}>
                             <TouchableOpacity onPress={() => this.props.navigation.navigate('Maps')}>
                                 <Avatar
                                     size="xlarge" rounded
@@ -73,8 +77,9 @@ export default class Home extends Component {
                                 />
                                 <Text style={styles.texto}>Mecanico</Text>
                             </TouchableOpacity>
-                        </View>
-                        <View style={styles.icon4}>
+                        </Animatable.View>
+                        <Animatable.View
+                            animation="zoomInDown" duration={3000} style={styles.icon4}>
                             <TouchableOpacity onPress={() => this.props.navigation.navigate('Maps')}>
                                 <Avatar
                                     size="xlarge" rounded
@@ -85,7 +90,7 @@ export default class Home extends Component {
                                 />
                                 <Text style={styles.texto}>Lava Car</Text>
                             </TouchableOpacity>
-                        </View>
+                        </Animatable.View>
                     </View>
                 </View>
             </View>
