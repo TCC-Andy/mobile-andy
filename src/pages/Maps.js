@@ -7,7 +7,8 @@ import {
   Alert, 
   Text, 
   FlatList, 
-  Dimensions 
+  Dimensions,
+  Button, 
 } from 'react-native';
 import MapboxGL from '@react-native-mapbox-gl/maps';
 import ModalExemplo from '../componentes/ModalExemplo';
@@ -25,7 +26,7 @@ MapboxGL.setAccessToken("pk.eyJ1IjoiYnJ1bm9wZWRyb3NvIiwiYSI6ImNrNmJkY2R3dDEwODkz
 
 export default class Maps extends Component {
   state = {
-    index: null,
+    index: 0,
     id_conpanies:null,
     showModal:false,
     activIndicador: false,
@@ -119,27 +120,14 @@ export default class Maps extends Component {
     this.setState({ camera })
   }
   alterCoordenadas2 = (place) => {
-    // Alert.alert(place.title)
-    // let camera = null
-    // // camera = [...this.state.camera]
-    // if (this.state.places.zoom < 11) {
-    //   this.state.textView = false
-    // } else {
-    //   this.state.textView = true
-    // }
-    // camera = {
-    //   coordenadas: place.coordenadas,
-    //   zoom: 15
-    // }
-    // this.setState({ camera })
   }
   renderAnnotations2(place) {
     return (
       <MapboxGL.PointAnnotation
         ref={p => (this.place = p)}
-        id={place._id.toString()}
-        key={place._id.toString()}
-        coordinate={place.coordenadas}
+        id={place._id}
+        key={place._id}
+        coordinate={place.coordenadas.map(coor => parseFloat(coor))}
        // onDeselected={() => this.alterCoordenadas2()}
         onSelected={() => this.alterCoordenadas(place)}
       >
@@ -151,7 +139,8 @@ export default class Maps extends Component {
       </MapboxGL.PointAnnotation>
     )
   }
-  renderItem = ({ item }) => (
+
+  renderItem = ({ item,index }) => (
     <Card
     containerStyle={styles.card}
   >
@@ -162,7 +151,7 @@ export default class Maps extends Component {
           {item.nome}
         </Text>
         <TouchableOpacity  style={styles.buttonServices}
-          onPress={ () => this.showServices(item._id)}>
+          onPress={ () => this.showServices()}>
           <Text style={styles.textButton}>Servicos </Text>
         </TouchableOpacity >
       </View>
@@ -180,6 +169,10 @@ export default class Maps extends Component {
         <View style={styles.textSevies}>
           <Text>-----------------------------------------------</Text>
         </View>
+        <TouchableOpacity  style={styles.button}
+          onPress={ () => this.myscrollToIndex(index)}>
+          <Text style={styles.textButton}>next </Text>
+        </TouchableOpacity >
       </View>
 
       <View style={styles.description}>
@@ -206,15 +199,7 @@ export default class Maps extends Component {
   //   this.list.scrollToIndex({ animated: true,index: this.props.scrollToIndex + 2 });
   // }
   itemSeparatorComponent = (item,data) => {console.log("separeator ",data," itmm", item)
-    return <View style = {
-      
-        {
-            height: '100%',
-            width: 100,
-            backgroundColor: 'red',
-        }
-    }
-    >
+    return <View style = {{height: '100%',width: 100, backgroundColor: 'red'}}>
       <Text
       style = {
         {
@@ -222,13 +207,23 @@ export default class Maps extends Component {
         }}></Text> 
     </View>
     }
-  getItemLayout = (data, index) => (
-    //this.state.index = index
-    this.state.index ={ length: 150, offset: 150 * index, index }
-      //  console.log('iu')
+  // getItemLayout = (data, index) => (
+  //   //this.state.index = index
+  //   //this.state.index ={ length: 150, offset: 150 * index, index }
+  //     //  console.log('iu')
     
-  );
+  // );
 
+  _keyExtractor = (item, index) => item.id;
+
+  myscrollToIndex = (index) => {
+
+    this.setState({index: ++this.state.index});
+    //Alert.alert(this.state.index.toString())
+    
+
+    this.flatListRef.scrollToIndex({animated: true,index: this.state.index});
+  };
   render() {
     return (
       <View style={styles.container}>
@@ -243,7 +238,7 @@ export default class Maps extends Component {
         >
 
           <MapboxGL.Camera
-            centerCoordinate={this.state.camera.coordenadas}
+            centerCoordinate={this.state.camera.coordenadas.map(coor => parseFloat(coor))}
             zoomLevel={this.state.camera.zoom}
             pitch={15}
             heading={5}
@@ -258,24 +253,27 @@ export default class Maps extends Component {
         <View style={styles.markerAnotacion}>
           <FlatList
           horizontal
-          onScroll={(e) => { console.log('onScroll', e.nativeEvent); console.log("indexx",this.state.index)}}
-          ref={(ref) => { this.list = ref; }}
+          scrollEnabled
+          onScroll={(e) => { 
+          console.log('onScroll', e.nativeEvent); console.log("indexx",this.state.index)}}
+          ref={(ref) => { this.flatListRef = ref; }}
             pagingEnabled={true}
             onMomentumScrollEnd={(e) => {
               let posicao =  (e.nativeEvent.contentOffset.x > 0)
               ? e.nativeEvent.contentOffset.x / Dimensions.get('window').width
               : 0;
         
-             // setTimeout(() => {
+              setTimeout(() => {
                if(posicao > 0 && posicao < this.state.places.length){
                this.alterCoordenadas(this.state.places[posicao])
                }
-             // })
+              })
             }}
             data={this.state.places}
             renderItem={this.renderItem}
-            keyExtractor={item => item._id}
-            getItemLayout={this.getItemLayout}
+            extraData={this.state.index}
+            keyExtractor={this._keyExtractor}
+            //getItemLayout={this.getItemLayout}
             //ItemSeparatorComponent={this.itemSeparatorComponent}
           />
         </View>
@@ -364,7 +362,7 @@ const styles = StyleSheet.create({
   button: {
     position: 'absolute',
     left: Dimensions.get('window').width / 2 + 60,
-    backgroundColor: '#1E90FF',
+    backgroundColor: '#6495ED',
     alignItems: 'center',
     borderRadius: 3,
     width: 90,
