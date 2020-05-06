@@ -287,7 +287,7 @@ const styles = StyleSheet.create({
 
     },
     contentContainer: {
-        paddingTop: 60,
+        paddingTop: Dimensions.get('window').height/4,
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -296,7 +296,7 @@ const styles = StyleSheet.create({
         borderColor: '#FFFFFF',
         borderWidth: 1,
         fontSize: 60,
-        marginBottom: 10
+        marginBottom: Dimensions.get('window').height/10,
     },
     subtitle: {
         color: '#FFF',

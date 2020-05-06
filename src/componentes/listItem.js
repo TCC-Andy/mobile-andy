@@ -25,7 +25,7 @@ moment.locale('pt-BR')
 export default class ListItem extends Component {
     state = {
         date: new Date(),
-        opemTimes: false
+        opemTimes: false,
     }
     handleDateAndroidChanged = () => {
         DatePickerAndroid.open({
@@ -43,6 +43,7 @@ export default class ListItem extends Component {
     render() {
         return (
             <View style={styles.card}>
+                {/* <Text> {moment(this.state.date).format('DD/MM/YYYY')}</Text> */}
                 <View style={styles.rowAgendar}>
                     <View>
                         <TouchableOpacity onPress={this.handleDateAndroidChanged}>

@@ -75,7 +75,6 @@ export default class Maps extends Component {
 
 
   showServices = async (_id) => {
-    console.log("swoooNAPS",this.props.id_conpanies)
     this.setState({ activIndicador: !this.state.activIndicador })
     const data = {
       id: _id
@@ -88,7 +87,7 @@ export default class Maps extends Component {
 
           services.push(data);
 
-          console.log("MAPS SHOW----",services);
+          console.log("MAPS Services----",services);
         });
         console.log("MAPS SHOW--------------------------",services);
         this.setState({ services: services })
@@ -188,11 +187,6 @@ export default class Maps extends Component {
       </View>
 
     </View>
-
-
-    <ModalExemplo isVisible={this.state.showModal} 
-    services = {this.state.services}
-      closeModal={() => this.setState({ showModal: false })} />
   </Card>
   );
   // componentDidMount() {
@@ -228,6 +222,10 @@ export default class Maps extends Component {
     return (
       <View style={styles.container}>
         <ActivIndicador animating={this.state.activIndicador} />
+        <ModalExemplo isVisible={this.state.showModal} 
+    services = {this.state.services}
+      closeModal={() => this.setState({ showModal: false })} />
+      
         <MapboxGL.MapView
           ref={m => (this.map = m)}
           style={styles.containerMaps}
@@ -254,15 +252,14 @@ export default class Maps extends Component {
           <FlatList
           horizontal
           scrollEnabled
-          onScroll={(e) => { 
-          console.log('onScroll', e.nativeEvent); console.log("indexx",this.state.index)}}
+          onScroll={(e) => { console.log('onScroll', e.nativeEvent); console.log("indexx",this.state.index)}}
           ref={(ref) => { this.flatListRef = ref; }}
             pagingEnabled={true}
             onMomentumScrollEnd={(e) => {
               let posicao =  (e.nativeEvent.contentOffset.x > 0)
               ? e.nativeEvent.contentOffset.x / Dimensions.get('window').width
               : 0;
-        
+        console.log('passssouuuuu alter coordenadas')
               setTimeout(() => {
                if(posicao > 0 && posicao < this.state.places.length){
                this.alterCoordenadas(this.state.places[posicao])

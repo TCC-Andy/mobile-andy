@@ -19,7 +19,8 @@ import api from '../service/api';
 import Icon from 'react-native-vector-icons/FontAwesome'
 import ActivIndicador from './activIndicador'
 import { showError, showSuccess, showNotification } from '../utils/alertsUser'
-import ListItem from '../componentes/listItem';
+import ViewData from '../componentes/listItem';
+import ListagemAgenda from '../componentes/listagemAgenda';
 import Accordion from 'react-native-collapsible/Accordion';
 import * as Animatable from 'react-native-animatable';
 //import for the animation of Collapse and Expand
@@ -31,56 +32,12 @@ export default class ModalExemplo extends Component {
         services: this.props.services,
         //default active selector
         activeSections: [],
+        data:'10/11/2020'
     }
 
-    showServices = async () => {
-        console.log("swooo", this.props.id_conpanies)
-        this.setState({ activIndicador: !this.state.activIndicador })
-        const data = {
-            categoria: this.state.id_conpanies
-        }
-        await api.get('/showServices').then((response) => {
-            if (response.data.lengh != 0) {
 
-                let services = new Array();
-                response.data.forEach(data => {
-
-                    console.log(data.coordenadas);
-
-                    services.push(data);
-
-                    console.log(services);
-                });
-                this.setState({ services: services })
-                this.setState({ activIndicador: !this.state.activIndicador })
-
-            } else {
-                this.setState({ activIndicador: !this.state.activIndicador })
-                return showNotification(response.data.menssagem);
-            }
-        }).catch((error) => {
-            showError('Falha na conexão')
-            return this.props.navigation.navigate('Maps')
-            //  showError('Falha na conexão')
-        });
-    }
     agendaDisponivel = (id_service) => {
         Alert.alert('oiii vamo', id_service)
-        // <FlatList
-        //     initialScrollIndex
-        //     data={data}
-        //     horizontal
-        //     renderItem={({ item: rowData }) => {
-
-        //         return (
-        //             <Text style={styles.horarios}>
-        //                 {rowData.inicio}
-        //             </Text>
-
-        //         );
-        //     }}
-        //     keyExtractor={(item, index) => index}
-        // />
     }
 
     setSections = sections => {
@@ -130,38 +87,18 @@ export default class ModalExemplo extends Component {
 
     renderContent(section, _, isActive) {
         //Accordion Content view
-        return (
-            <Animatable.View
-                duration={1}
-                style={styles.content}
-                transition="backgroundColor">
-                <Animatable.View
-                    animation={isActive ? 'bounceIn' : undefined}>
-                       <Text>
-                        funcionario 1
-                        13:00 13:10 :13:30
-                        </Text>
-                        <Text>
-                        funcionario 2
-                        10:00 10:10 :13:30
-                        </Text>
-                        <Text>
-                        funcionario 3
-                        17:00 18:10 :19:30
-                        </Text>
-                </Animatable.View>
-            </Animatable.View>
-        )
+        console.log('isactive ----  == '+isActive)
+        if(isActive){
+            console.log('oiiiiiii')
+            return (
+                <ListagemAgenda  id_conpanie={section.idEmpresa} id_service={section._id} data='10/20180' />
+            )
+        }else{
+            
+        }
     }
 
     render() {
-
-        // if (this.state.services != null) {
-        //     console.log("----------------------------------------")
-        //     console.log("cooppanieee", this.state.services)
-        //     //  console.log("----------------------------------------")
-        //     // console.log("prosppppppp", this.props.services)
-        // }
         const { activeSections } = this.state;
         return (
             <Modal transparent={true} visible={this.props.isVisible}
@@ -180,7 +117,7 @@ export default class ModalExemplo extends Component {
                         </TouchableOpacity>
                     </View>
                     <View style={styles.body}>
-                        <ListItem />
+                        <ViewData />
 
                         <View style={styles.container}>
                             <ScrollView contentContainerStyle={{ paddingTop: 10 }}>
