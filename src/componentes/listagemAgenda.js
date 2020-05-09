@@ -29,6 +29,44 @@ export default class listagemAgenda extends Component {
         id_service: this.props.id_service,
         id_cliente: null,
         data: this.props.data,
+        activIndicador: false,
+        agenda: [{
+            _id: 1,
+            nomeFuncionario: 'gustavo',
+            HorariosOcupados: [{
+                inicio: '8:00',
+                cliente: 'incio',
+                fim: '08:30'
+            }, {
+                inicio: '10:00',
+                cliente: 'Ricardo',
+                fim: '11:00'
+            }, {
+                inicio: '17:00',
+                cliente: 'fim',
+                fim: '18:30'
+            },
+            ]
+        },
+        {
+            _id: 1,
+            nomeFuncionario: 'joao',
+            HorariosOcupados: [{
+                inicio: '7:00',
+                cliente: 'incio',
+                fim: '7:30'
+            }, {
+                inicio: '13:00',
+                cliente: 'Ricardo',
+                fim: '14:00'
+            }, {
+                inicio: '17:00',
+                cliente: 'fim',
+                fim: '17:15'
+            },
+            ]
+        }
+        ]
     }
 
     _retrieData = async () => {
@@ -43,7 +81,8 @@ export default class listagemAgenda extends Component {
                 var user = JSON.parse(userGet)
                 var id_cliente = user._id
                 console.log("iii cjlient ", user._id);
-                this.setState({id_cliente})
+                this.setState({ id_cliente })
+
             }
         } catch (error) {
             console.log(error.message);
@@ -87,50 +126,107 @@ export default class listagemAgenda extends Component {
             //  showError('Falha na conexão')
         });
     }
-    agendaDisponivel = (data) => {
-        <FlatList
-            initialScrollIndex
-            data={data}
-            horizontal
-            renderItem={({ item: rowData }) => {
+    agendaDisponivel = (HorariosOcupados) => {
 
-                return (
-                    <Text style={styles.horarios}>
-                        {rowData.inicio}
-                    </Text>
+        var tempoServico = 30
 
-                );
-            }}
-            keyExtractor={(item, index) => index}
-        />
+        for (var i = 1; i < 5; i++) {
+            console.log(" for 1", i)
+            // for (var j = data[i-1].fim; j < data[i].inicio; j++) {
+            //     console.log("horarios for 2",i,j)
+            this.horarios(i)
+
+            // }
+
+        }
     }
 
+    horarios = (horario) => {
+        console.log("horarios", horario)
+        return (
+
+            <View>
+                <Text>
+                    fla.......horario
+                       {horario}
+                    {/* {data.inicio}
+                       {data.fim}
+    */}
+                </Text>
+            </View>
+        );
+    }
 
     render() {
-        if(this.state.id_cliente == null){
-            console.log('id cliente'+this.state.id_cliente)
-            this._retrieData()
-        }  
-        return (
-                <View style={styles.container}>
-                <Text>TESTE</Text>
-                <Text>
-                    oiii agenda
-                    id compania { this.props.id_conpanie }
-                    id cliente { this.state.id_cliente }
-                    id services { this.props.id_sevice }
-                    id data { this.props.data }
-   
-                </Text>
 
-                    </View>
-        )
+        if (this.state.id_cliente == null) {
+
+            console.log('id cliente' + this.state.id_cliente)
+            this._retrieData()
+        }
+        if (this.state.agenda == null) {
+            return (
+
+                <View>
+                    <Text>
+                        Horarios indisponivel
+                    </Text>
+                </View>
+            );
+        } else {
+            this.state.agenda.forEach(agenda => {
+
+                this.horarios(5)
+                console.log('id forechaagenda', agenda)
+            });
+        }
+
+
+        // return (
+
+        //     <View>
+        //         {console.log("flast list", this.state.agenda)}
+        //         <FlatList
+        //             horizontal={false}
+        //             data={this.state.agenda}
+        //             renderItem={({ item: rowData }) => {
+
+        //                 return (
+        //                     <View>
+        //                         <Text>
+        //                             flast.......
+        //                         {rowData.nomeFuncionario}
+
+        //                         </Text>
+        //                         {this.agendaDisponivel(rowData.HorariosOcupados)}
+        //                     </View>
+
+        //                 );
+        //             }}
+        //             keyExtractor={(item, index) => index}
+        //         />
+        //     </View>
+
+        //     // <View style={styles.container}>
+        //     //     <Text>TESTE</Text>
+        //     //     <Text>
+        //     //         oiii agenda
+        //     //         id compania {this.props.id_conpanie}
+        //     //         id cliente {this.state.id_cliente}
+        //     //         id services {this.props.id_sevice}
+        //     //         id data {this.props.data}
+        //     //         {this.agendaDisponivel()}
+
+        //     //     </Text>
+
+        //     // </View>
+        // )
     }
 }
 
 const styles = StyleSheet.create({
     container: {
-        paddingTop:20,
+        paddingTop: 20,
     },
     header: {
         flexDirection: "row",
@@ -164,59 +260,59 @@ const styles = StyleSheet.create({
     horarios: {
         backgroundColor: '#87CEEB',
     },
-      title: {
+    title: {
         textAlign: 'center',
         fontSize: 18,
         fontWeight: '300',
         marginBottom: 20,
-      },
-      headerList: {
+    },
+    headerList: {
         backgroundColor: '#F5FCFF',
         padding: 10,
-      },
-      headerText: {
+    },
+    headerText: {
         textAlign: 'center',
         fontSize: 16,
         fontWeight: '500',
-      },
-      content: {
+    },
+    content: {
         padding: 20,
         backgroundColor: '#fff',
-      },
-      active: {
+    },
+    active: {
         backgroundColor: 'rgba(255,255,255,1)',
-      },
-      inactive: {
+    },
+    inactive: {
         backgroundColor: 'rgba(245,252,255,1)',
-      },
-      selectors: {
+    },
+    selectors: {
         marginBottom: 10,
         flexDirection: 'row',
         justifyContent: 'center',
-      },
-      selector: {
+    },
+    selector: {
         backgroundColor: '#F5FCFF',
         padding: 10,
-      },
-      activeSelector: {
+    },
+    activeSelector: {
         fontWeight: 'bold',
-      },
-      selectTitle: {
+    },
+    selectTitle: {
         fontSize: 14,
         fontWeight: '500',
         padding: 10,
         textAlign: 'center',
-      },
-      multipleToggle: {
+    },
+    multipleToggle: {
         flexDirection: 'row',
         justifyContent: 'center',
         marginVertical: 30,
         alignItems: 'center',
-      },
-      multipleToggle__title: {
+    },
+    multipleToggle__title: {
         fontSize: 16,
         marginRight: 8,
-      },
+    },
 })
 
 /*
