@@ -139,10 +139,9 @@ export default class ModalExemplo extends Component {
             }]
 
             return (
-                <ListagemAgenda  id_conpanie={section.idEmpresa} id_service={section._id} data='10/20180' />
-                // agenda.map(agDisponivel => (
-                //     <ListagemAgenda  agenda={agDisponivel} id_conpanie={section.idEmpresa} id_service={section._id} data='10/20180' />
-                // ))
+                agenda.map(agDisponivel => (
+                    <ListagemAgenda  agenda={agDisponivel} id_conpanie={section.idEmpresa} id_service={section._id} data='10/20180' />
+                ))
             )
 
         } else {

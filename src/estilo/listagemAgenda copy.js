@@ -31,7 +31,7 @@ export default class listagemAgenda extends Component {
         id_cliente: null,
         data: this.props.data,
         activIndicador: false,
-        agenda: []
+        agenda: 20
     }
 
     _retrieData = async () => {
@@ -56,128 +56,86 @@ export default class listagemAgenda extends Component {
     };
 
     showAgenda = async () => {
-        this._retrieData()
-        // this.setState({ activIndicador: !this.state.activIndicador })
+        console.log("swooo", this.props.id_conpanie)
+        this.setState({ activIndicador: !this.state.activIndicador })
         const data = {
             id_conpanie: this.props.id_conpanie,
             id_service: this.props.id_service,
             id_cliente: this.state.id_cliente,
             data: this.props.data,
         }
-        await api.get('/showServices').then((response) => {
+        await api.get('/showAgenda').then((response) => {
             if (response.data.lengh != 0) {
 
-                let agenda1 = new Array();
+                let services = new Array();
                 response.data.forEach(data => {
 
-                    agenda1.push(data);
+                    console.log(data.coordenadas);
 
-                    console.log('agendaaaaaaaaaaaaaaaaaaaaa       '+agenda1);
-                    console.log('adataaaa ---------------====      '+data);
+                    services.push(data);
+
+                    console.log(services);
                 });
-                //agenda statica
-                console.log('oiiiiiiiiiiiiiiiii ->')
-                let agenda = [{
-                    _id: 1,
-                    nomeFuncionario: 'gustavo',
-                    HorariosDisponivel: ['9:00', '9:10', '9:20', '9:30', '9:40', '10:00', '10:00', '10:30', '11:00', '17:00'],
-                }, {
-                    _id: 2,
-                    nomeFuncionario: 'gustavo',
-                    HorariosDisponivel: ['11:00', '13:00', '14:30', '15:30', '17:30', '18:00', '19:00', '19:30'],
-                }, {
-                    _id: 3,
-                    nomeFuncionario: 'gustavo',
-                    HorariosDisponivel: ['8:00', '9:00', '10:50', '11:00', '12:40', '13:10', '14:50', '15:20', '18:40', '18:00']
-                }]
-
-                this.setState({ agenda: agenda })
-                // this.setState({ activIndicador: !this.state.activIndicador })
-                console.log('stateeeeee'+ this.state.agenda)
+                this.setState({ services: services })
+                this.setState({ activIndicador: !this.state.activIndicador })
 
             } else {
-                //  this.setState({ activIndicador: !this.state.activIndicador })
+                this.setState({ activIndicador: !this.state.activIndicador })
                 return showNotification(response.data.menssagem);
             }
         }).catch((error) => {
             showError('Falha na conexão')
-            //  return this.props.navigation.navigate('Maps')
-            showError('Falha na conexão')
+            return this.props.navigation.navigate('Maps')
+            //  showError('Falha na conexão')
         });
-
     }
 
     agendarHorario = async (horario) => {
         try {
-            showSuccess('Horario ' + horario + ' hrs, reservado com sucesso!')
-
+            showSuccess('Horario '+horario+' hrs, reservado com sucesso!') 
+            
+            
         } catch (error) {
             console.log(error.message);
         }
-
+        
     };
 
 
     horariosDisponivel(horario) {
         return (
-            <TouchableOpacity style={styles.viewHorarios} onPress={() => this.agendarHorario(horario)} >
-                <View style={styles.horarios} >
-                    <Text>
-                        {horario}
-                    </Text>
-                </View>
+            <TouchableOpacity style={styles.viewHorarios} onPress={ () => this.agendarHorario(horario)} >
+            <View style={styles.horarios} >
+                <Text>
+                    {horario}
+                </Text>
+            </View>
             </TouchableOpacity>
         )
     }
-    horariosAgenda(horario) {
-        return (
-            <TouchableOpacity style={styles.viewHorarios} onPress={() => this.agendarHorario(horario)} >
-                <View style={styles.horarios} >
-                    <Text>
-                        {horario}
-                    </Text>
-                </View>
-            </TouchableOpacity>
-        )
-    }
+
 
     render() {
 
         if (this.state.id_cliente == null) {
-            
-            console.log('id cliente  ' + this.state.id_cliente)
+
+            console.log('id cliente ' + this.state.id_cliente)
             console.log('data ' + this.state.data)
             console.log('id service ' + this.state.id_service)
             console.log('id onpanie ' + this.state.id_conpanie)
-
-            this.showAgenda()
-            console.log(' if       oooooooo->'+ this.state.agenda)
-
-            return (
-                this.state.agenda.map(agenda => (
-                    <View style={styles.container}>
-                        <Text style={styles.title}>
-                            Funcionário {agenda.nomeFuncionario}
-                        </Text>
-                        <ScrollView horizontal={true}>
-                            {agenda.HorariosDisponivel.map(horario => this.horariosDisponivel(horario))}
-                        </ScrollView>
-                    </View>
-                ))
-            );
-
-        }else{
-            return (
-                    <View style={styles.container}>
-                        <Text style={styles.title}>
-                            Indisponvel
-                        </Text>
-                    </View>
-                
-            );
+            this._retrieData()
         }
-        
-        
+        return (
+
+            <View style={styles.container}>
+                <Text style={styles.title}>
+                    Funcionário {this.props.agenda.nomeFuncionario}
+                </Text>
+                <ScrollView horizontal={true}>
+                    {this.props.agenda.HorariosDisponivel.map(horario => this.horariosDisponivel(horario))}
+                </ScrollView>
+            </View>
+        );
     }
 }
 
@@ -186,15 +144,14 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(220,220,220,1)',
     },
     title: {
-        fontSize: 18,
-        color: '#000000'
+        fontSize:18,
+        color:'#000000'
     },
     viewHorarios: {
-        paddingTop: 15,
-        paddingLeft: 7,
-        paddingRight: 7,
+        paddingTop:15,
+        paddingLeft:10,
         height: 60,
-
+        
     },
     horarios: {
         alignItems: "center",
@@ -295,4 +252,3 @@ servicos: [
 
         //     // </View>
         // )
-
