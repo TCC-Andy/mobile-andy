@@ -22,7 +22,7 @@ import moment from 'moment'
 import 'moment/locale/pt-br'
 moment.locale('pt-BR')
 
-export default class ListItem extends Component {
+export default class ViewData extends Component {
     state = {
         date: new Date(),
         opemTimes: false,

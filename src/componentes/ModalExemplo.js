@@ -19,7 +19,7 @@ import api from '../service/api';
 import Icon from 'react-native-vector-icons/FontAwesome'
 import ActivIndicador from './activIndicador'
 import { showError, showSuccess, showNotification } from '../utils/alertsUser'
-import ViewData from '../componentes/listItem';
+import ViewData from '../componentes/viewData';
 import ListagemAgenda from '../componentes/listagemAgenda';
 import Accordion from 'react-native-collapsible/Accordion';
 import * as Animatable from 'react-native-animatable';
@@ -84,10 +84,6 @@ export default class ModalExemplo extends Component {
             </Animatable.View>
         );
     };
-    verdata = () =>  {
-        console.log('ver dattttaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
-
-    }
 
     renderContent(section, _, isActive) {
         
@@ -95,58 +91,11 @@ export default class ModalExemplo extends Component {
     
 
         if (isActive) {
-
-            let agenda2 = []
-                  
-                  
-            console.log("agennbnddddd-----------------------111--");
-           async () => {
-            console.log("agennbnddddd-----------------------22--");
-                await api.get('/showServices').then((response) => {
-                  if (response.data.lengh != 0) {
-            
-                    let agenda = new Array();
-                    response.data.forEach(data => {
-            
-                        agenda.push(data);
-            
-                      console.log("agenda     -",agenda);
-                    });
-                    console.log("agennbnddddd-------------------------",agenda);
-                    agenda2 = agenda  
-                  } else {
-                    return showNotification(response.data.menssagem);
-                  }
-                }).catch((error) => {
-                  showError('Falha na conexão')
-                });
-              }
-
-
-            console.log('oiiiiiiiiiiiiiiiii ->')
-            let agenda = [{
-                _id: 1,
-                nomeFuncionario: 'gustavo',
-                HorariosDisponivel: ['9:00', '9:10', '9:20', '9:30', '9:40', '10:00', '10:00', '10:30', '11:00', '17:00'],
-            }, {
-                _id: 2,
-                nomeFuncionario: 'gustavo',
-                HorariosDisponivel: ['11:00', '13:00', '14:30', '15:30', '17:30', '18:00', '19:00', '19:30'],
-            }, {
-                _id: 3,
-                nomeFuncionario: 'gustavo',
-                HorariosDisponivel: ['8:00', '9:00', '10:50', '11:00', '12:40', '13:10', '14:50', '15:20', '18:40', '18:00']
-            }]
-
             return (
-                <ListagemAgenda  id_conpanie={section.idEmpresa} id_service={section._id} data='10/20180' />
-                // agenda.map(agDisponivel => (
-                //     <ListagemAgenda  agenda={agDisponivel} id_conpanie={section.idEmpresa} id_service={section._id} data='10/20180' />
-                // ))
+                <ListagemAgenda isActive={isActive} id_conpanie={section.idEmpresa} id_service={section._id} data='10/20180' />
             )
-
         } else {
-
+            
         }
     }
 
@@ -173,14 +122,9 @@ export default class ModalExemplo extends Component {
 
                         <View style={styles.container}>
                             <ScrollView contentContainerStyle={{ paddingTop: 10 }}>
-
-                                {/*Code for Selector starts here*/}
                                 <View style={styles.selectors}>
 
                                 </View>
-                                {/*Code for Selector ends here*/}
-
-                                {/*Code for Accordion/Expandable List starts here*/}
                                 <Accordion
                                     activeSections={activeSections}
                                     sections={this.props.services}
@@ -191,29 +135,8 @@ export default class ModalExemplo extends Component {
                                     duration={500}
                                     onChange={this.setSections}
                                 />
-                                {/*Code for Accordion/Expandable List ends here*/}
                             </ScrollView>
                         </View>
-
-                        {/* <View style={{ marginTop: (Platform.OS) == 'ios' ? 20 : 0 }}>
-
-                            <SectionList
-
-                                sections={[
-
-                                    { title: 'Servicos', data: this.props.services },
-
-                                ]}
-
-                                renderSectionHeader={({ section }) => <Text> {section.nome} </Text>}
-
-                                renderItem={({ item }) => <ListItem service={item} />}
-
-                                keyExtractor={(item, index) => index}
-
-                            />
-
-                        </View> */}
                     </View>
                 </View>
                 <TouchableWithoutFeedback onPress={this.props.closeModal} >

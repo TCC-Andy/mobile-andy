@@ -30,82 +30,78 @@ export default class listagemAgenda extends Component {
         id_service: this.props.id_service,
         id_cliente: null,
         data: this.props.data,
+        isActive: this.props.isActive,
         activIndicador: false,
-        agenda: []
+        agenda: [],
+        places: []
     }
+
+    async componentDidMount() {
+        this.setState({ activIndicador: !this.state.activIndicador })
+        this._retrieData()
+        const data = {
+            categoria: 'cabelereiro'
+        }
+
+        /*agenda fake */
+        let agenda = [{
+            _id: 1,
+            nomeFuncionario: 'gustavo',
+            HorariosDisponivel: ['9:00', '9:10', '9:20', '9:30', '9:40', '10:00', '10:00', '10:30', '11:00', '17:00'],
+        }, {
+            _id: 2,
+            nomeFuncionario: 'viro',
+            HorariosDisponivel: ['11:00', '13:00', '14:30', '15:30', '17:30', '18:00', '19:00', '19:30'],
+        }, {
+            _id: 3,
+            nomeFuncionario: 'maria',
+            HorariosDisponivel: ['8:00', '9:00', '10:50', '11:00', '12:40', '13:10', '14:50', '15:20', '18:40', '18:00']
+        }]
+
+        this.setState({ agenda: agenda })
+        console.log('buscaaaa ---------- agenda  ')
+
+        /*agenda fake */
+
+        await api.get('/showCompanies', data).then((response) => {
+            if (response.data.lengh != 0) {
+
+                let places = new Array();
+                response.data.forEach(data => {
+
+                    places.push(data);
+                });
+                this.setState({ places: places })
+                this.setState({ activIndicador: !this.state.activIndicador })
+
+
+            } else {
+                this.setState({ activIndicador: !this.state.activIndicador })
+                return showNotification(response.data.menssagem);
+            }
+        }).catch((error) => {
+            showError('Falha na conexão')
+            // return this.props.navigation.navigate('Home')
+        });
+    }
+
 
     _retrieData = async () => {
         try {
-            console.log("_retrieveData")
             const userGet = await AsyncStorage.getItem('user');
 
             if (userGet !== null) {
                 // Converte este json para objeto
                 //var user = JSON.parse(userGet);
-                console.log("oi _retrieveData", userGet);
                 var user = JSON.parse(userGet)
                 var id_cliente = user._id
-                console.log("iii cjlient ", user._id);
                 this.setState({ id_cliente })
 
             }
         } catch (error) {
             console.log(error.message);
         }
-        console.log("tchau  _retrieveData")
     };
-
-    showAgenda = async () => {
-        this._retrieData()
-        // this.setState({ activIndicador: !this.state.activIndicador })
-        const data = {
-            id_conpanie: this.props.id_conpanie,
-            id_service: this.props.id_service,
-            id_cliente: this.state.id_cliente,
-            data: this.props.data,
-        }
-        await api.get('/showServices').then((response) => {
-            if (response.data.lengh != 0) {
-
-                let agenda1 = new Array();
-                response.data.forEach(data => {
-
-                    agenda1.push(data);
-
-                    console.log('agendaaaaaaaaaaaaaaaaaaaaa       '+agenda1);
-                    console.log('adataaaa ---------------====      '+data);
-                });
-                //agenda statica
-                console.log('oiiiiiiiiiiiiiiiii ->')
-                let agenda = [{
-                    _id: 1,
-                    nomeFuncionario: 'gustavo',
-                    HorariosDisponivel: ['9:00', '9:10', '9:20', '9:30', '9:40', '10:00', '10:00', '10:30', '11:00', '17:00'],
-                }, {
-                    _id: 2,
-                    nomeFuncionario: 'gustavo',
-                    HorariosDisponivel: ['11:00', '13:00', '14:30', '15:30', '17:30', '18:00', '19:00', '19:30'],
-                }, {
-                    _id: 3,
-                    nomeFuncionario: 'gustavo',
-                    HorariosDisponivel: ['8:00', '9:00', '10:50', '11:00', '12:40', '13:10', '14:50', '15:20', '18:40', '18:00']
-                }]
-
-                this.setState({ agenda: agenda })
-                // this.setState({ activIndicador: !this.state.activIndicador })
-                console.log('stateeeeee'+ this.state.agenda)
-
-            } else {
-                //  this.setState({ activIndicador: !this.state.activIndicador })
-                return showNotification(response.data.menssagem);
-            }
-        }).catch((error) => {
-            showError('Falha na conexão')
-            //  return this.props.navigation.navigate('Maps')
-            showError('Falha na conexão')
-        });
-
-    }
 
     agendarHorario = async (horario) => {
         try {
@@ -142,42 +138,30 @@ export default class listagemAgenda extends Component {
     }
 
     render() {
+        console.log('agenda' + this.state.isActive, this.state.agenda)
+        console.log('places  '+ this.state.isActive,this.state.places)
 
-        if (this.state.id_cliente == null) {
-            
-            console.log('id cliente  ' + this.state.id_cliente)
-            console.log('data ' + this.state.data)
-            console.log('id service ' + this.state.id_service)
-            console.log('id onpanie ' + this.state.id_conpanie)
+        return (
+            <View>
+                <ActivIndicador animating={this.state.activIndicador} />
+                {
+                    this.state.agenda.map(agenda => (
+                        <View style={styles.container}>
+                            <Text style={styles.title}>
+                                Funcionário {agenda.nomeFuncionario}
+                            </Text>
+                            <ScrollView horizontal={true}>
+                                {agenda.HorariosDisponivel.map(horario => this.horariosDisponivel(horario))}
+                            </ScrollView>
+                        </View>
+                    ))
+                }
+            </View>
+        );
 
-            this.showAgenda()
-            console.log(' if       oooooooo->'+ this.state.agenda)
 
-            return (
-                this.state.agenda.map(agenda => (
-                    <View style={styles.container}>
-                        <Text style={styles.title}>
-                            Funcionário {agenda.nomeFuncionario}
-                        </Text>
-                        <ScrollView horizontal={true}>
-                            {agenda.HorariosDisponivel.map(horario => this.horariosDisponivel(horario))}
-                        </ScrollView>
-                    </View>
-                ))
-            );
 
-        }else{
-            return (
-                    <View style={styles.container}>
-                        <Text style={styles.title}>
-                            Indisponvel
-                        </Text>
-                    </View>
-                
-            );
-        }
-        
-        
+
     }
 }
 

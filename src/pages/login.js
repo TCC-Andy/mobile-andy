@@ -24,7 +24,7 @@ import backgroundImage from '../../assets/imgs/login4.jpg'//LOGIN4
 import AuthInput from '../componentes/textInput'
 
 import api from '../service/api';
-import { showError, showSuccess, showNotification } from '../utils/alertsUser'
+import { showError, showSuccess, showNotification, storeData } from '../utils/alertsUser'
 import { color } from 'react-native-reanimated'
 
 const initialState = {
@@ -43,38 +43,32 @@ export default class Login extends Component {
     state = {
         ...initialState
     }
-    _storeData = async (userSet) => {
-        console.log('oi storeData')
 
-        console.log(userSet);
-        try {
-            var user = JSON.stringify(userSet);
-            await AsyncStorage.setItem('user', user);
-            console.log(user);
-            this.setState({ activIndicador: !this.state.activIndicador })
-            //  this._retrieveData()
-            return this.props.navigation.navigate('Home')
-        } catch (error) {
-            console.log(err)
-            showError('Falha ao iniciar uma nova sessao')
-        }
-        console.log('tchau storeData')
-        return 1;
-    }
+    // _storeData = async (userSet) => {
+        
+    //     try {
+    //         var user = JSON.stringify(userSet);
+    //         await AsyncStorage.setItem('user', user);
+       
+    //         this.setState({ activIndicador: !this.state.activIndicador })
+    //         //  this._retrieveData()
+    //         return this.props.navigation.navigate('Home')
+    //     } catch (error) {
+    //         showError('Falha ao iniciar uma nova sessao')
+    //     }
+    //     return 1;
+    // }
     _retrieData = async () => {
         try {
-            console.log("_retrieveData")
             const userGet = await AsyncStorage.getItem('user');
 
             if (userGet !== null) {
                 // Converte este json para objeto
                 //var user = JSON.parse(userGet);
-                console.log("oi _retrieveData", userGet);
             }
         } catch (error) {
             console.log(error.message);
         }
-        console.log("tchau  _retrieveData")
     };
     signinOrSignup = () => {
         if (this.state.stageNew) {
@@ -142,9 +136,11 @@ export default class Login extends Component {
                     email: response.data.usuario.email,
                 }
 
-                this._storeData(user)
+                storeData(user)
+                this.setState({ activIndicador: !this.state.activIndicador })
+                this.props.navigation.navigate('Home')
             } else {
-                return showNotification(response.data.menssagem);
+                return showNotification(response.data.mensagem);
             }
         }).catch((error) => {
             showError('Falha na conexão')
