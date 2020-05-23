@@ -40,7 +40,7 @@ export default class Maps extends Component {
     },
     camera: {
       coordenadas: [-49.219982, -25.455471],
-      zoom: 11
+      zoom: 9
     },
     places: [],
     services:[]
@@ -87,9 +87,9 @@ export default class Maps extends Component {
 
           services.push(data);
 
-          console.log("MAPS Services----",services);
+          //console.log("MAPS Services----",services);
         });
-        console.log("MAPS SHOW--------------------------",services);
+        //console.log("MAPS SHOW--------------------------",services);
         this.setState({ services: services })
         this.setState({ showModal: true })
         this.setState({ activIndicador: !this.state.activIndicador })
@@ -104,37 +104,35 @@ export default class Maps extends Component {
   }
 
   alterCoordenadas = (place) => {
-    // Alert.alert(place.title)
     let camera = null
-    // camera = [...this.state.camera]
-    if (this.state.places.zoom < 11) {
-      this.state.textView = false
-    } else {
-      this.state.textView = true
-    }
+    
     camera = {
       coordenadas: place.coordenadas,
-      zoom: 15
+      zoom: 12
     }
     this.setState({ camera })
   }
-  alterCoordenadas2 = (place) => {
+  
+  alterarPosicao = (place, index) => {
+    this.myscrollToIndex(index)
+    this.alterCoordenadas(place)
   }
-  renderAnnotations2(place) {
+  renderAnnotations2(place,index,data) {
+    console.log('data ------- render anoticionn---------------------------'+place)
     return (
       <MapboxGL.PointAnnotation
         ref={p => (this.place = p)}
         id={place._id}
         key={place._id}
         coordinate={place.coordenadas.map(coor => parseFloat(coor))}
-       // onDeselected={() => this.alterCoordenadas2()}
-        onSelected={() => this.alterCoordenadas(place)}
+        //onDeselected={() => this.myscrollToIndex(index)}
+        onSelected={() => this.alterarPosicao(place,index)}
       >
         <View style={styles.annotationFill} >
           <Icon name="map-marker" color={'#DC143C'} size={20} />
 
         </View>
-        <MapboxGL.Callout style={{height:100,width:100}} title={place.descricao} />
+        <MapboxGL.Callout style={{height:100,width:100}} title={place.descricao, index.toString()} />
       </MapboxGL.PointAnnotation>
     )
   }
@@ -169,7 +167,7 @@ export default class Maps extends Component {
           <Text>-----------------------------------------------</Text>
         </View>
         <TouchableOpacity  style={styles.button}
-          onPress={ () => this.myscrollToIndex(index)}>
+          onPress={ () => this.alterarPosicao(item,index+1)}>
           <Text style={styles.textButton}>next </Text>
         </TouchableOpacity >
       </View>
@@ -193,12 +191,8 @@ export default class Maps extends Component {
   //   this.list.scrollToIndex({ animated: true,index: this.props.scrollToIndex + 2 });
   // }
   itemSeparatorComponent = (item,data) => {console.log("separeator ",data," itmm", item)
-    return <View style = {{height: '100%',width: 100, backgroundColor: 'red'}}>
-      <Text
-      style = {
-        {
-            backgroundColor: 'white',
-        }}></Text> 
+    return <View style = {styles.separador}>
+      <Text>1</Text> 
     </View>
     }
   // getItemLayout = (data, index) => (
@@ -212,11 +206,9 @@ export default class Maps extends Component {
 
   myscrollToIndex = (index) => {
 
-    this.setState({index: ++this.state.index});
-    //Alert.alert(this.state.index.toString())
-    
-
-    this.flatListRef.scrollToIndex({animated: true,index: this.state.index});
+    this.setState({index: index});
+    //Alert.alert(this.state.index.toString()
+    this.flatListRef.scrollToIndex({animated: true,index: index});
   };
   render() {
     return (
@@ -245,7 +237,7 @@ export default class Maps extends Component {
           >
           </MapboxGL.Camera>
 
-          {this.state.places.map(place => this.renderAnnotations2(place))}
+          {this.state.places.map((place,index, data) => this.renderAnnotations2(place,index, data))}
 
         </MapboxGL.MapView>
         <View style={styles.markerAnotacion}>
@@ -259,10 +251,10 @@ export default class Maps extends Component {
               let posicao =  (e.nativeEvent.contentOffset.x > 0)
               ? e.nativeEvent.contentOffset.x / Dimensions.get('window').width
               : 0;
-        console.log('passssouuuuu alter coordenadas')
-              setTimeout(() => {
+              console.log('passssouuuuu alter coordenadas')
+              setTimeout(async() => {
                if(posicao > 0 && posicao < this.state.places.length){
-               this.alterCoordenadas(this.state.places[posicao])
+                this.alterCoordenadas(this.state.places[posicao])
                }
               })
             }}
@@ -271,7 +263,7 @@ export default class Maps extends Component {
             extraData={this.state.index}
             keyExtractor={this._keyExtractor}
             //getItemLayout={this.getItemLayout}
-            //ItemSeparatorComponent={this.itemSeparatorComponent}
+            ItemSeparatorComponent={this.itemSeparatorComponent}
           />
         </View>
       </View>
@@ -311,12 +303,19 @@ const styles = StyleSheet.create({
   },
   card: {
     marginTop: 5,
-    marginLeft: 9,
+    marginLeft: 0,
     width: Dimensions.get('window').width - 20,
     borderBottomWidth:5,
     borderRadius:5,
     borderColor:'#000000',
     backgroundColor: 'rgba(211,211,211, 0.9)'
+  },
+  separador: {
+    marginTop:0 ,
+    marginRight: 50,
+    height: '100%',
+    width: 10,
+    backgroundColor: 'red'
   },
   body: {
    

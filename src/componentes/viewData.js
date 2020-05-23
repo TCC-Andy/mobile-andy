@@ -17,6 +17,7 @@ import {
 import { Card } from "react-native-elements";
 import { Avatar, Badge, SearchBar, Overlay } from 'react-native-elements'
 import Padrao from '../estilo/Padrao'
+import { storeData } from '../utils/alertsUser'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import moment from 'moment'
 import 'moment/locale/pt-br'
@@ -37,10 +38,14 @@ export default class ViewData extends Component {
                 momentDate.month(e.month)
                 momentDate.year(e.year)
                 this.setState({ date: momentDate.toDate() })
+              console.log(moment(this.state.date).format('D/MM/YYYY'))
+                storeData('data',moment(this.state.date).format('D/MM/YYYY'))
             }
         })
     }
     render() {
+        console.log(moment(this.state.date).format('D/MM/YYYY'))
+        storeData('data',moment(this.state.date).format('D/MM/YYYY'))
         return (
             <View style={styles.card}>
                 {/* <Text> {moment(this.state.date).format('DD/MM/YYYY')}</Text> */}

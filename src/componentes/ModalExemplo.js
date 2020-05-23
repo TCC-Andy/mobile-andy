@@ -87,7 +87,7 @@ export default class ModalExemplo extends Component {
 
     renderContent(section, _, isActive) {
         
-        console.log('isactive ----  == ' + isActive)
+        console.log('isactive ----  =||||||= ' + isActive)
     
 
         if (isActive) {

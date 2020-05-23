@@ -15,14 +15,14 @@ function showNotification(msg) {
     Alert.alert('Falhou', msg)
 }
 
-    async function storeData (userSet){
+    async function storeData (typeObj, objSet){
     console.log('oi storeData')
 
-    console.log(userSet);
+    console.log(objSet);
     try {
-        var user = JSON.stringify(userSet);
-        await AsyncStorage.setItem('user', user);
-        console.log(user);
+        var obj = JSON.stringify(objSet);
+        await AsyncStorage.setItem(typeObj, obj);
+        console.log(obj);
         return 1;
     } catch (error) {
         console.log(err)
@@ -32,18 +32,22 @@ function showNotification(msg) {
     return 0;
 }
 
-async function retrieData (userSet){
+async function retrieData (typeObj){
     try {
-        const userGet = await AsyncStorage.getItem('user');
-
-        if (userGet !== null) {
+        const obj= null;
+        const objGet = await AsyncStorage.getItem(typeObj);
+    
+        if (objGet !== null) {
             // Converte este json para objeto
-            //var user = JSON.parse(userGet);
+             obj = JSON.parse(objGet);
             
         }
+        console.log('ritrii  ->'+obj)
+        return objGetobjGet;
     } catch (error) {
-        console.log(error.message);
+        console.log('eroooo'+error.message);
+        return 0;
     }
 };
 
-export { server, showError, showSuccess,showNotification, storeData}
+export { server, showError, showSuccess,showNotification, storeData, retrieData}

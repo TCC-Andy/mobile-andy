@@ -22,6 +22,9 @@ import ActivIndicador from './activIndicador'
 import { showError, showSuccess, showNotification } from '../utils/alertsUser'
 import * as Animatable from 'react-native-animatable';
 import { color } from 'react-native-reanimated';
+import moment from 'moment'
+import 'moment/locale/pt-br'
+moment.locale('pt-BR')
 
 
 export default class listagemAgenda extends Component {
@@ -29,7 +32,7 @@ export default class listagemAgenda extends Component {
         id_conpanie: this.props.id_conpanie,
         id_service: this.props.id_service,
         id_cliente: null,
-        data: this.props.data,
+        data: '00/00/00',
         isActive: this.props.isActive,
         activIndicador: false,
         agenda: [],
@@ -88,15 +91,24 @@ export default class listagemAgenda extends Component {
 
     _retrieData = async () => {
         try {
+           
             const userGet = await AsyncStorage.getItem('user');
+            const dataGet = await AsyncStorage.getItem('data');
 
-            if (userGet !== null) {
+            
+            if (userGet !== null && data !== null ) {
                 // Converte este json para objeto
                 //var user = JSON.parse(userGet);
                 var user = JSON.parse(userGet)
+                var data = JSON.parse(dataGet)
+                
                 var id_cliente = user._id
-                this.setState({ id_cliente })
-
+                this.setState({ id_cliente,data })
+                console.log('--------------------------------------------------------------------------------')
+                console.log('--------------------------------------------------------------------------------')
+                console.log('--------------------------------------------------------------------------------')
+                
+                console.log('id cliente '+this.state.id_cliente +' data '+this.state.data)
             }
         } catch (error) {
             console.log(error.message);

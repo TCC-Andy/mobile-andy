@@ -24,7 +24,7 @@ import backgroundImage from '../../assets/imgs/login4.jpg'//LOGIN4
 import AuthInput from '../componentes/textInput'
 
 import api from '../service/api';
-import { showError, showSuccess, showNotification, storeData } from '../utils/alertsUser'
+import { showError, showSuccess, showNotification} from '../utils/alertsUser'
 import { color } from 'react-native-reanimated'
 
 const initialState = {
@@ -44,20 +44,21 @@ export default class Login extends Component {
         ...initialState
     }
 
-    // _storeData = async (userSet) => {
+    _storeData = async (userSet) => {
         
-    //     try {
-    //         var user = JSON.stringify(userSet);
-    //         await AsyncStorage.setItem('user', user);
+        try {
+            var user = JSON.stringify(userSet);
+            await AsyncStorage.setItem('user', user);
        
-    //         this.setState({ activIndicador: !this.state.activIndicador })
-    //         //  this._retrieveData()
-    //         return this.props.navigation.navigate('Home')
-    //     } catch (error) {
-    //         showError('Falha ao iniciar uma nova sessao')
-    //     }
-    //     return 1;
-    // }
+            this._retrieData()
+            this.setState({ activIndicador: !this.state.activIndicador })
+            return this.props.navigation.navigate('Home')
+        } catch (error) {
+            console.log(error)
+            this.setState({ activIndicador: !this.state.activIndicador })
+            showError('Falha ao iniciar uma nova sessao')
+        }
+    }
     _retrieData = async () => {
         try {
             const userGet = await AsyncStorage.getItem('user');
@@ -67,7 +68,7 @@ export default class Login extends Component {
                 //var user = JSON.parse(userGet);
             }
         } catch (error) {
-            console.log(error.message);
+            console.log(error);
         }
     };
     signinOrSignup = () => {
@@ -136,13 +137,12 @@ export default class Login extends Component {
                     email: response.data.usuario.email,
                 }
 
-                storeData(user)
-                this.setState({ activIndicador: !this.state.activIndicador })
-                this.props.navigation.navigate('Home')
+                this._storeData(user)
             } else {
                 return showNotification(response.data.mensagem);
             }
         }).catch((error) => {
+            console.log(error)
             showError('Falha na conexão')
             this.setState({ activIndicador: !this.state.activIndicador })
         });
