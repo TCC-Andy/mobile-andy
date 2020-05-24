@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
-import { 
-  View, 
-  StyleSheet, 
-  TouchableOpacity, 
-  TouchableWithoutFeedback, 
-  Alert, 
-  Text, 
-  FlatList, 
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  Alert,
+  Text,
+  FlatList,
   Dimensions,
-  Button, 
+  Button,
+  ScrollView ,
 } from 'react-native';
 import MapboxGL from '@react-native-mapbox-gl/maps';
 import ModalExemplo from '../componentes/ModalExemplo';
@@ -27,8 +28,8 @@ MapboxGL.setAccessToken("pk.eyJ1IjoiYnJ1bm9wZWRyb3NvIiwiYSI6ImNrNmJkY2R3dDEwODkz
 export default class Maps extends Component {
   state = {
     index: 0,
-    id_conpanies:null,
-    showModal:false,
+    id_conpanies: null,
+    showModal: false,
     activIndicador: false,
     textView: false,
     viewport: {
@@ -43,7 +44,7 @@ export default class Maps extends Component {
       zoom: 9
     },
     places: [],
-    services:[]
+    services: []
   }
 
   async componentDidMount() {
@@ -93,7 +94,7 @@ export default class Maps extends Component {
         this.setState({ services: services })
         this.setState({ showModal: true })
         this.setState({ activIndicador: !this.state.activIndicador })
-        
+
       } else {
         this.setState({ activIndicador: !this.state.activIndicador })
         return showNotification(response.data.menssagem);
@@ -105,20 +106,20 @@ export default class Maps extends Component {
 
   alterCoordenadas = (place) => {
     let camera = null
-    
+
     camera = {
       coordenadas: place.coordenadas,
       zoom: 12
     }
     this.setState({ camera })
   }
-  
+
   alterarPosicao = (place, index) => {
     this.myscrollToIndex(index)
     this.alterCoordenadas(place)
   }
-  renderAnnotations2(place,index,data) {
-    console.log('data ------- render anoticionn---------------------------'+place)
+  renderAnnotations2(place, index, data) {
+    console.log('data ------- render anoticionn---------------------------' + place)
     return (
       <MapboxGL.PointAnnotation
         ref={p => (this.place = p)}
@@ -126,98 +127,103 @@ export default class Maps extends Component {
         key={place._id}
         coordinate={place.coordenadas.map(coor => parseFloat(coor))}
         //onDeselected={() => this.myscrollToIndex(index)}
-        onSelected={() => this.alterarPosicao(place,index)}
+        onSelected={() => this.alterarPosicao(place, index)}
       >
         <View style={styles.annotationFill} >
           <Icon name="map-marker" color={'#DC143C'} size={20} />
 
         </View>
-        <MapboxGL.Callout style={{height:100,width:100}} title={place.descricao, index.toString()} />
+        <MapboxGL.Callout style={{ height: 100, width: 100 }} title={place.descricao, index.toString()} />
       </MapboxGL.PointAnnotation>
     )
   }
 
-  renderItem = ({ item,index }) => (
+  renderItem = ({ item, index }) => (
     <Card
-    containerStyle={styles.card}
-  >
-    <View style={styles.body}>
+      containerStyle={styles.card}
+    >
+      <View style={styles.body}>
 
-      <View style={styles.header}>
-        <Text style={styles.title} >
-          {item.nome}
-        </Text>
-        <TouchableOpacity  style={styles.buttonServices}
-          onPress={ () => this.showServices()}>
-          <Text style={styles.textButton}>Servicos </Text>
-        </TouchableOpacity >
-      </View>
-
-      <View style={styles.evaluation}>
-        <Text style={styles.textEvaluation}>Avaliação  <Icon name="star" color={'#e7a74e'} size={15} />
-        <Icon name="star" color={'#e7a74e'} size={15} />
-        <Icon name="star-half-o" color={'#e7a74e'} size={15} />
-         <Icon name="star-o" color={'#e7a74e'} size={15} />
-         <Icon name="star-o" color={'#e7a74e'} size={15} />
+        <View style={styles.header}>
+          <Text style={styles.title} >
+            {item.nome}
           </Text>
-      </View>
-
-      <View style={styles.services}>
-        <View style={styles.textSevies}>
-          <Text>-----------------------------------------------</Text>
+          <TouchableOpacity style={styles.buttonServices}
+            onPress={() => this.showServices()}>
+            <Text style={styles.textButton}>Servicos </Text>
+          </TouchableOpacity >
         </View>
-        <TouchableOpacity  style={styles.button}
-          onPress={ () => this.alterarPosicao(item,index+1)}>
-          <Text style={styles.textButton}>next </Text>
-        </TouchableOpacity >
-      </View>
 
-      <View style={styles.description}>
-        <Text>{item.descricao} </Text>
-      </View>
+        <View style={styles.evaluation}>
+          <Text style={styles.textEvaluation}>Avaliação  <Icon name="star" color={'#e7a74e'} size={15} />
+            <Icon name="star" color={'#e7a74e'} size={15} />
+            <Icon name="star-half-o" color={'#e7a74e'} size={15} />
+            <Icon name="star-o" color={'#e7a74e'} size={15} />
+            <Icon name="star-o" color={'#e7a74e'} size={15} />
+          </Text>
+        </View>
 
-      <View style={styles.City}>
-        <Text>{item.cidade } - {item.bairro}</Text>
-      </View>
+        <View style={styles.services}>
+          <View style={styles.textSevies}>
+            <Text>-----------------------------------------------</Text>
+          </View>
+          <TouchableOpacity style={styles.buttonProximo}
+            onPress={() => this.alterarPosicao(item, index + 1)}>
+            <Text style={styles.textButton}>proximo </Text>
+          </TouchableOpacity >
+          <TouchableOpacity style={styles.buttonAnterior}
+            onPress={() => this.alterarPosicao(item, index - 1)}>
+            <Text style={styles.textButton}>anterior </Text>
+          </TouchableOpacity >
+        </View>
 
-      <View style={styles.footer}>
-        <Text>{item.rua }-{item.status }-</Text>
-      </View>
+        <View style={styles.description}>
+          <Text>{item.descricao} </Text>
+        </View>
 
-    </View>
-  </Card>
+        <View style={styles.City}>
+          <Text>{item.cidade} - {item.bairro}</Text>
+        </View>
+
+        <View style={styles.footer}>
+          <Text>{item.rua}-{item.status}-</Text>
+        </View>
+
+      </View>
+    </Card>
   );
   // componentDidMount() {
   //   this.list.scrollToIndex({ animated: true,index: this.props.scrollToIndex + 2 });
   // }
-  itemSeparatorComponent = (item,data) => {console.log("separeator ",data," itmm", item)
-    return <View style = {styles.separador}>
-      <Text>1</Text> 
+  itemSeparatorComponent = (item, data) => {
+    console.log("separeator ", data, " itmm", item)
+    return <View style={styles.separador}>
+      <Text>=</Text>
     </View>
-    }
+  }
   // getItemLayout = (data, index) => (
   //   //this.state.index = index
   //   //this.state.index ={ length: 150, offset: 150 * index, index }
   //     //  console.log('iu')
-    
+
   // );
 
   _keyExtractor = (item, index) => item.id;
 
   myscrollToIndex = (index) => {
 
-    this.setState({index: index});
+    this.setState({ index: index });
     //Alert.alert(this.state.index.toString()
-    this.flatListRef.scrollToIndex({animated: true,index: index});
+    this.flatListRef.scrollToIndex({ animated: true, index: index });
   };
   render() {
     return (
       <View style={styles.container}>
         <ActivIndicador animating={this.state.activIndicador} />
-        <ModalExemplo isVisible={this.state.showModal} 
-    services = {this.state.services}
-      closeModal={() => this.setState({ showModal: false })} />
-      
+        <ModalExemplo isVisible={this.state.showModal}
+          services={this.state.services}
+          closeModal={() => this.setState({ showModal: false })} />
+
         <MapboxGL.MapView
           ref={m => (this.map = m)}
           style={styles.containerMaps}
@@ -237,34 +243,40 @@ export default class Maps extends Component {
           >
           </MapboxGL.Camera>
 
-          {this.state.places.map((place,index, data) => this.renderAnnotations2(place,index, data))}
+          {this.state.places.map((place, index, data) => this.renderAnnotations2(place, index, data))}
 
         </MapboxGL.MapView>
         <View style={styles.markerAnotacion}>
-          <FlatList
-          horizontal
-          scrollEnabled
-          onScroll={(e) => { console.log('onScroll', e.nativeEvent); console.log("indexx",this.state.index)}}
-          ref={(ref) => { this.flatListRef = ref; }}
-            pagingEnabled={true}
-            onMomentumScrollEnd={(e) => {
-              let posicao =  (e.nativeEvent.contentOffset.x > 0)
-              ? e.nativeEvent.contentOffset.x / Dimensions.get('window').width
-              : 0;
-              console.log('passssouuuuu alter coordenadas')
-              setTimeout(async() => {
-               if(posicao > 0 && posicao < this.state.places.length){
-                this.alterCoordenadas(this.state.places[posicao])
-               }
-              })
-            }}
-            data={this.state.places}
-            renderItem={this.renderItem}
-            extraData={this.state.index}
-            keyExtractor={this._keyExtractor}
-            //getItemLayout={this.getItemLayout}
-            ItemSeparatorComponent={this.itemSeparatorComponent}
-          />
+          {/* <ScrollView horizontal= {true}
+          pagingEnabled={true}
+          automaticallyAdjustContentInsets={true}
+          > */}
+            <FlatList
+              horizontal
+              scrollEnabled
+              automaticallyAdjustContentInsets={true}
+              onScroll={(e) => { console.log('onScroll', e.nativeEvent); console.log("indexx", this.state.index) }}
+              ref={(ref) => { this.flatListRef = ref; }}
+              pagingEnabled={true}
+              onMomentumScrollEnd={(e) => {
+                let posicao = (e.nativeEvent.contentOffset.x > 0)
+                  ? e.nativeEvent.contentOffset.x / Dimensions.get('window').width
+                  : 0;
+                console.log('passssouuuuu alter coordenadas')
+                setTimeout(async () => {
+                  if (posicao > 0 && posicao < this.state.places.length) {
+                    this.alterCoordenadas(this.state.places[posicao])
+                  }
+                })
+              }}
+              data={this.state.places}
+              renderItem={this.renderItem}
+              extraData={this.state.index}
+              keyExtractor={this._keyExtractor}
+              //getItemLayout={this.getItemLayout}
+              ItemSeparatorComponent={this.itemSeparatorComponent}
+            />
+          {/* </ScrollView> */}
         </View>
       </View>
     )
@@ -304,21 +316,21 @@ const styles = StyleSheet.create({
   card: {
     marginTop: 5,
     marginLeft: 0,
-    width: Dimensions.get('window').width - 20,
-    borderBottomWidth:5,
-    borderRadius:5,
-    borderColor:'#000000',
+   // width: Dimensions.get('window').width - 20,
+    borderBottomWidth: 5,
+    borderRadius: 5,
+    borderColor: '#000000',
     backgroundColor: 'rgba(211,211,211, 0.9)'
   },
   separador: {
-    marginTop:0 ,
-    marginRight: 50,
+    marginTop: 0,
+    marginRight: 0,
     height: '100%',
-    width: 10,
+   // width: 20,
     backgroundColor: 'red'
   },
   body: {
-   
+
   },
   header: {
     marginTop: 0,
@@ -335,9 +347,12 @@ const styles = StyleSheet.create({
     marginLeft: 0,
   },
   services: {
-    
+
     marginTop: 0,
     marginLeft: 0,
+  },
+  description: {
+    marginBottom:20,
   },
   city: {
     //  flex: 1,
@@ -355,7 +370,7 @@ const styles = StyleSheet.create({
   textButton: {
     fontSize: 20,
   },
-  button: {
+  buttonProximo: {
     position: 'absolute',
     left: Dimensions.get('window').width / 2 + 60,
     backgroundColor: '#6495ED',
@@ -363,6 +378,17 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     width: 90,
     paddingBottom: 5,
+  },
+  buttonAnterior:
+  {
+     position: 'absolute',
+    left: -15,
+    backgroundColor: '#6495ED',
+    alignItems: 'center',
+    borderRadius: 3,
+    width: 90,
+    paddingBottom: 5,
+
   },
   buttonServices: {
     position: 'absolute',
