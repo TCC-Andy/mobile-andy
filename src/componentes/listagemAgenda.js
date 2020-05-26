@@ -47,34 +47,34 @@ export default class listagemAgenda extends Component {
         }
 
         /*agenda fake */
-        let agenda = [{
-            _id: 1,
-            nomeFuncionario: 'gustavo',
-            HorariosDisponivel: ['9:00', '9:10', '9:20', '9:30', '9:40', '10:00', '10:00', '10:30', '11:00', '17:00'],
-        }, {
-            _id: 2,
-            nomeFuncionario: 'viro',
-            HorariosDisponivel: ['11:00', '13:00', '14:30', '15:30', '17:30', '18:00', '19:00', '19:30'],
-        }, {
-            _id: 3,
-            nomeFuncionario: 'maria',
-            HorariosDisponivel: ['8:00', '9:00', '10:50', '11:00', '12:40', '13:10', '14:50', '15:20', '18:40', '18:00']
-        }]
+        // let agenda = [{
+        //     _id: 1,
+        //     nomeFuncionario: 'gustavo',
+        //     HorariosDisponivel: ['9:00', '9:10', '9:20', '9:30', '9:40', '10:00', '10:00', '10:30', '11:00', '17:00'],
+        // }, {
+        //     _id: 2,
+        //     nomeFuncionario: 'viro',
+        //     HorariosDisponivel: ['11:00', '13:00', '14:30', '15:30', '17:30', '18:00', '19:00', '19:30'],
+        // }, {
+        //     _id: 3,
+        //     nomeFuncionario: 'maria',
+        //     HorariosDisponivel: ['8:00', '9:00', '10:50', '11:00', '12:40', '13:10', '14:50', '15:20', '18:40', '18:00']
+        // }]
 
-        this.setState({ agenda: agenda })
+        // this.setState({ agenda: agenda })
         console.log('buscaaaa ---------- agenda  ')
 
         /*agenda fake */
 
-        await api.get('/showCompanies', data).then((response) => {
+        await api.get('/showDataSchedule', data).then((response) => {
             if (response.data.lengh != 0) {
 
-                let places = new Array();
+                let agenda = new Array();
                 response.data.forEach(data => {
 
-                    places.push(data);
+                    agenda.push(data);
                 });
-                this.setState({ places: places })
+                this.setState({ agenda: agenda })
                 this.setState({ activIndicador: !this.state.activIndicador })
 
 
@@ -83,6 +83,7 @@ export default class listagemAgenda extends Component {
                 return showNotification(response.data.menssagem);
             }
         }).catch((error) => {
+            this.setState({ activIndicador: !this.state.activIndicador })
             showError('Falha na conexão')
             // return this.props.navigation.navigate('Home')
         });

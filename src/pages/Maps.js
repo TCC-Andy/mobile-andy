@@ -49,16 +49,21 @@ export default class Maps extends Component {
 
   async componentDidMount() {
     this.setState({ activIndicador: !this.state.activIndicador })
-    const data = {
-      categoria: 'cabelereiro'
+   const data ={
+    categoria : 'cabelereiro'
     }
-    await api.get('/showCompanies', data).then((response) => {
+    
+    console.log('tesssssssssssssssss')
+    await api.get('/showCategories/',data).then((response) => {
+      console.log('dat ')
+      console.log('response '+response.data)
       if (response.data.lengh != 0) {
 
         let places = new Array();
         response.data.forEach(data => {
 
           places.push(data);
+          console.log('dat'+data)
         });
         this.setState({ places: places })
         this.setState({ activIndicador: !this.state.activIndicador })
@@ -68,8 +73,10 @@ export default class Maps extends Component {
         return showNotification(response.data.menssagem);
       }
     }).catch((error) => {
+      console.log('erooo --------------------',error)
       showError('Falha na conexão')
-      return this.props.navigation.navigate('Home')
+      this.setState({ activIndicador: !this.state.activIndicador })
+      //return this.props.navigation.navigate('Home')
       //  showError('Falha na conexão')
     });
   }
