@@ -32,84 +32,116 @@ export default class listagemAgenda extends Component {
         id_conpanie: this.props.id_conpanie,
         id_service: this.props.id_service,
         id_cliente: null,
-        data: '00/00/00',
+        dataAgenda: '00/00/00',
         isActive: this.props.isActive,
         activIndicador: false,
         agenda: [],
         places: []
     }
+    async componentDidMount () {
 
-    async componentDidMount() {
-        this.setState({ activIndicador: !this.state.activIndicador })
-        this._retrieData()
-        const data = {
-            categoria: 'cabelereiro'
+        try {
+            console.log('o-----------------------------------------')
+            const userGet = await AsyncStorage.getItem('user');
+            const dataGet = await AsyncStorage.getItem('data');
+
+            const data = {
+                idEmpresa: '5eb3e4212c78cb2fe89d64a5',
+                dataAgenda: '28/25/25',
+                idServico: 1,
+                tempoServico: 40
+            }
+            const agenda = await api.post('/showDataSchedule', data);
+            
+            console.log('agendaaaaaa-> ' + agenda)
+            this.setState({ agenda: agenda })
+
+        } catch (err) {
+            console.log('Erro:', err);
         }
 
-        /*agenda fake */
-        // let agenda = [{
-        //     _id: 1,
-        //     nomeFuncionario: 'gustavo',
-        //     HorariosDisponivel: ['9:00', '9:10', '9:20', '9:30', '9:40', '10:00', '10:00', '10:30', '11:00', '17:00'],
-        // }, {
-        //     _id: 2,
-        //     nomeFuncionario: 'viro',
-        //     HorariosDisponivel: ['11:00', '13:00', '14:30', '15:30', '17:30', '18:00', '19:00', '19:30'],
-        // }, {
-        //     _id: 3,
-        //     nomeFuncionario: 'maria',
-        //     HorariosDisponivel: ['8:00', '9:00', '10:50', '11:00', '12:40', '13:10', '14:50', '15:20', '18:40', '18:00']
-        // }]
-
-        // this.setState({ agenda: agenda })
-        console.log('buscaaaa ---------- agenda  ')
-
-        /*agenda fake */
-
-        await api.get('/showDataSchedule', data).then((response) => {
-            if (response.data.lengh != 0) {
-
-                let agenda = new Array();
-                response.data.forEach(data => {
-
-                    agenda.push(data);
-                });
-                this.setState({ agenda: agenda })
-                this.setState({ activIndicador: !this.state.activIndicador })
 
 
-            } else {
-                this.setState({ activIndicador: !this.state.activIndicador })
-                return showNotification(response.data.menssagem);
-            }
-        }).catch((error) => {
-            this.setState({ activIndicador: !this.state.activIndicador })
-            showError('Falha na conexão')
-            // return this.props.navigation.navigate('Home')
-        });
+
+
+
+        // async componentDidMount () {
+        //  this.setState({ activIndicador: !this.state.activIndicador })
+
+        // const userGet = await AsyncStorage.getItem('user');
+        // const dataGet = await AsyncStorage.getItem('data');
+
+
+        // if (userGet !== null && data !== null ) {
+        //     // Converte este json para objeto
+        //     //var user = JSON.parse(userGet);
+        //     var user = JSON.parse(userGet)
+        //     var dataAgenda = JSON.parse(dataGet)
+
+        //     var id_cliente = user._id
+        //     this.setState({ id_cliente,dataAgenda })
+        //     console.log('--------------------------------------------------------------------------------')
+        //     console.log('--------------------------------------------------------------------------------')
+        //     console.log('--------------------------------------------------------------------------------')
+
+        //     console.log('id cliente '+this.state.id_cliente +' data '+this.state.data)
+        // }
+
+
+        // const data = {
+        //     idEmpresa: '5eb3e4212c78cb2fe89d64a5',
+        //     dataAgenda: '28/25/25',
+        //     idServico: 1,
+        //     tempoServico: 40
+        // }
+
+        // console.log('buscaa--------------agenda  ')
+
+        // /*agenda fake */
+
+        // await api.post('/showDataSchedule', data).then((response) => {
+        //     if (response.data.lengh != 0) {
+        //         console.log('respoooooooseeee dattttttta', response.data)
+        //         let agenda = new Array();
+
+        //         agenda = response.data.agenda
+
+        //         this.setState({ agenda: agenda })
+
+
+
+        //     } else {
+        //         this.setState({ activIndicador: !this.state.activIndicador })
+        //         return showNotification(response.data.mensagem);
+        //     }
+        // }).catch((error) => {
+        //     console.log('erooooooooooooooooo', error)
+        //     this.setState({ activIndicador: !this.state.activIndicador })
+        //     showError('Falha na conexão')
+        //     // return this.props.navigation.navigate('Home')
+        // });
     }
 
 
     _retrieData = async () => {
         try {
-           
+
             const userGet = await AsyncStorage.getItem('user');
             const dataGet = await AsyncStorage.getItem('data');
 
-            
-            if (userGet !== null && data !== null ) {
+
+            if (userGet !== null && data !== null) {
                 // Converte este json para objeto
                 //var user = JSON.parse(userGet);
                 var user = JSON.parse(userGet)
                 var data = JSON.parse(dataGet)
-                
+
                 var id_cliente = user._id
-                this.setState({ id_cliente,data })
-                console.log('--------------------------------------------------------------------------------')
-                console.log('--------------------------------------------------------------------------------')
-                console.log('--------------------------------------------------------------------------------')
-                
-                console.log('id cliente '+this.state.id_cliente +' data '+this.state.data)
+                this.setState({ id_cliente, data })
+                console.log('---------gggggggggggggggggggg-sssssssss----------------------------------------------------------------------')
+
+
+                console.log('id cliente ' + this.state.id_cliente + ' data ' + this.state.data)
             }
         } catch (error) {
             console.log(error.message);
@@ -128,47 +160,61 @@ export default class listagemAgenda extends Component {
 
 
     horariosDisponivel(horario) {
+        console.log('horarioooo ============', horario)
         return (
             <TouchableOpacity style={styles.viewHorarios} onPress={() => this.agendarHorario(horario)} >
                 <View style={styles.horarios} >
                     <Text>
-                        {horario}
+                        {horario.inicioServico}
                     </Text>
                 </View>
             </TouchableOpacity>
         )
     }
-    horariosAgenda(horario) {
-        return (
-            <TouchableOpacity style={styles.viewHorarios} onPress={() => this.agendarHorario(horario)} >
-                <View style={styles.horarios} >
-                    <Text>
-                        {horario}
-                    </Text>
-                </View>
-            </TouchableOpacity>
-        )
-    }
+    // horariosAgenda(horario) {
+
+    //     return (
+    //         <TouchableOpacity style={styles.viewHorarios} onPress={() => this.agendarHorario(horario)} >
+    //             <View style={styles.horarios} >
+    //                 <Text>
+    //                     {horario}
+    //                 </Text>
+    //             </View>
+    //         </TouchableOpacity>
+    //     )
+    // }
 
     render() {
-        console.log('agenda' + this.state.isActive, this.state.agenda)
-        console.log('places  '+ this.state.isActive,this.state.places)
+
+        console.log('data ' + this.state.data)
+        console.log('agendaa ' + this.state.agenda)
+        console.log('--1111111111111111111111111111111111------------------------------------------------------------------------')
+        console.log('isactve  ' + this.state.isActive)
 
         return (
+
             <View>
                 <ActivIndicador animating={this.state.activIndicador} />
                 {
-                    this.state.agenda.map(agenda => (
-                        <View style={styles.container}>
-                            <Text style={styles.title}>
-                                Funcionário {agenda.nomeFuncionario}
-                            </Text>
-                            <ScrollView horizontal={true}>
-                                {agenda.HorariosDisponivel.map(horario => this.horariosDisponivel(horario))}
-                            </ScrollView>
-                        </View>
-                    ))
+
+                    // this.state.agenda.map(agenda => (
+                    //     <View style={styles.container}>
+                    //         <Text style={styles.title}>
+                    //             Funcionário {agenda.nome}
+                    //             {console.log('funiocooooonari'+agenda.nome)}
+                    //         </Text>
+                    //         <ScrollView horizontal={true}>
+                    //             {/* {agenda.horariosDisponiveis.map(horario => this.horariosDisponivel(horario))} */}
+                    //         </ScrollView>
+                    //     </View>
+                    // ))
                 }
+                {
+
+                    console.log('agenda -->' + this.state.agenda)
+              
+                }
+                <Text>oiiiii</Text>
             </View>
         );
 

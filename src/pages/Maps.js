@@ -9,7 +9,7 @@ import {
   FlatList,
   Dimensions,
   Button,
-  ScrollView ,
+  ScrollView,
 } from 'react-native';
 import MapboxGL from '@react-native-mapbox-gl/maps';
 import ModalExemplo from '../componentes/ModalExemplo';
@@ -49,21 +49,21 @@ export default class Maps extends Component {
 
   async componentDidMount() {
     this.setState({ activIndicador: !this.state.activIndicador })
-   const data ={
-    categoria : 'cabelereiro'
-    }
+    const data = {
+        categoria: 'cabelereiro'
+      }
     
-    console.log('tesssssssssssssssss')
-    await api.get('/showCategories/',data).then((response) => {
+
+    await api.get('/showCategories/cabelereiro').then((response) => {
       console.log('dat ')
-      console.log('response '+response.data)
+      console.log('response ' + response.data)
       if (response.data.lengh != 0) {
 
         let places = new Array();
         response.data.forEach(data => {
 
           places.push(data);
-          console.log('dat'+data)
+          console.log('dat' + data)
         });
         this.setState({ places: places })
         this.setState({ activIndicador: !this.state.activIndicador })
@@ -73,7 +73,7 @@ export default class Maps extends Component {
         return showNotification(response.data.menssagem);
       }
     }).catch((error) => {
-      console.log('erooo --------------------',error)
+      console.log('erooo --------------------', error)
       showError('Falha na conexão')
       this.setState({ activIndicador: !this.state.activIndicador })
       //return this.props.navigation.navigate('Home')
@@ -258,31 +258,31 @@ export default class Maps extends Component {
           pagingEnabled={true}
           automaticallyAdjustContentInsets={true}
           > */}
-            <FlatList
-              horizontal
-              scrollEnabled
-              automaticallyAdjustContentInsets={true}
-              onScroll={(e) => { console.log('onScroll', e.nativeEvent); console.log("indexx", this.state.index) }}
-              ref={(ref) => { this.flatListRef = ref; }}
-              pagingEnabled={true}
-              onMomentumScrollEnd={(e) => {
-                let posicao = (e.nativeEvent.contentOffset.x > 0)
-                  ? e.nativeEvent.contentOffset.x / Dimensions.get('window').width
-                  : 0;
-                console.log('passssouuuuu alter coordenadas')
-                setTimeout(async () => {
-                  if (posicao > 0 && posicao < this.state.places.length) {
-                    this.alterCoordenadas(this.state.places[posicao])
-                  }
-                })
-              }}
-              data={this.state.places}
-              renderItem={this.renderItem}
-              extraData={this.state.index}
-              keyExtractor={this._keyExtractor}
-              //getItemLayout={this.getItemLayout}
-              ItemSeparatorComponent={this.itemSeparatorComponent}
-            />
+          <FlatList
+            horizontal
+            scrollEnabled
+            automaticallyAdjustContentInsets={true}
+            onScroll={(e) => { console.log('onScroll', e.nativeEvent); console.log("indexx", this.state.index) }}
+            ref={(ref) => { this.flatListRef = ref; }}
+            pagingEnabled={true}
+            onMomentumScrollEnd={(e) => {
+              let posicao = (e.nativeEvent.contentOffset.x > 0)
+                ? e.nativeEvent.contentOffset.x / Dimensions.get('window').width
+                : 0;
+              console.log('passssouuuuu alter coordenadas')
+              setTimeout(async () => {
+                if (posicao > 0 && posicao < this.state.places.length) {
+                  this.alterCoordenadas(this.state.places[posicao])
+                }
+              })
+            }}
+            data={this.state.places}
+            renderItem={this.renderItem}
+            extraData={this.state.index}
+            keyExtractor={this._keyExtractor}
+            //getItemLayout={this.getItemLayout}
+            ItemSeparatorComponent={this.itemSeparatorComponent}
+          />
           {/* </ScrollView> */}
         </View>
       </View>
@@ -323,7 +323,7 @@ const styles = StyleSheet.create({
   card: {
     marginTop: 5,
     marginLeft: 0,
-   // width: Dimensions.get('window').width - 20,
+    // width: Dimensions.get('window').width - 20,
     borderBottomWidth: 5,
     borderRadius: 5,
     borderColor: '#000000',
@@ -333,7 +333,7 @@ const styles = StyleSheet.create({
     marginTop: 0,
     marginRight: 0,
     height: '100%',
-   // width: 20,
+    // width: 20,
     backgroundColor: 'red'
   },
   body: {
@@ -359,7 +359,7 @@ const styles = StyleSheet.create({
     marginLeft: 0,
   },
   description: {
-    marginBottom:20,
+    marginBottom: 20,
   },
   city: {
     //  flex: 1,
@@ -388,7 +388,7 @@ const styles = StyleSheet.create({
   },
   buttonAnterior:
   {
-     position: 'absolute',
+    position: 'absolute',
     left: -15,
     backgroundColor: '#6495ED',
     alignItems: 'center',
