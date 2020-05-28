@@ -92,7 +92,7 @@ export default class ModalExemplo extends Component {
 
         if (isActive) {
             return (
-                <ListagemAgenda isActive={isActive} id_conpanie={section.idEmpresa} id_service={section._id} data='10/20180' />
+                <ListagemAgenda id_conpanie={section.idEmpresa} id_service={section._id} tempo={section.tempo} />
             )
         } else {
             

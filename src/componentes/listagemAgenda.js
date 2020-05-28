@@ -32,104 +32,53 @@ export default class listagemAgenda extends Component {
         id_conpanie: this.props.id_conpanie,
         id_service: this.props.id_service,
         id_cliente: null,
-        dataAgenda: '00/00/00',
-        isActive: this.props.isActive,
-        activIndicador: false,
+        dataAgenda: '00/00/0000',
+        tempo: this.props.tempo,
+        activIndicador: true,
         agenda: [],
+        erroBusca:false,
         places: []
     }
-    async componentDidMount () {
-
+    async componentDidMount() {
+        let agenda = new Array();
         try {
             console.log('o-----------------------------------------')
-            const userGet = await AsyncStorage.getItem('user');
+            //const userGet = await AsyncStorage.getItem('user');
             const dataGet = await AsyncStorage.getItem('data');
 
             const data = {
-                idEmpresa: '5eb3e4212c78cb2fe89d64a5',
-                dataAgenda: '28/25/25',
-                idServico: 1,
-                tempoServico: 40
+                idEmpresa: this.props.id_conpanie,
+                dataAgenda: dataGet,
+                idServico: this.props.id_service,
+                tempoServico: this.props.tempo
             }
-            const agenda = await api.post('/showDataSchedule', data);
-            
-            console.log('agendaaaaaa-> ' + agenda)
-            this.setState({ agenda: agenda })
+            console.log(data)
+            const response = await api.post('/showDataSchedule', data);
+            console.log('agendaaaaaaaaaaaaaaaa-> ' + response.data.agenda)
+
+            if (response.data.agenda.lengh != 0) {
+
+                agenda = response.data.agenda
+                this.setState({ agenda: agenda })
+                this.setState({erroBusca: !this.state.erroBusca})
+                this.setState({ activIndicador: !this.state.activIndicador })
+            } else {
+                this.setState({ activIndicador: !this.state.activIndicador })
+                return showNotification('Agenda vazia');
+            }
 
         } catch (err) {
+            this.setState({ activIndicador: !this.state.activIndicador })
             console.log('Erro:', err);
         }
 
-
-
-
-
-
-        // async componentDidMount () {
-        //  this.setState({ activIndicador: !this.state.activIndicador })
-
-        // const userGet = await AsyncStorage.getItem('user');
-        // const dataGet = await AsyncStorage.getItem('data');
-
-
-        // if (userGet !== null && data !== null ) {
-        //     // Converte este json para objeto
-        //     //var user = JSON.parse(userGet);
-        //     var user = JSON.parse(userGet)
-        //     var dataAgenda = JSON.parse(dataGet)
-
-        //     var id_cliente = user._id
-        //     this.setState({ id_cliente,dataAgenda })
-        //     console.log('--------------------------------------------------------------------------------')
-        //     console.log('--------------------------------------------------------------------------------')
-        //     console.log('--------------------------------------------------------------------------------')
-
-        //     console.log('id cliente '+this.state.id_cliente +' data '+this.state.data)
-        // }
-
-
-        // const data = {
-        //     idEmpresa: '5eb3e4212c78cb2fe89d64a5',
-        //     dataAgenda: '28/25/25',
-        //     idServico: 1,
-        //     tempoServico: 40
-        // }
-
-        // console.log('buscaa--------------agenda  ')
-
-        // /*agenda fake */
-
-        // await api.post('/showDataSchedule', data).then((response) => {
-        //     if (response.data.lengh != 0) {
-        //         console.log('respoooooooseeee dattttttta', response.data)
-        //         let agenda = new Array();
-
-        //         agenda = response.data.agenda
-
-        //         this.setState({ agenda: agenda })
-
-
-
-        //     } else {
-        //         this.setState({ activIndicador: !this.state.activIndicador })
-        //         return showNotification(response.data.mensagem);
-        //     }
-        // }).catch((error) => {
-        //     console.log('erooooooooooooooooo', error)
-        //     this.setState({ activIndicador: !this.state.activIndicador })
-        //     showError('Falha na conexão')
-        //     // return this.props.navigation.navigate('Home')
-        // });
     }
 
 
     _retrieData = async () => {
         try {
-
             const userGet = await AsyncStorage.getItem('user');
             const dataGet = await AsyncStorage.getItem('data');
-
-
             if (userGet !== null && data !== null) {
                 // Converte este json para objeto
                 //var user = JSON.parse(userGet);
@@ -171,51 +120,44 @@ export default class listagemAgenda extends Component {
             </TouchableOpacity>
         )
     }
-    // horariosAgenda(horario) {
-
-    //     return (
-    //         <TouchableOpacity style={styles.viewHorarios} onPress={() => this.agendarHorario(horario)} >
-    //             <View style={styles.horarios} >
-    //                 <Text>
-    //                     {horario}
-    //                 </Text>
-    //             </View>
-    //         </TouchableOpacity>
-    //     )
-    // }
 
     render() {
 
         console.log('data ' + this.state.data)
         console.log('agendaa ' + this.state.agenda)
         console.log('--1111111111111111111111111111111111------------------------------------------------------------------------')
-        console.log('isactve  ' + this.state.isActive)
+
 
         return (
 
             <View>
                 <ActivIndicador animating={this.state.activIndicador} />
-                {
-
-                    // this.state.agenda.map(agenda => (
-                    //     <View style={styles.container}>
-                    //         <Text style={styles.title}>
-                    //             Funcionário {agenda.nome}
-                    //             {console.log('funiocooooonari'+agenda.nome)}
-                    //         </Text>
-                    //         <ScrollView horizontal={true}>
-                    //             {/* {agenda.horariosDisponiveis.map(horario => this.horariosDisponivel(horario))} */}
-                    //         </ScrollView>
-                    //     </View>
-                    // ))
+                {this.state.erroBusca &&
+                    <View>
+                        {
+                            this.state.agenda.map(agenda => (
+                                <View style={styles.container}>
+                                    <Text style={styles.title}>
+                                        Funcionário {agenda.nome}
+                                        {console.log('funiocooooonari' + agenda.nome)}
+                                    </Text>
+                                    <ScrollView horizontal={true}>
+                                        {agenda.horariosDisponiveis.map(horario => this.horariosDisponivel(horario))}
+                                    </ScrollView>
+                                </View>
+                            ))
+                        }
+                    </View>
                 }
                 {
 
-                    console.log('agenda -->' + this.state.agenda)
-              
+                    console.log('agenda -->' + Object.values(Object.values(this.state.agenda)))
+
                 }
+
                 <Text>oiiiii</Text>
             </View>
+
         );
 
 

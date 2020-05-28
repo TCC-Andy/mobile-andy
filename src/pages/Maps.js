@@ -49,12 +49,11 @@ export default class Maps extends Component {
 
   async componentDidMount() {
     this.setState({ activIndicador: !this.state.activIndicador })
-    const data = {
-        categoria: 'cabelereiro'
-      }
+   
+      var categoria = 'cabelereiro'
     
 
-    await api.get('/showCategories/cabelereiro').then((response) => {
+    await api.get(`/showCategories/${categoria}`).then((response) => {
       console.log('dat ')
       console.log('response ' + response.data)
       if (response.data.lengh != 0) {
@@ -84,14 +83,12 @@ export default class Maps extends Component {
 
   showServices = async (_id) => {
     this.setState({ activIndicador: !this.state.activIndicador })
-    const data = {
-      id: _id
-    }
-    await api.get('/showServices').then((response) => {
+    var id = _id
+    await api.get(`/showCompanyServices/${id}`).then((response) => {
       if (response.data.lengh != 0) {
 
         let services = new Array();
-        response.data.forEach(data => {
+        response.data.servicos.forEach(data => {
 
           services.push(data);
 
@@ -105,8 +102,10 @@ export default class Maps extends Component {
       } else {
         this.setState({ activIndicador: !this.state.activIndicador })
         return showNotification(response.data.menssagem);
+        this.setState({ activIndicador: !this.state.activIndicador })
       }
     }).catch((error) => {
+      console.log(error)
       showError('Falha na conexão')
     });
   }
@@ -153,10 +152,10 @@ export default class Maps extends Component {
 
         <View style={styles.header}>
           <Text style={styles.title} >
-            {item.nome}
+            {item._id}
           </Text>
           <TouchableOpacity style={styles.buttonServices}
-            onPress={() => this.showServices()}>
+            onPress={() => this.showServices(item._id)}>
             <Text style={styles.textButton}>Servicos </Text>
           </TouchableOpacity >
         </View>

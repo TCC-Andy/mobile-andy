@@ -39,13 +39,13 @@ export default class ViewData extends Component {
                 momentDate.year(e.year)
                 this.setState({ date: momentDate.toDate() })
               console.log(moment(this.state.date).format('D/MM/YYYY'))
-                storeData('data',moment(this.state.date).format('D/MM/YYYY'))
+                storeData('data',moment(this.state.date).format('YYYY/MM/D'))
             }
         })
     }
     render() {
         console.log(moment(this.state.date).format('D/MM/YYYY'))
-        storeData('data',moment(this.state.date).format('D/MM/YYYY'))
+        storeData('data',moment(this.state.date).format('YYYY/MM/D'))
         return (
             <View style={styles.card}>
                 {/* <Text> {moment(this.state.date).format('DD/MM/YYYY')}</Text> */}
