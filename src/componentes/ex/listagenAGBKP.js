@@ -43,7 +43,37 @@ export default class listagemAgenda extends Component {
 
     delay = async (ms) => {
         return new Promise((resolve) => {
-            setTimeout(resolve, ms);
+          setTimeout(resolve, ms);
+        });
+      }
+
+    buscaAgenda = async (datanova) => {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                let agenda = new Array();
+                const data = {
+                    idEmpresa: '5ecab500563c112a70493769',
+                    dataAgenda: '2020/05/26',
+                    idServico: '5ecab7feb7b5ec4e00e7c098',
+                    tempoServico: '20'
+                }
+                api.post('/showDataSchedule', data).then((response) => {
+                    if (response.data.agenda.lengh != 0) {
+                        response.data.agenda.forEach(data => {
+                            agenda.push(data);
+                        });
+                        this.setState({ agenda: agenda })
+                        this.setState({ erroBusca: !this.state.erroBusca })
+                    } else {
+                        this.setState({ erroBusca: false })
+                        this.setState({ mensageErro: 'Nao foi possivel' })
+                    }
+                    return agenda
+                }).catch((error) => {
+                    console.log(error)
+                });
+                ; resolve();
+            });
         });
     }
 
@@ -55,30 +85,11 @@ export default class listagemAgenda extends Component {
             await Promise.all([
                 this.buscaAgenda(dataGet)
             ])
-            console.log('response')
         } catch (e) {
-            console.log(e)
+           
         }
+
     }
-
-    buscaAgenda = async (datanova) => {
-        let agenda = new Array();
-        const data = {
-            idEmpresa: '5ecab500563c112a70493769',
-            dataAgenda: '2020/05/26',
-            idServico: '5ecab7feb7b5ec4e00e7c098',
-            tempoServico: '20'
-        }
-        try {
-            let response = await api.post('/showDataSchedule', data)
-            await this.setState({ agenda: response.data.agenda })
-            await this.setState({ erroBusca: !this.state.erroBusca })
-        } catch (error) {
-            console.log(error)
-        };
-    };
-
-
 
 
     _retrieData = async () => {
@@ -196,93 +207,5 @@ const styles = StyleSheet.create({
     }
 })
 
-/*
-{rowData.Agenda.forEach(nomeFuncionario => {
 
-        <Text>{nomeFuncionario}</Text>
-        {this.agendaDisponivel(rowData.Agenda[0])}
-})}
-
-
-
-servicos: [
-            {
-                nome: 'corte de cabelo',
-                descricao: 'Sera cortado seu cabelo com maquina zero :)',
-                tempo: '10:00',
-                preco: '30:00',
-            },
-            {
-                nome: 'corte de barba',
-                descricao: 'Sera fazer a barba :)',
-                tempo: '20:00',
-                preco: '50:00',
-            },
-            {
-                nome: 'corte de cabelo',
-                descricao: 'Sera feito bigode :)',
-                tempo: '10:00',
-                preco: '30:00',
-            }
-
-        ],
-        Agenda: [{
-            _id: 1,
-            nomeFuncionario: 'gustavo',
-            HorariosOcupados: [{
-                inicio: '0',
-                cliente: 'incio',
-                fim: '08:30'
-            }, {
-                inicio: '0',
-                cliente: 'Ricardo',
-                fim: '08:30'
-            }, {
-                inicio: '0',
-                cliente: 'fim',
-                fim: '18:30'
-            },
-            ]
-        }
-        ]
-*/
-   // return (
-
-        //     <View>
-        //         {console.log("flast list", this.state.agenda)}
-        //         <FlatList
-        //             horizontal={false}
-        //             data={this.state.agenda}
-        //             renderItem={({ item: rowData }) => {
-
-        //                 return (
-        //                     <View>
-        //                         <Text>
-        //                             flast.......
-        //                         {rowData.nomeFuncionario}
-
-        //                         </Text>
-        //                         {this.agendaDisponivel(rowData.HorariosOcupados)}
-        //                     </View>
-
-        //                 );
-        //             }}
-        //             keyExtractor={(item, index) => index}
-        //         />
-        //     </View>
-
-        //     // <View style={styles.container}>
-        //     //     <Text>TESTE</Text>
-        //     //     <Text>
-        //     //         oiii agenda
-        //     //         id compania {this.props.id_conpanie}
-        //     //         id cliente {this.state.id_cliente}
-        //     //         id services {this.props.id_sevice}
-        //     //         id data {this.props.data}
-        //     //         {this.agendaDisponivel()}
-
-        //     //     </Text>
-
-        //     // </View>
-        // )
 
