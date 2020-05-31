@@ -47,6 +47,19 @@ export default class listagemAgenda extends Component {
         });
       }
 
+      async componentDidMount() {
+
+        let dataGet = await AsyncStorage.getItem('data');
+        try {
+            console.log("Doncce");
+            await Promise.all([
+                this.buscaAgenda(dataGet)
+            ])
+        } catch (e) {
+           console.log(e)
+        }
+    }
+
     buscaAgenda = async (datanova) => {
         return new Promise((resolve) => {
             setTimeout(() => {
@@ -75,20 +88,6 @@ export default class listagemAgenda extends Component {
                 ; resolve();
             });
         });
-    }
-
-    async componentDidMount() {
-
-        let dataGet = await AsyncStorage.getItem('data');
-        try {
-            console.log("Doncce");
-            await Promise.all([
-                this.buscaAgenda(dataGet)
-            ])
-        } catch (e) {
-           
-        }
-
     }
 
 
@@ -209,3 +208,26 @@ const styles = StyleSheet.create({
 
 
 
+/**
+ * 
+ * 
+ * _retrieData = async () => {
+        try {
+            const userGet = await AsyncStorage.getItem('user');
+            const dataGet = await AsyncStorage.getItem('data');
+            if (userGet !== null && data !== null) {
+                var user = JSON.parse(userGet)
+                var data = JSON.parse(dataGet)
+
+                var id_cliente = user._id
+                this.setState({ id_cliente, data })
+                console.log('---------gggggggggggggggggggg-sssssssss----------------------------------------------------------------------')
+
+
+                console.log('id cliente ' + this.state.id_cliente + ' data ' + this.state.data)
+            }
+        } catch (error) {
+            console.log(error.message);
+        }
+    };
+ */

@@ -49,9 +49,9 @@ export default class Maps extends Component {
 
   async componentDidMount() {
     this.setState({ activIndicador: !this.state.activIndicador })
-   
-      var categoria = 'cabelereiro'
-    
+
+    var categoria = 'cabelereiro'
+
 
     await api.get(`/showCategories/${categoria}`).then((response) => {
       console.log('dat ')
@@ -80,35 +80,29 @@ export default class Maps extends Component {
     });
   }
 
-
   showServices = async (_id) => {
+    //_id = 1
     this.setState({ activIndicador: !this.state.activIndicador })
-    var id = _id
-    await api.get(`/showCompanyServices/${id}`).then((response) => {
-      if (response.data.lengh != 0) {
+    try {
 
-        let services = new Array();
-        response.data.servicos.forEach(data => {
-
-          services.push(data);
-
-          //console.log("MAPS Services----",services);
-        });
-        //console.log("MAPS SHOW--------------------------",services);
-        this.setState({ services: services })
-        this.setState({ showModal: true })
-        this.setState({ activIndicador: !this.state.activIndicador })
-
+      let response = await api.get(`/showCompanyServices/${_id}`)
+      if (response.data.mensagem === undefined) {
+        await this.setState({ services: response.data.servicos })
+        await this.setState({ showModal: true })
       } else {
-        this.setState({ activIndicador: !this.state.activIndicador })
-        return showNotification(response.data.menssagem);
-        this.setState({ activIndicador: !this.state.activIndicador })
+
+        showNotification(response.data.mensagem);
       }
-    }).catch((error) => {
-      console.log(error)
+      this.setState({ activIndicador: !this.state.activIndicador })
+
+    } catch (e) {
+      console.log(e)
       showError('Falha na conexão')
-    });
+      this.setState({ activIndicador: false })
+    }
   }
+
+
 
   alterCoordenadas = (place) => {
     let camera = null

@@ -36,7 +36,6 @@ export default class ModalExemplo extends Component {
 
     }
 
-
     agendaDisponivel = (id_service) => {
         Alert.alert('oiii vamo', id_service)
     }
@@ -88,15 +87,14 @@ export default class ModalExemplo extends Component {
     renderContent(section, _, isActive) {
         
         console.log('isactive ----  =||||||= ' + isActive)
-    
 
-        if (isActive) {
+        //if (isActive) {
             return (
                 <ListagemAgenda id_conpanie={section.idEmpresa} id_service={section._id} tempo={section.tempo} />
             )
-        } else {
+        // } else {
             
-        }
+        // }
     }
 
     render() {
@@ -274,14 +272,11 @@ const styles = StyleSheet.create({
     }
 })
 
+
+
+
+
 /*
-{rowData.Agenda.forEach(nomeFuncionario => {
-
-        <Text>{nomeFuncionario}</Text>
-        {this.agendaDisponivel(rowData.Agenda[0])}
-})}
-
-
 
 servicos: [
             {

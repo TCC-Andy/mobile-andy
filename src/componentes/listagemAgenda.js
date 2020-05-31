@@ -1,11 +1,9 @@
 import React, { Component } from 'react'
 import {
     Platform,
-    Modal,
     View,
     Text,
     TouchableOpacity,
-    TextInput,
     StyleSheet,
     TouchableWithoutFeedback,
     Dimensions,
@@ -13,15 +11,12 @@ import {
     SectionList,
     Alert,
     ScrollView,
-    Switch,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import api from '../service/api';
-import { Card } from "react-native-elements";
 import ActivIndicador from './activIndicador'
 import { showError, showSuccess, showNotification } from '../utils/alertsUser'
 import * as Animatable from 'react-native-animatable';
-import { color } from 'react-native-reanimated';
 import moment from 'moment'
 import 'moment/locale/pt-br'
 moment.locale('pt-BR')
@@ -34,9 +29,8 @@ export default class listagemAgenda extends Component {
         id_cliente: null,
         dataAgenda: '00/00/0000',
         tempo: this.props.tempo,
-        activIndicador: false,
+        activIndicador: true,
         agenda: [],
-        erroBusca: false,
         mensageErro: '',
         places: []
     }
@@ -49,75 +43,91 @@ export default class listagemAgenda extends Component {
 
     async componentDidMount() {
 
-        let dataGet = await AsyncStorage.getItem('data');
+
         try {
-            console.log("Doncce");
-            await Promise.all([
-                this.buscaAgenda(dataGet)
-            ])
-            console.log('response')
+            let dataGet = await AsyncStorage.getItem('data');
+            // const data = {
+            //     idEmpresa: this.props.id_conpanie,
+            //     dataAgenda: dataGet,
+            //     idServico: this.props.id_conpanie,
+            //     tempoServico: parseInt(this.props.tempo)
+            // }
+            const data = {
+                idEmpresa: '5ecab500563c112a70493769',
+                dataAgenda: dataGet,
+                idServico: '5ecab7feb7b5ec4e00e7c098',
+                tempoServico: parseInt(this.props.tempo)
+            }
+            let response = await api.post('/showDataSchedule', data)
+            console.log('console dir ->',response.data)
+            if(response.data.mensagem === undefined){
+                await this.setState({ agenda: response.data.agenda })
+            }else{
+                await this.setState({ mensageErro:response.data.mensagem})
+            }
+            await this.setState({ activIndicador: !this.state.activIndicador })
         } catch (e) {
             console.log(e)
+            this.setState({ activIndicador: false })
+            this.setState({ mensageErro:' Falha na conexão'})
+            showNotification('Falha na conexão');
         }
     }
 
-    buscaAgenda = async (datanova) => {
-        let agenda = new Array();
-        const data = {
-            idEmpresa: '5ecab500563c112a70493769',
-            dataAgenda: '2020/05/26',
-            idServico: '5ecab7feb7b5ec4e00e7c098',
-            tempoServico: '20'
-        }
-        try {
-            let response = await api.post('/showDataSchedule', data)
-            await this.setState({ agenda: response.data.agenda })
-            await this.setState({ erroBusca: !this.state.erroBusca })
-        } catch (error) {
-            console.log(error)
-        };
-    };
+    alertConfirmacao = (horario,array) =>
+    Alert.alert(
+      "Confirmação",
+      "deseja realmente fazer Agendamendo",
+      [
+        {
+          text: "Cancelar",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        { text: "OK", onPress: () => this.agendarHorario(horario,array) }
+      ],
+      { cancelable: false }
+    );
 
-
-
-
-    _retrieData = async () => {
-        try {
-            const userGet = await AsyncStorage.getItem('user');
-            const dataGet = await AsyncStorage.getItem('data');
-            if (userGet !== null && data !== null) {
-                // Converte este json para objeto
-                //var user = JSON.parse(userGet);
-                var user = JSON.parse(userGet)
-                var data = JSON.parse(dataGet)
-
-                var id_cliente = user._id
-                this.setState({ id_cliente, data })
-                console.log('---------gggggggggggggggggggg-sssssssss----------------------------------------------------------------------')
-
-
-                console.log('id cliente ' + this.state.id_cliente + ' data ' + this.state.data)
+    agendarHorario = async (horario,array) => {
+        
+        showSuccess('Horario ' + horario + ' hrs, reservado com sucesso!')
+        this.setState({ activIndicador: !this.state.activIndicador })
+            try {
+                let user = await AsyncStorage.getItem('user');
+                const data = {
+                    status:'1',
+                    idFuncionario: array.idFuncionario,
+                    nomeFuncionario: array.nomeFuncionario,
+                    idCliente: user._id,
+                    nomeCliente: user.name,
+                    dataAgenda: array.dataServico,
+                    idServico: array.idServico,
+                    inicioServico: horario.inicioServico,
+                    fimServico: horario.fimServico,
+                }
+                let response = await api.post('/createSchedule', data)
+                console.log('criar agenda->',response.data)
+                if(response.data.mensagem === undefined){
+                   // await this.setState({ agenda: response.data.agenda })
+                   showSuccess('Agendado com sucesso')
+                }else{
+                    this.setState({ mensageErro:response.data.mensagem})
+                }
+                 this.setState({ activIndicador: !this.state.activIndicador })
+            } catch (e) {
+                console.log(e)
+                this.setState({ activIndicador: false })
+                this.setState({ mensageErro:' Falha na conexão'})
+                showNotification('Falha na conexão');
             }
-        } catch (error) {
-            console.log(error.message);
-        }
+        
     };
-
-    agendarHorario = async (horario) => {
-        try {
-            showSuccess('Horario ' + horario + ' hrs, reservado com sucesso!')
-
-        } catch (error) {
-            console.log(error.message);
-        }
-
-    };
-
 
     horariosDisponivel(horario) {
-        console.log('horarioooo ============', horario)
+      //  console.log('horarioooo ============', horario)
         return (
-            <TouchableOpacity style={styles.viewHorarios} onPress={() => this.agendarHorario(horario)} >
+            <TouchableOpacity style={styles.viewHorarios} onPress={() => this.alertConfirmacao(horario)} >
                 <View style={styles.horarios} >
                     <Text>
                         {horario.inicioServico}
@@ -128,26 +138,24 @@ export default class listagemAgenda extends Component {
     }
 
     render() {
-
-        console.log('data ' + this.state.data)
         console.log('agendaa ->>>>>>' + this.state.agenda)
-        console.log('--1111111111111111111111111111111111------------------------------------------------------------------------')
 
         return (
 
             <View>
                 <ActivIndicador animating={this.state.activIndicador} />
-                {this.state.erroBusca &&
+                {this.state.mensageErro !== '' &&
                     <View>
                         {
-                            this.state.agenda.map(agenda => (
+                     console.log('agenda []true ou false ->> ', (this.state.agenda === [])),
+                            this.state.agenda.map(agenda,indice,array => (
                                 <View style={styles.container}>
                                     <Text style={styles.title}>
                                         Funcionário {agenda.nome}
-                                        {console.log('funiocooooonari' + agenda.nome)}
+                                        {/* {console.log('funiocooooonari' + agenda.nome)} */}
                                     </Text>
                                     <ScrollView horizontal={true}>
-                                        {agenda.horariosDisponiveis.map(horario => this.horariosDisponivel(horario))}
+                                        {agenda.horariosDisponiveis.map(horario => this.horariosDisponivel(horario,array))}
                                     </ScrollView>
                                 </View>
                             ))
@@ -156,11 +164,14 @@ export default class listagemAgenda extends Component {
                 }
                 {
 
-                    console.log('agenda -->' + Object.values(Object.values(this.state.agenda)))
+                   // console.log('agenda -->' + Object.values(Object.values(this.state.agenda)))
 
                 }
 
-                <Text>oooGiii</Text>
+                <Text>
+                    {this.state.mensageErro !== '' &&
+                    this.state.mensageErro}
+                </Text>
             </View>
 
         );
