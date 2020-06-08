@@ -43,7 +43,6 @@ export default class listagemAgenda extends Component {
 
     async componentDidMount() {
 
-
         try {
             let dataGet = await AsyncStorage.getItem('data');
             // const data = {

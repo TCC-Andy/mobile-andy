@@ -10,16 +10,20 @@ import {
   Dimensions,
   Button,
   ScrollView,
+  ImageBackground,
 } from 'react-native';
 import MapboxGL from '@react-native-mapbox-gl/maps';
 import ModalExemplo from '../componentes/ModalExemplo';
 import SliderLocations from '../componentes/sliderLocations';
 import Icon from 'react-native-vector-icons/FontAwesome'
+import Image from "react-native-elements";
 import { Card } from "react-native-elements";
 import api from '../service/api';
 import { showError, showSuccess, showNotification } from '../utils/alertsUser'
 import ActivIndicador from '../componentes/activIndicador'
 import * as Animatable from 'react-native-animatable';
+import Carousel from 'react-native-snap-carousel';
+import separadorImage from '../../assets/imgs/botaoDireita.png'
 
 
 
@@ -133,73 +137,124 @@ export default class Maps extends Component {
           <Icon name="map-marker" color={'#DC143C'} size={20} />
 
         </View>
-        <MapboxGL.Callout style={{ height: 100, width: 100 }} title={place.descricao, index.toString()} />
+        <MapboxGL.Callout style={{ height: 100, width: 100 }} title={place.descricao} />
       </MapboxGL.PointAnnotation>
     )
   }
 
   renderItem = ({ item, index }) => (
-    <Card
-      containerStyle={styles.card}
+    console.log('item ' + this.state.places.length + ' indez x' + index),
+    <View
+      style={styles.card}
     >
       <View style={styles.body}>
-
-        <View style={styles.header}>
-          <Text style={styles.title} >
-            {item._id}
-          </Text>
-          <TouchableOpacity style={styles.buttonServices}
-            onPress={() => this.showServices(item._id)}>
-            <Text style={styles.textButton}>Servicos </Text>
-          </TouchableOpacity >
-        </View>
-
-        <View style={styles.evaluation}>
-          <Text style={styles.textEvaluation}>Avaliação  <Icon name="star" color={'#e7a74e'} size={15} />
-            <Icon name="star" color={'#e7a74e'} size={15} />
-            <Icon name="star-half-o" color={'#e7a74e'} size={15} />
-            <Icon name="star-o" color={'#e7a74e'} size={15} />
-            <Icon name="star-o" color={'#e7a74e'} size={15} />
-          </Text>
-        </View>
-
         <View style={styles.services}>
-          <View style={styles.textSevies}>
-            <Text>-----------------------------------------------</Text>
+          {index != 0 &&
+            <TouchableOpacity style={styles.buttonAnterior}
+              onPress={() => this.alterarPosicao(item, index - 1)}>
+
+              <View style={styles.icone}>
+                {/* <Icon name='long-arrow-left'
+                size={13} color='black' /> */}
+              </View>
+              <View style={styles.espacamento}></View>
+              <View style={styles.icone}>
+                <Icon name='angle-left'
+                  size={25} color='black' />
+              </View>
+              <View style={styles.espacamento}></View>
+              <View style={styles.icone}>
+                {/* <Icon name='long-arrow-left'
+                size={13} color='black' /> */}
+              </View>
+
+            </TouchableOpacity >
+          }
+          <View style={styles.entreButuns}>
+            <View style={styles.bodyCentral}>
+              <View style={styles.headerTotal}>
+                <View style={styles.header}>
+                  <Text style={styles.title} >
+                    {item.nome}
+                  </Text>
+
+                  <View style={styles.buttonServices}>
+                    <TouchableOpacity
+                      onPress={() => this.showServices(item._id)}>
+                      <Text style={styles.textButton}>Servicos </Text>
+                    </TouchableOpacity >
+                  </View>
+
+                </View>
+              </View>
+
+              <View>
+                <Text>-----------------------------------------------</Text>
+              </View>
+
+
+              <View style={styles.evaluation}>
+                <Text style={styles.textEvaluation}>Avaliação  <Icon name="star" color={'#e7a74e'} size={15} />
+                  <Icon name="star" color={'#e7a74e'} size={15} />
+                  <Icon name="star-half-o" color={'#e7a74e'} size={15} />
+                  <Icon name="star-o" color={'#e7a74e'} size={15} />
+                  <Icon name="star-o" color={'#e7a74e'} size={15} />
+                </Text>
+              </View>
+
+              <View style={styles.description}>
+                <Text>{item.descricao} </Text>
+              </View>
+
+              <View style={styles.City}>
+                <Text>{item.cidade} - {item.bairro}</Text>
+              </View>
+
+              <View style={styles.footer}>
+                <Text>{item.rua}-{item.status}-</Text>
+              </View>
+            </View>
           </View>
-          <TouchableOpacity style={styles.buttonProximo}
-            onPress={() => this.alterarPosicao(item, index + 1)}>
-            <Text style={styles.textButton}>proximo </Text>
-          </TouchableOpacity >
-          <TouchableOpacity style={styles.buttonAnterior}
-            onPress={() => this.alterarPosicao(item, index - 1)}>
-            <Text style={styles.textButton}>anterior </Text>
-          </TouchableOpacity >
+
+          {index != (this.state.places.length - 1) &&
+            <TouchableOpacity style={styles.buttonProximo}
+              onPress={() => this.alterarPosicao(item, index + 1)}>
+              <View style={styles.icone}>
+                {/* <Icon name='long-arrow-right'
+                  size={13} color='black' /> */}
+              </View>
+              <View style={styles.espacamento}></View>
+              <View style={styles.icone}>
+                <Icon name='angle-right'
+                  size={25} color='black' />
+              </View>
+              <View style={styles.espacamento}></View>
+              <View style={styles.icone}>
+                {/* <Icon name='long-arrow-right'
+                  size={13} color='black' /> */}
+              </View>
+
+            </TouchableOpacity>
+          }
+
         </View>
 
-        <View style={styles.description}>
-          <Text>{item.descricao} </Text>
-        </View>
 
-        <View style={styles.City}>
-          <Text>{item.cidade} - {item.bairro}</Text>
-        </View>
-
-        <View style={styles.footer}>
-          <Text>{item.rua}-{item.status}-</Text>
-        </View>
 
       </View>
-    </Card>
+
+    </View>
+
   );
   // componentDidMount() {
   //   this.list.scrollToIndex({ animated: true,index: this.props.scrollToIndex + 2 });
   // }
   itemSeparatorComponent = (item, data) => {
     console.log("separeator ", data, " itmm", item)
-    return <View style={styles.separador}>
-      <Text>=</Text>
-    </View>
+    return (
+      <View></View>
+    )
+
   }
   // getItemLayout = (data, index) => (
   //   //this.state.index = index
@@ -228,7 +283,7 @@ export default class Maps extends Component {
           ref={m => (this.map = m)}
           style={styles.containerMaps}
           showUserLocation={true}
-          styleURL={MapboxGL.StyleURL.TrafficNight}// stret/ satellite TrafficNight
+          styleURL={MapboxGL.StyleURL.stret}// stret/ satellite TrafficNight
           attributionPosition={{ top: 8, left: 8 }}  //canto superior esquerda
           logoEnabled={false} // tirar o logo do mapa
         >
@@ -263,19 +318,18 @@ export default class Maps extends Component {
                 ? e.nativeEvent.contentOffset.x / Dimensions.get('window').width
                 : 0;
               console.log('passssouuuuu alter coordenadas')
-              setTimeout(async () => {
                 if (posicao > 0 && posicao < this.state.places.length) {
                   this.alterCoordenadas(this.state.places[posicao])
                 }
-              })
             }}
             data={this.state.places}
             renderItem={this.renderItem}
             extraData={this.state.index}
             keyExtractor={this._keyExtractor}
-            //getItemLayout={this.getItemLayout}
-            ItemSeparatorComponent={this.itemSeparatorComponent}
+          //getItemLayout={this.getItemLayout}
+          // ItemSeparatorComponent={this.itemSeparatorComponent}
           />
+
           {/* </ScrollView> */}
         </View>
       </View>
@@ -291,7 +345,7 @@ const styles = StyleSheet.create({
     flex: 2,
   },
   markerAnotacion: {
-    backgroundColor: 'rgba(255, 255, 255,0.9)',
+    // padding: '2%',
     flex: 1
   },
   annotationContainer: {
@@ -309,34 +363,27 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
   viewAnnotation: {
-    paddingLeft: -20,
+    // paddingLeft: -20,
     paddingBottom: 20,
     backgroundColor: 'rgba(255, 255, 255, 0.6)'
   },
   card: {
-    marginTop: 5,
-    marginLeft: 0,
-    // width: Dimensions.get('window').width - 20,
-    borderBottomWidth: 5,
-    borderRadius: 5,
-    borderColor: '#000000',
-    backgroundColor: 'rgba(211,211,211, 0.9)'
-  },
-  separador: {
-    marginTop: 0,
-    marginRight: 0,
-    height: '100%',
-    // width: 20,
-    backgroundColor: 'red'
+    flex: 1,
+    flexDirection: 'row',
+    width: Dimensions.get('window').width,
   },
   body: {
-
+    flex: 1,
+  },
+  services: {
+    flex: 4,
+    flexDirection: 'row',
   },
   header: {
+    flex: 1,
+    flexDirection: "row",
     marginTop: 0,
     marginLeft: 0,
-    marginTop: -10,
-    marginBottom: 10,
   },
   evaluation: {
     marginTop: -10,
@@ -346,59 +393,69 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginLeft: 0,
   },
-  services: {
-
-    marginTop: 0,
-    marginLeft: 0,
+  headerTotal: {
+    flex: 1,
+    flexDirection: "row"
   },
   description: {
-    marginBottom: 20,
+    flex: 1,
+    marginBottom: 10,
   },
   city: {
+    flex: 1,
     //  flex: 1,
     marginTop: 0,
     marginLeft: 0,
   },
   footer: {
+    flex: 1,
     //    flex: 1,
     marginTop: 0,
     marginLeft: 0,
   },
   title: {
+    flex: 2,
     fontSize: 20
   },
   textButton: {
     fontSize: 20,
   },
+  bodyCentral: {
+    flex: 1,
+  },
   buttonProximo: {
-    position: 'absolute',
-    left: Dimensions.get('window').width / 2 + 60,
-    backgroundColor: '#6495ED',
+    flex: 1,
+    backgroundColor: '#B0E0E6',
     alignItems: 'center',
     borderRadius: 3,
-    width: 90,
-    paddingBottom: 5,
+  },
+  entreButuns: {
+    flex: 25,
+    padding: '2%'
   },
   buttonAnterior:
   {
-    position: 'absolute',
-    left: -15,
-    backgroundColor: '#6495ED',
+    flex: 1,
+    backgroundColor: '#B0E0E6',
     alignItems: 'center',
     borderRadius: 3,
-    width: 90,
-    paddingBottom: 5,
+
 
   },
+  espacamento: {
+    flex: 2
+  },
+  icone: {
+    flex: 1
+  },
   buttonServices: {
-    position: 'absolute',
-    left: Dimensions.get('window').width / 2 + 40,
+    flex: 1,
+    //left: Dimensions.get('window').width / 2 + 40,
     backgroundColor: '#1E90FF',
     alignItems: 'center',
     borderRadius: 3,
-    width: 90,
+    //width: 90,
     paddingBottom: 5,
-
   },
   titleView: {
 
