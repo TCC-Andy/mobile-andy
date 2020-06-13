@@ -32,7 +32,6 @@ export default class listagemAgenda extends Component {
         activIndicador: true,
         agenda: [],
         mensageErro: '',
-        places: []
     }
 
     delay = async (ms) => {
@@ -143,7 +142,7 @@ export default class listagemAgenda extends Component {
 
             <View>
                 <ActivIndicador animating={this.state.activIndicador} />
-                {this.state.mensageErro !== '' &&
+                {this.state.mensageErro == '' &&
                     <View>
                         {
                      console.log('agenda []true ou false ->> ', (this.state.agenda === [])),
