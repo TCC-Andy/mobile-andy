@@ -3,9 +3,9 @@ import { Text } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome'
 
-import Main from '../pages/main'
+import Perfil from '../pages/perfil'
 import Home from '../pages/home'
-import Pagina2 from '../pages/pagina2'
+import Agenda from '../pages/agenda'
 import Pagina3 from '../pages/pagina3'
 
 const Tab = createBottomTabNavigator();
@@ -25,12 +25,12 @@ const menuTab = () =>
                 <Icon name="home" color={'#000000'} size={40} />
             )
         }} />
-        <Tab.Screen name="Pagina2" component={Pagina2}
+        <Tab.Screen name="Agenda" component={Agenda}
             options={{
                 tabBarVisible: true,
                 tabBarLabel: 'Agenda',
                 tabBarIcon: ({ color, size }) => (
-                    <Icon name="calendar" color={'#000000'} size={40} />
+                    <Icon name="calendar" color={'#000000'} size={38} />
                 )
             }}/>
      <Tab.Screen name="Pagina3" component={Pagina3}
@@ -38,15 +38,15 @@ const menuTab = () =>
                 tabBarVisible: true,
                 tabBarLabel: 'Favorito',
                 tabBarIcon: ({ color, size }) => (
-                    <Icon  name="heartbeat" color={'#000000'} size={40} />
+                    <Icon  name="heartbeat" color={'#000000'} size={38} />
                 )
             }}/>
-             <Tab.Screen name="Main" component={Main}
+             <Tab.Screen name="Perfil" component={Perfil}
             options={{
                 tabBarVisible: true,
-                tabBarLabel: 'notificações',
+                tabBarLabel: 'Perfil',
                 tabBarIcon: ({ color, size }) => (
-                    <Icon name="exclamation" color={'#000000'} size={40} />
+                    <Icon name="user" color={'#000000'} size={38} />
                 )
             }}/>
     </Tab.Navigator>

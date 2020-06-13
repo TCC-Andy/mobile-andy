@@ -14,7 +14,7 @@ import api from '../service/api';
 import ActivIndicador from '../componentes/activIndicador'
 import { showError, showSuccess, showNotification } from '../utils/alertsUser'
 
-export default class Pagina2 extends Component {
+export default class Agenda extends Component {
     state = {
         mensageErro: '',
         activIndicador: true,

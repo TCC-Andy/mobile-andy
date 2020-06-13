@@ -7,8 +7,6 @@ import Maps from '../pages/Maps';
 import AsyncStorage from '@react-native-community/async-storage';
 
 
-
-
 const Stack = createStackNavigator();
 
 const menuStackLogin =

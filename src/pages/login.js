@@ -30,7 +30,7 @@ import { color } from 'react-native-reanimated'
 const initialState = {
     name: 'bruno',
     surname: 'pedroso',
-    email: 'bruno.1301817@fapi-pinhais.edu.br',
+    email: 'bruno.1301817@fapi-pinhais.edu.br2',
     password: '123456',
     confirnPassword: '123456',
     stageNew: false,
@@ -97,6 +97,7 @@ export default class Login extends Component {
             }
         }).catch((error) => {
             showError('Falha na conexão')
+            this.setState({ activIndicador: false })
         });
     }
 
@@ -119,6 +120,7 @@ export default class Login extends Component {
             }
         }).catch((error) => {
             showError('Falha na conexão')
+            this.setState({ activIndicador: false })
         });
     }
 
@@ -139,12 +141,14 @@ export default class Login extends Component {
 
                 this._storeData(user)
             } else {
+                this.setState({ activIndicador: !this.state.activIndicador })
                 return showNotification(response.data.mensagem);
+                
             }
         }).catch((error) => {
             console.log(error)
             showError('Falha na conexão')
-            this.setState({ activIndicador: !this.state.activIndicador })
+            this.setState({ activIndicador: false })
         });
     }
     render() {
