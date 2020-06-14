@@ -29,13 +29,13 @@ export default class Agenda extends Component {
             console.log('id clientddde  ', idCliente)
             let response = await api.get(`/showClientHistSchedule/${idCliente}`)
             console.log('console ag horas ->', response.data)
-            console.log('------------------------------------------------>msdg ', response.data.mensagem)
-            if (response.data.mensagem == undefined) {
+            console.log('------------------------------------------------>msdg ',response.data.schedule.length)
+            if (response.data.schedule.length > 0) {
                 agenda = response.data.schedule
                 await this.setState({ agenda: agenda })
                 console.log(agenda)
             } else {
-                await this.setState({ mensageErro: response.data.mensagem })
+                await this.setState({ mensageErro: 'Não foi reallizado nenhum agendamento até o momento' })
             }
             await this.setState({ activIndicador: !this.state.activIndicador })
         } catch (e) {
@@ -75,14 +75,17 @@ export default class Agenda extends Component {
                             }
                         </View>
                     }
-                    {this.state.mensageErro !== '' &&
-                        <View>
-                            <Text style={styles.erro}>
+                    {console.log("msg erroo ", this.state.mensageErro),
+                        this.state.mensageErro !== '' &&
 
-                                {this.state.mensageErro}
-                Não foi reallizado nenhum agendamento
-                </Text>
-                        </View>
+                        <Card containerStyle={styles.card}>
+                            <View style={styles.viewErro}>
+                                <Text style={styles.erro}>
+                                    {this.state.mensageErro}
+                                </Text>
+                            </View>
+                        </Card>
+
                     }
                 </ScrollView>
             </View>
@@ -124,9 +127,13 @@ const styles = StyleSheet.create({
         fontSize: 25,
         color: '#FFFFFF'
     },
+    viewErro: {
+        flexDirection:'row',
+        justifyContent: 'center',
+    },
     erro: {
         margin: 10,
-        fontSize: 18,
+        fontSize: 22,
         color: '#000000'
     },
     viewHorarios: {

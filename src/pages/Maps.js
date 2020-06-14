@@ -22,7 +22,6 @@ import api from '../service/api';
 import { showError, showSuccess, showNotification } from '../utils/alertsUser'
 import ActivIndicador from '../componentes/activIndicador'
 import * as Animatable from 'react-native-animatable';
-import Carousel from 'react-native-snap-carousel';
 import separadorImage from '../../assets/imgs/botaoDireita.png'
 
 
@@ -193,14 +192,14 @@ export default class Maps extends Component {
               </View>
 
 
-              <View style={styles.evaluation}>
+              {/* <View style={styles.evaluation}>
                 <Text style={styles.textEvaluation}>Avaliação  <Icon name="star" color={'#e7a74e'} size={15} />
                   <Icon name="star" color={'#e7a74e'} size={15} />
                   <Icon name="star-half-o" color={'#e7a74e'} size={15} />
                   <Icon name="star-o" color={'#e7a74e'} size={15} />
                   <Icon name="star-o" color={'#e7a74e'} size={15} />
                 </Text>
-              </View>
+              </View> */}
 
               <View style={styles.description}>
                 <Text>{item.descricao} </Text>

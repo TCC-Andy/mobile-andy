@@ -12,25 +12,25 @@ import {
     KeyboardAvoidingView,
     Platform,
     ScrollView,
-    StatusBar
+    StatusBar,
+    Image,
+    
 } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage';
 import * as Animatable from 'react-native-animatable';
 import ActivIndicador from '../componentes/activIndicador'
-import axios from 'axios'
-//import AsyncStorage from '@react-native-community/async-storage'
-
-import backgroundImage from '../../assets/imgs/login4.jpg'//LOGIN4
+import backgroundImage from '../../assets/imgs/login15.jpg'//LOGIN4
 import AuthInput from '../componentes/textInput'
-
+// import { Image } from 'react-native-elements';
+// import image from '../../assets/imgs/logo_vermelho.jpeg'
 import api from '../service/api';
-import { showError, showSuccess, showNotification} from '../utils/alertsUser'
+import { showError, showSuccess, showNotification } from '../utils/alertsUser'
 import { color } from 'react-native-reanimated'
 
 const initialState = {
     name: 'bruno',
     surname: 'pedroso',
-    email: 'bruno.1301817@fapi-pinhais.edu.br2',
+    email: 'bruno.1301817@fapi-pinhais.edu.br3',
     password: '123456',
     confirnPassword: '123456',
     stageNew: false,
@@ -45,11 +45,11 @@ export default class Login extends Component {
     }
 
     _storeData = async (userSet) => {
-        
+
         try {
             var user = JSON.stringify(userSet);
             await AsyncStorage.setItem('user', user);
-       
+
             this._retrieData()
             this.setState({ activIndicador: !this.state.activIndicador })
             return this.props.navigation.navigate('Home')
@@ -143,7 +143,7 @@ export default class Login extends Component {
             } else {
                 this.setState({ activIndicador: !this.state.activIndicador })
                 return showNotification(response.data.mensagem);
-                
+
             }
         }).catch((error) => {
             console.log(error)
@@ -168,7 +168,7 @@ export default class Login extends Component {
             <ImageBackground source={backgroundImage}
                 style={styles.background}>
                 <ScrollView contentContainerStyle={styles.contentContainer}>
-                <StatusBar barStyle="dark-content"/>
+                    <StatusBar barStyle="dark-content" />
                     <Modal transparent={true} visible={this.state.opemResetPass}
                         animationType='slide' >
                         <TouchableWithoutFeedback onPress={() => this.setState({ opemResetPass: !this.state.opemResetPass })}>
@@ -202,7 +202,14 @@ export default class Login extends Component {
                         </TouchableWithoutFeedback>
                     </Modal>
                     <ActivIndicador animating={this.state.activIndicador} />
-                    <Animatable.Text animation="fadeInUpBig" duration={2000} style={styles.title}>Andy</Animatable.Text>
+                    <Image
+                        style={{ width: 180, height: 180,marginBottom:3 }}
+                        source={{
+                            uri: 'https://avatars2.githubusercontent.com/u/61466626?s=400&u=a5c9b1908b4b8cb6698cf3e8d0a5c4c563d2875b&v=4'}}
+
+                    />
+
+                    {/* <Animatable.Text animation="fadeInUpBig" duration={2000} style={styles.title}>Andy</Animatable.Text> */}
                     <Animatable.View animation="swing"
                         style={styles.formContainer}>
                         <Animatable.Text animation="pulse" duration={2000} style={styles.subtitle}>
@@ -250,29 +257,29 @@ export default class Login extends Component {
                                 disabled={!validForm}>
                                 <View style={[styles.button, validForm ? {} : { backgroundColor: '#AAA' }]}>
                                     <Text style={styles.textBotton}>
-                                        {this.state.stageNew ? 'Registrarr' : 'Entrar'}
+                                        {this.state.stageNew ? 'Registrar' : 'Entrar'}
                                     </Text>
                                 </View>
                             </TouchableOpacity>
                         </Animatable.View>
                         <Animatable.View animation="lightSpeedIn" duration={1800}>
-                        <TouchableOpacity style={styles.touchResetSenha}
-                            onPress={() => this.setState({ opemResetPass: !this.state.opemResetPass })}>
-                            {!this.state.stageNew &&
-                                <Text style={styles.textResetSenha}>
-                                    Recuperar Senha ?
+                            <TouchableOpacity style={styles.touchResetSenha}
+                                onPress={() => this.setState({ opemResetPass: !this.state.opemResetPass })}>
+                                {!this.state.stageNew &&
+                                    <Text style={styles.textResetSenha}>
+                                        Recuperar Senha ?
                                 </Text>
-                            }
-                        </TouchableOpacity>
+                                }
+                            </TouchableOpacity>
                         </Animatable.View>
                     </Animatable.View>
                     <Animatable.View animation="slideInUp" duration={2000}>
-                    <TouchableOpacity style={{ padding: 15 }}
-                        onPress={() => this.setState({ stageNew: !this.state.stageNew })} >
-                        <Text style={styles.buttonText}>
-                            {this.state.stageNew ? 'Já possui conta?' : 'Ainda não possui conta?'}
-                        </Text>
-                    </TouchableOpacity>
+                        <TouchableOpacity style={{ padding: 15 }}
+                            onPress={() => this.setState({ stageNew: !this.state.stageNew })} >
+                            <Text style={styles.buttonText}>
+                                {this.state.stageNew ? 'Já possui conta?' : 'Ainda não possui conta?'}
+                            </Text>
+                        </TouchableOpacity>
                     </Animatable.View>
                 </ScrollView>
             </ImageBackground >
@@ -287,7 +294,7 @@ const styles = StyleSheet.create({
 
     },
     contentContainer: {
-        paddingTop: Dimensions.get('window').height/6,
+        paddingTop: Dimensions.get('window').height / 80,
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -296,16 +303,17 @@ const styles = StyleSheet.create({
         borderColor: '#FFFFFF',
         borderWidth: 1,
         fontSize: 60,
-        marginBottom: Dimensions.get('window').height/12,
+        marginBottom: Dimensions.get('window').height / 12,
     },
     subtitle: {
+        fontWeight: 'bold',
         color: '#FFF',
         fontSize: 20,
         textAlign: 'center',
         marginBottom: 10
     },
     formContainer: {
-        backgroundColor: 'rgba(0,0,0, 0.8)',
+        backgroundColor: 'rgba(0,0,0, 0.3)',
         padding: 20,
         width: '80%',
         borderRadius: 7
@@ -316,8 +324,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFfffF'
     },
     button: {
-        backgroundColor: '#080',
-        marginTop: 10,
+        left:'25%',
+        width:'50%',
+        backgroundColor: 'rgba(0,128,0,1)',
+        marginTop: 20,
         padding: 10,
         alignItems: 'center',
         borderRadius: 7
@@ -347,16 +357,16 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     buttonText: {
-        padding: 5,
+        // padding: 5,
         textAlign: "center",
-        color: '#FFF',
+        color: '#0000FF',
         fontSize: 20,
-        backgroundColor: 'rgba(128,128,128, 0.9)',
+        // backgroundColor: 'rgba(128,128,128, 0.5)',
         alignContent: 'center',
-        borderColor: '#000000',
-        color: '#FFFFFF',
-        borderWidth: 2,
-        borderRadius: 4,
+        borderColor: '#0000FF',
+        //color: '#FFFFFF',
+         borderBottomWidth: 2,
+        // borderRadius: 4,
     },
     btResetPass: {
         alignContent: "center",

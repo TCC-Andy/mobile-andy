@@ -15,17 +15,12 @@ import {
     StatusBar
 } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage';
-import * as Animatable from 'react-native-animatable';
 import ActivIndicador from '../componentes/activIndicador'
-import axios from 'axios'
-//import AsyncStorage from '@react-native-community/async-storage'
-
-import backgroundImage from '../../assets/imgs/login4.jpg'//LOGIN4
+import backgroundImage from '../../assets/imgs/login4.jpg'
 import AuthInput from '../componentes/textInput'
-
 import api from '../service/api';
 import { showError, showSuccess, showNotification } from '../utils/alertsUser'
-import { color } from 'react-native-reanimated'
+
 export default class Perfil extends Component {
 
     state = {
@@ -53,8 +48,7 @@ export default class Perfil extends Component {
         } catch (e) {
             console.log(e)
             this.setState({ activIndicador: false })
-            // this.setState({ mensageErro: ' Falha na conexão' })
-            // showNotification('Falha na conexão');
+            showNotification('Falha na conexão');
         }
     }
 
@@ -67,16 +61,19 @@ export default class Perfil extends Component {
             senha: this.state.password,
             status: 1
         };
-        console.log('id clienteeeEEEEEE ',this.state.idCliente)
+        // console.log('id client ',this.state.idCliente)
 
         await api.put(`/updateUser/${this.state.idCliente}`, data).then((response) => {
+            //console.log('responseee '+response.data.email)
+            if (response.data.email === this.state.email) {
 
-            if (response.data.status === 200) {
                 this.setState({ activIndicador: !this.state.activIndicador })
-                return showSuccess(response.data.menssagem);
+                return showSuccess('Atualizado com sucesso');
+                //return showSuccess(response.data.menssagem);
             } else {
-                 this.setState({ activIndicador: !this.state.activIndicador })
-                return showNotification(response.data.menssagem);
+                this.setState({ activIndicador: !this.state.activIndicador })
+                return showSuccess('Não foi possivel atualizar');
+                //return showNotification(response.data.menssagem);
             }
         }).catch((error) => {
             console.log(error)
@@ -100,60 +97,60 @@ export default class Perfil extends Component {
 
         return (
 
-
-            <View style={styles.formContainer}>
-                <StatusBar barStyle="dark-content" />
-                <ActivIndicador animating={this.state.activIndicador} />
-                <Text style={styles.subtitle}>
-                    Atualizar seus dados
+            <ScrollView>
+                <View style={styles.formContainer}>
+                    <StatusBar barStyle="dark-content" />
+                    <ActivIndicador animating={this.state.activIndicador} />
+                    <Text style={styles.subtitle}>
+                        Atualizar seus dados
                         </Text>
 
-                <AuthInput icon='user' placeholder='Nome'
-                    value={this.state.name}
-                    style={styles.input}
-                    onChangeText={name => this.setState({ name })} />
+                    <AuthInput icon='user' placeholder='Nome'
+                        value={this.state.name}
+                        style={styles.input}
+                        onChangeText={name => this.setState({ name })} />
 
 
-                <AuthInput icon='user' placeholder='Sobrenome'
-                    value={this.state.surname}
-                    style={styles.input}
-                    onChangeText={surname => this.setState({ surname })} />
+                    <AuthInput icon='user' placeholder='Sobrenome'
+                        value={this.state.surname}
+                        style={styles.input}
+                        onChangeText={surname => this.setState({ surname })} />
 
-                <AuthInput icon='at' placeholder='E-mail' keyboardType='email-address'
-                    value={this.state.email}
-                    style={styles.input}
-                    onChangeText={email => this.setState({ email })} />
-                <AuthInput icon='lock' placeholder='Senha'
-                    value={this.state.password}
-                    style={styles.input} secureTextEntry={true}
-                    onChangeText={password => this.setState({ password })} />
+                    <AuthInput icon='at' placeholder='E-mail' keyboardType='email-address'
+                        value={this.state.email}
+                        style={styles.input}
+                        onChangeText={email => this.setState({ email })} />
+                    <AuthInput icon='lock' placeholder='Senha'
+                        value={this.state.password}
+                        style={styles.input} secureTextEntry={true}
+                        onChangeText={password => this.setState({ password })} />
 
-                <AuthInput icon='asterisk'
-                    placeholder='Confirmação de Senha'
-                    value={this.state.confirnPassword}
-                    style={styles.input} secureTextEntry={true}
-                    onChangeText={confirnPassword => this.setState({ confirnPassword })} />
+                    <AuthInput icon='asterisk'
+                        placeholder='Confirmação de Senha'
+                        value={this.state.confirnPassword}
+                        style={styles.input} secureTextEntry={true}
+                        onChangeText={confirnPassword => this.setState({ confirnPassword })} />
 
-                <View>
-                    <TouchableOpacity onPress={this.signup}
-                        disabled={!validForm}>
-                        <View style={[styles.button, validForm ? {} : { backgroundColor: '#AAA' }]}>
-                            <Text style={styles.textBotton}>
-                                Atualizar
+                    <View>
+                        <TouchableOpacity onPress={this.signup}
+                            disabled={!validForm}>
+                            <View style={[styles.button, validForm ? {} : { backgroundColor: '#AAA' }]}>
+                                <Text style={styles.textBotton}>
+                                    Atualizar
                                     </Text>
-                        </View>
-                    </TouchableOpacity>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                    <View duration={1800}>
+                    </View>
                 </View>
-                <View duration={1800}>
-                </View>
-            </View>
-
+            </ScrollView>
         )
     }
 }
 
 const styles = StyleSheet.create({
-   
+
     title: {
         color: '#8B0000',
         borderColor: '#FFFFFF',
@@ -170,7 +167,7 @@ const styles = StyleSheet.create({
     formContainer: {
         paddingTop: '5%',
         backgroundColor: 'rgba(0,0,0, 0.8)',
-        padding: 40,
+        padding: 50,
         width: '100%',
         height: Dimensions.get('window').height,
 
@@ -181,7 +178,7 @@ const styles = StyleSheet.create({
     },
     button: {
         left: '25%',
-        width: "50%",
+        width: "40%",
         height: 40,
         backgroundColor: '#080',
         marginTop: 25,
