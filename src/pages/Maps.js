@@ -237,17 +237,10 @@ export default class Maps extends Component {
           }
 
         </View>
-
-
-
       </View>
-
     </View>
 
   );
-  // componentDidMount() {
-  //   this.list.scrollToIndex({ animated: true,index: this.props.scrollToIndex + 2 });
-  // }
   itemSeparatorComponent = (item, data) => {
     console.log("separeator ", data, " itmm", item)
     return (
@@ -255,12 +248,6 @@ export default class Maps extends Component {
     )
 
   }
-  // getItemLayout = (data, index) => (
-  //   //this.state.index = index
-  //   //this.state.index ={ length: 150, offset: 150 * index, index }
-  //     //  console.log('iu')
-
-  // );
 
   _keyExtractor = (item, index) => item.id;
 
@@ -313,13 +300,13 @@ export default class Maps extends Component {
             ref={(ref) => { this.flatListRef = ref; }}
             pagingEnabled={true}
             onMomentumScrollEnd={(e) => {
-              let posicao = (e.nativeEvent.contentOffset.x > 0)
-                ? e.nativeEvent.contentOffset.x / Dimensions.get('window').width
-                : 0;
-              console.log('passssouuuuu alter coordenadas')
-                if (posicao > 0 && posicao < this.state.places.length) {
-                  this.alterCoordenadas(this.state.places[posicao])
-                }
+              // let posicao = (e.nativeEvent.contentOffset.x > 0)
+              //   ? e.nativeEvent.contentOffset.x / Dimensions.get('window').width
+              //   : 0;
+              // console.log('passssouuuuu alter coordenadas')
+              //   if (posicao > 0 && posicao < this.state.places.length) {
+              //     this.alterCoordenadas(this.state.places[posicao])
+              //   }
             }}
             data={this.state.places}
             renderItem={this.renderItem}

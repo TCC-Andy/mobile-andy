@@ -30,7 +30,7 @@ import { color } from 'react-native-reanimated'
 const initialState = {
     name: 'bruno',
     surname: 'pedroso',
-    email: 'bruno.1301817@fapi-pinhais.edu.br3',
+    email: 'bruno.1301817@fapi-pinhais.edu.br',
     password: '123456',
     confirnPassword: '123456',
     stageNew: false,

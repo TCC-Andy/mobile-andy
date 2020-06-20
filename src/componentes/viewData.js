@@ -20,6 +20,8 @@ import Padrao from '../estilo/Padrao'
 import { storeData } from '../utils/alertsUser'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import moment from 'moment'
+import AsyncStorage from '@react-native-community/async-storage';
+import api from '../service/api';
 import 'moment/locale/pt-br'
 moment.locale('pt-BR')
 
@@ -28,6 +30,28 @@ export default class ViewData extends Component {
         date: new Date(),
         opemTimes: false,
     }
+
+    // async componentDidMount() {
+
+    //     try {
+    //         console.log('foi no bancioooooo ------------------------------------')
+    //         let dataGet = await AsyncStorage.getItem('data');
+
+    //        // console.log(data)
+    //         const data = {
+    //             idEmpresa: '5ecab500563c112a70493769',
+    //             dataAgenda: '2020/06/20',
+    //             idServico: '5ee67341ce25271560fb58eb',
+    //             tempoServico: '00:30'
+    //         }
+    //         let response = await api.post('/showDataSchedule', data)
+    //       //  console.log('console dir ->', response.data)
+           
+    //     } catch (e) {
+    //         console.log(e)
+    //     }
+    // }
+
     handleDateAndroidChanged = () => {
         DatePickerAndroid.open({
             date: this.state.date
