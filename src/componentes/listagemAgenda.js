@@ -144,18 +144,6 @@ export default class listagemAgenda extends Component {
     }
 
     render() {
-        console.log('-----------------------++++++++++++++++++++++++++++++++++++++++++++++')
-        // if(this.state.agenda.dataServico !== ''){
-        //     console.log('ddadasdasdasd ->>>>>>' + this.state.agenda)
-
-        //     let dataGet = AsyncStorage.getItem('data');
-        //     // let data =JSON.parse(dataGet)
-        //     console.log('datttttttttttt '+dataGet)
-        //     if(this.state.agenda.dataServico !== dataGet){
-        //         console.log('ssimmm ')
-        //          //this.componentDidMount()
-        //     }
-        // }
         return (
 
             <View>

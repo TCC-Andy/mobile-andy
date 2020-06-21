@@ -26,7 +26,7 @@ export default class Home extends Component {
 
     render() {
         return (
-            <ScrollView>
+            <ScrollView contentContainerStyle={styles.contentContainer}>
                 <View style={styles.container}>
                     <View style={styles.iconBar}>
                         <TouchableOpacity onPress={() => this.props.navigation.openDrawer()}>
@@ -114,6 +114,11 @@ export default class Home extends Component {
 
 
 const styles = StyleSheet.create({
+    contentContainer: {
+        height: Dimensions.get('window').height-100,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     container: {
         flex: 1
     },

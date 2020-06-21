@@ -13,21 +13,31 @@ import AsyncStorage from '@react-native-community/async-storage';
 import api from '../service/api';
 import ActivIndicador from '../componentes/activIndicador'
 import { showError, showSuccess, showNotification } from '../utils/alertsUser'
+import moment from 'moment'
+import 'moment/locale/pt-br'
+moment.locale('pt-BR')
 
 export default class Agenda extends Component {
     state = {
+        date: new Date(),
         mensageErro: '',
         activIndicador: true,
         agenda: []
     }
     async componentDidMount() {
         let agenda = new Array();
+        console.log('aquiiiiiiiii')
         try {
             let user = await AsyncStorage.getItem('user')
             var userParse = JSON.parse(user);
             var idCliente = userParse._id
-            console.log('id clientddde  ', idCliente)
-            let response = await api.get(`/showClientHistSchedule/${idCliente}`)
+           
+            const data = {
+                idCliente: idCliente,
+                dataAgenda: moment(this.state.date).format('YYYY/MM/D'),
+            }
+            console.log('data  ', data)
+            let response = await api.post('/showClientCurrentSchedule', data)
             console.log('console ag horas ->', response.data)
             console.log('------------------------------------------------>msdg ',response.data.schedule.length)
             if (response.data.schedule.length > 0) {
@@ -65,11 +75,11 @@ export default class Agenda extends Component {
                                 this.state.agenda.map(agenda => (
                                     console.log(agenda),
                                     <Card containerStyle={styles.card}>
-                                        <Text style={styles.fontCard}>Empresa Teste - {agenda.dataAgenda}</Text>
-                                        <Text style={styles.fontCard}>Corte masculino </Text>
+                                        <Text style={styles.fontCard}>{agenda.nomeEmpresa}- {agenda.dataAgenda}</Text>
+                                        <Text style={styles.fontCard}>{agenda.nomeServico} </Text>
                                         <Text style={styles.fontCard}>Horario: {agenda.inicioServico} hrs - {agenda.fimServico} hrs </Text>
                                         <Text style={styles.fontCard}>Funcionrio: {agenda.nomeFuncionario} </Text>
-                                        <Text style={styles.fontCard}>Rua camilo de lemis 666 </Text>
+                                        <Text style={styles.fontCard}>{agenda.ruaEmpresa} - {agenda.numeroEmpresa} </Text>
                                     </Card>
                                 ))
                             }

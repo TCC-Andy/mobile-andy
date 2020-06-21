@@ -90,10 +90,10 @@ export default class Login extends Component {
         await api.post('/sendPassReset', data).then((response) => {
             if (response.data.status === 200) {
                 this.setState({ activIndicador: !this.state.activIndicador })
-                return showSuccess(response.data.menssagem);
+                return showSuccess(response.data.mensagem);
             } else {
                 this.setState({ activIndicador: !this.state.activIndicador })
-                return showNotification(response.data.menssagem);
+                return showNotification(response.data.mensagem);
             }
         }).catch((error) => {
             showError('Falha na conexão')
@@ -107,16 +107,17 @@ export default class Login extends Component {
             sobrenome: this.state.surname,
             email: this.state.email,
             senha: this.state.password,
+            perfil: 'cliente',
             status: 1
         };
         await api.post('/createUser', data).then((response) => {
             if (response.data.status === 200) {
                 this.setState({ stageNew: !this.state.stageNew })
                 this.setState({ activIndicador: !this.state.activIndicador })
-                return showSuccess(response.data.menssagem);
+                return showSuccess(response.data.mensagem);
             } else {
                 this.setState({ activIndicador: !this.state.activIndicador })
-                return showNotification(response.data.menssagem);
+                return showNotification(response.data.mensagem);
             }
         }).catch((error) => {
             showError('Falha na conexão')
