@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import Perfil from '../pages/perfil'
 import Home from '../pages/home'
 import Agenda from '../pages/agenda'
-import Pagina3 from '../pages/pagina3'
+import Favorito from '../pages/favorito'
 
 const Tab = createBottomTabNavigator();
 
@@ -33,7 +33,7 @@ const menuTab = () =>
                     <Icon name="calendar" color={'#000000'} size={38} />
                 )
             }}/>
-     <Tab.Screen name="Pagina3" component={Pagina3}
+     <Tab.Screen name="Favorito" component={Favorito}
             options={{
                 tabBarVisible: true,
                 tabBarLabel: 'Favorito',

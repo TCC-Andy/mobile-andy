@@ -115,7 +115,7 @@ export default class Home extends Component {
 
 const styles = StyleSheet.create({
     contentContainer: {
-        height: Dimensions.get('window').height-100,
+        height: Dimensions.get('window').height-120,
         alignItems: 'center',
         justifyContent: 'center',
     },

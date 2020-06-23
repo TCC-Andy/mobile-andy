@@ -12,7 +12,7 @@ function showSuccess(msg) {
     Alert.alert('Sucesso!', msg)
 }
 function showNotification(msg) {
-    Alert.alert('Falhou', msg)
+    Alert.alert('Alerta', msg)
 }
 
     async function storeData (typeObj, objSet){

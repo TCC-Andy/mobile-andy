@@ -20,40 +20,36 @@ import moment from 'moment'
 import 'moment/locale/pt-br'
 moment.locale('pt-BR')
 
-export default class Agenda extends Component {
+export default class Favorito extends Component {
     state = {
         date: new Date(),
         mensageErro: '',
         activIndicador: true,
-        agenda: []
+        favorito: []
     }
     async componentDidMount() {
-        let agenda = new Array();
+        let favorito = new Array();
         console.log('aquiiiiiiiii')
         try {
             let user = await AsyncStorage.getItem('user')
             var userParse = JSON.parse(user);
             var idCliente = userParse._id
 
-            const data = {
-                idCliente: idCliente,
-                dataAgenda: moment(this.state.date).format('YYYY/MM/D'),
-            }
-            console.log('data  ', data)
-            let response = await api.post('/showClientCurrentSchedule', data)
-            console.log('console ag horas ->', response.data)
-            console.log('------------------------------------------------>msdg ', response.data.schedule.length)
-            if (response.data.schedule.length > 0) {
-                agenda = response.data.schedule
-                await this.setState({ agenda: agenda })
-                console.log(agenda)
+            
+            let response = await api.get(`/showFavorites/${idCliente}`)
+            console.log('console ag favor ->', response.data.favoritos)
+            console.log('-------------------->respos ', response)
+            if (response.data.favoritos.length > 0) {
+                favorito = response.data.favoritos
+                await this.setState({ favorito: favorito })
+                console.log(favorito)
             } else {
-                await this.setState({ mensageErro: 'Não foi reallizado nenhum agendamento até o momento' })
-                showNotification('Nenhum agendamento até o momento')
+                await this.setState({ mensageErro: 'Nenhuma empresa adicionada até o momento' })
+                showNotification('Nenhuma empresa adicionada')
             }
-            await this.setState({ activIndicador: !this.state.activIndicador })
+             await this.setState({ activIndicador: !this.state.activIndicador })
         } catch (e) {
-            console.log(e)
+            console.log(e) 
             this.setState({ activIndicador: false })
             this.setState({ mensageErro: ' Falha na conexão' })
             showError('Falha na conexão');
@@ -67,7 +63,7 @@ export default class Agenda extends Component {
                 <ActivIndicador animating={this.state.activIndicador} />
                 <View style={styles.viewTitle}>
                     <Text style={styles.title}>
-                        Horarios Agendados
+                        Favoritos
                     </Text>
                 </View>
                 <ScrollView scrollEnabled={true}
@@ -76,18 +72,18 @@ export default class Agenda extends Component {
                     {this.state.mensageErro === '' &&
                         <View>
                             {
-                                console.log('agen lopp', this.state.agenda),
-                                this.state.agenda.map(agenda => (
-                                    console.log(agenda),
+                                console.log('agen lopp', this.state.favorito),
+                                this.state.favorito.map(favorito => (
+                                    console.log(favorito),
                                     <Card containerStyle={styles.card}>
-                                        <Text style={styles.fontCard}>{agenda.nomeEmpresa}- {agenda.dataAgenda}</Text>
-                                        <Text style={styles.fontCard}>{agenda.nomeServico} </Text>
-                                        <Text style={styles.fontCard}>Horario: {agenda.inicioServico} hrs - {agenda.fimServico} hrs </Text>
-                                        <Text style={styles.fontCard}>Funcionrio: {agenda.nomeFuncionario} </Text>
-                                        <Text style={styles.fontCard}>{agenda.ruaEmpresa} - {agenda.numeroEmpresa} </Text>
+                                        <Text style={styles.fontCard}>{favorito.nomeEmpresa}- {favorito.datafavorito}</Text>
+                                        <Text style={styles.fontCard}>Categoria: {favorito.categoria} </Text>
+                                        <Text style={styles.fontCard}>{favorito.descricao} </Text>
+                                        <Text style={styles.fontCard}>{favorito.cidade} - {favorito.bairro} </Text>
+                                        <Text style={styles.fontCard}>{favorito.rua} - {favorito.numero} </Text>
                                         <View>
                                             <TouchableOpacity style={styles.localizacao}
-                                             onPress={() => this.props.navigation.navigate('Localização',{empresa:agenda})}>
+                                             onPress={() => this.props.navigation.navigate('Maps Favoritos',{empresa:favorito})}>
                                                 <View style={styles.iconeLocal}>
                                                     <Icon name='map-marker'
                                                         size={25} color='red' />
@@ -211,7 +207,7 @@ const styles = StyleSheet.create({
 })
 
 /*
-Agenda: [{
+favorito: [{
     idServico:1,
     idFuncionario: 1,
     nomeFuncionario: 'gustavo',
@@ -219,7 +215,7 @@ Agenda: [{
     idCliente:1,
     inicioServico: '08:00',
     fimServico: '08:30',
-    dataAgenda:'10/12/20',
+    datafavorito:'10/12/20',
     status:1
 },
 {
@@ -230,7 +226,7 @@ Agenda: [{
     idCliente:1,
     inicioServico: '17:00',
     fimServico: '17:10',
-    dataAgenda:'05/12/20',
+    datafavorito:'05/12/20',
     status:1
 },
 {
@@ -241,7 +237,7 @@ Agenda: [{
     idCliente:1,
     inicioServico: '12:00',
     fimServico: '13:30',
-    dataAgenda:'05/11/20',
+    datafavorito:'05/11/20',
     status:1
 }]
 */

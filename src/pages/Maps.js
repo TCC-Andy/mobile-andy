@@ -18,6 +18,7 @@ import SliderLocations from '../componentes/sliderLocations';
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Image from "react-native-elements";
 import { Card } from "react-native-elements";
+import AsyncStorage from '@react-native-community/async-storage';
 import api from '../service/api';
 import { showError, showSuccess, showNotification } from '../utils/alertsUser'
 import ActivIndicador from '../componentes/activIndicador'
@@ -105,7 +106,29 @@ export default class Maps extends Component {
     }
   }
 
+  addFavorito = async (idEmpresa) => {
 
+    this.setState({ activIndicador: !this.state.activIndicador })
+    try {
+      let user = await AsyncStorage.getItem('user')
+      var userParse = JSON.parse(user);
+      var idCliente = userParse._id
+      const data = {
+        idCliente: idCliente,
+        idEmpresa: idEmpresa,
+        flag: 1
+      }
+      let response = await api.post('/checkFavorite', data)
+      showSuccess(response.data.mensagem);
+      
+      this.setState({ activIndicador: !this.state.activIndicador })
+
+    } catch (e) {
+      console.log(e)
+      showError('Falha na conexão')
+      this.setState({ activIndicador: false })
+    }
+  }
 
   alterCoordenadas = (place) => {
     let camera = null
@@ -136,7 +159,7 @@ export default class Maps extends Component {
           <Icon name="map-marker" color={'#DC143C'} size={20} />
 
         </View>
-        <MapboxGL.Callout style={{ height: 100, width: 100 }} title={place.descricao} />
+        <MapboxGL.Callout style={{ height: 80, width: 100 }} title={place.nome} />
       </MapboxGL.PointAnnotation>
     )
   }
@@ -183,6 +206,12 @@ export default class Maps extends Component {
                       <Text style={styles.textButton}>Servicos </Text>
                     </TouchableOpacity >
                   </View>
+                  <View style={styles.buttonFavorito}>
+                    <TouchableOpacity
+                      onPress={() => this.addFavorito(item._id)}>
+                      <Icon name="star" color={'#e7a74e'} size={25} />
+                    </TouchableOpacity >
+                  </View>
 
                 </View>
               </View>
@@ -210,7 +239,7 @@ export default class Maps extends Component {
               </View>
 
               <View style={styles.footer}>
-                <Text>{item.rua}-{item.status}-</Text>
+                <Text>{item.rua}-{item.numero}</Text>
               </View>
             </View>
           </View>
@@ -400,7 +429,7 @@ const styles = StyleSheet.create({
     marginLeft: 0,
   },
   title: {
-    flex: 2,
+    flex: 8,
     fontSize: 20
   },
   textButton: {
@@ -434,8 +463,17 @@ const styles = StyleSheet.create({
   icone: {
     flex: 1
   },
-  buttonServices: {
+  buttonFavorito: {
     flex: 1,
+    //left: Dimensions.get('window').width / 2 + 40,
+    // backgroundColor: '#000000',
+    alignItems: 'center',
+    borderRadius: 3,
+    //width: 90,
+    paddingTop: 5,
+  },
+  buttonServices: {
+    flex: 3,
     //left: Dimensions.get('window').width / 2 + 40,
     backgroundColor: '#1E90FF',
     alignItems: 'center',
