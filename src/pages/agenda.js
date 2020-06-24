@@ -119,9 +119,7 @@ export default class Agenda extends Component {
 
         )
     }
-}/*
-
-*/
+}
 
 const styles = StyleSheet.create({
     contentContainer: {

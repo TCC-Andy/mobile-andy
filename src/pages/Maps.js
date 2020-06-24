@@ -32,7 +32,7 @@ MapboxGL.setAccessToken("pk.eyJ1IjoiYnJ1bm9wZWRyb3NvIiwiYSI6ImNrNmJkY2R3dDEwODkz
 export default class Maps extends Component {
   state = {
     index: 0,
-    id_conpanies: null,
+    id_conpanie: null,
     showModal: false,
     activIndicador: false,
     textView: false,
@@ -53,57 +53,58 @@ export default class Maps extends Component {
 
   async componentDidMount() {
     this.setState({ activIndicador: !this.state.activIndicador })
-
-    var categoria = 'cabelereiro'
-
+// console.log('catttttee goiooi ->'+this.props.route.params.categoria)
+    var categoria = this.props.route.params.categoria
+ 
 
     await api.get(`/showCategories/${categoria}`).then((response) => {
-      console.log('dat ')
-      console.log('response ' + response.data)
-      if (response.data.lengh != 0) {
+      
+      if (response.data.length != 0) {
 
         let places = new Array();
         response.data.forEach(data => {
 
           places.push(data);
-          console.log('dat' + data)
+          
         });
         this.setState({ places: places })
         this.setState({ activIndicador: !this.state.activIndicador })
 
       } else {
         this.setState({ activIndicador: !this.state.activIndicador })
-        return showNotification(response.data.menssagem);
+         showNotification('Nenhum serviço nessa categoria no momento');
+        return this.props.navigation.navigate('Home')
       }
     }).catch((error) => {
-      console.log('erooo --------------------', error)
+      console.log(error)
       showError('Falha na conexão')
       this.setState({ activIndicador: !this.state.activIndicador })
-      //return this.props.navigation.navigate('Home')
+      return this.props.navigation.navigate('Home')
       //  showError('Falha na conexão')
     });
   }
 
   showServices = async (_id) => {
     //_id = 1
-    this.setState({ activIndicador: !this.state.activIndicador })
-    try {
+    await this.setState({ id_conpanie: _id })
+    await this.setState({ showModal: true })
+    // try {
 
-      let response = await api.get(`/showCompanyServices/${_id}`)
-      if (response.data.mensagem === undefined) {
-        await this.setState({ services: response.data.servicos })
-        await this.setState({ showModal: true })
-      } else {
+    //   let response = await api.get(`/showCompanyServices/${_id}`)
+    //   if (response.data.mensagem === undefined) {
+    //     await this.setState({ services: response.data.servicos })
+    //     await this.setState({ showModal: true })
+    //   } else {
 
-        showNotification(response.data.mensagem);
-      }
-      this.setState({ activIndicador: !this.state.activIndicador })
+    //     showNotification(response.data.mensagem);
+    //   }
+    //   this.setState({ activIndicador: !this.state.activIndicador })
 
-    } catch (e) {
-      console.log(e)
-      showError('Falha na conexão')
-      this.setState({ activIndicador: false })
-    }
+    // } catch (e) {
+    //   console.log(e)
+    //   showError('Falha na conexão')
+    //   this.setState({ activIndicador: false })
+    // }
   }
 
   addFavorito = async (idEmpresa) => {
@@ -145,7 +146,6 @@ export default class Maps extends Component {
     this.alterCoordenadas(place)
   }
   renderAnnotations2(place, index, data) {
-    console.log('data ------- render anoticionn---------------------------' + place)
     return (
       <MapboxGL.PointAnnotation
         ref={p => (this.place = p)}
@@ -291,7 +291,7 @@ export default class Maps extends Component {
       <View style={styles.container}>
         <ActivIndicador animating={this.state.activIndicador} />
         <ModalExemplo isVisible={this.state.showModal}
-          services={this.state.services}
+          services={this.state.services} id_conpanie={this.state.id_conpanie}
           closeModal={() => this.setState({ showModal: false })} />
 
         <MapboxGL.MapView
@@ -317,10 +317,7 @@ export default class Maps extends Component {
 
         </MapboxGL.MapView>
         <View style={styles.markerAnotacion}>
-          {/* <ScrollView horizontal= {true}
-          pagingEnabled={true}
-          automaticallyAdjustContentInsets={true}
-          > */}
+         
           <FlatList
             horizontal
             scrollEnabled
@@ -345,7 +342,6 @@ export default class Maps extends Component {
           // ItemSeparatorComponent={this.itemSeparatorComponent}
           />
 
-          {/* </ScrollView> */}
         </View>
       </View>
     )

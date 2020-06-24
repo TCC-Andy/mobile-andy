@@ -27,7 +27,7 @@ export default class listagemAgenda extends Component {
         id_conpanie: this.props.id_conpanie,
         id_service: this.props.id_service,
         id_cliente: null,
-        dataAgenda: '00/00/0000',
+        dataAgenda: '0000/00/00',
         tempo: this.props.tempo,
         activIndicador: true,
         agenda: [],
@@ -43,7 +43,6 @@ export default class listagemAgenda extends Component {
     async componentDidMount() {
 
         try {
-            
             console.log('foi no bancioooooo ------------------------------------')
             let dataGet = await AsyncStorage.getItem('data');
             const data = {
@@ -98,7 +97,6 @@ export default class listagemAgenda extends Component {
         try {
             let userGet = await AsyncStorage.getItem('user');
             let user = await JSON.parse(userGet)
-          //  console.log('userrrrrrrr',user)
             const data = await {
                 status: '1',
                 idFuncionario: array._id,
@@ -144,6 +142,7 @@ export default class listagemAgenda extends Component {
     }
 
     render() {
+       
         return (
 
             <View>

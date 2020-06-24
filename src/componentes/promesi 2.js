@@ -130,6 +130,10 @@ const busca = () =>{
 
     getFuncionarios()
 
+
+
+    /**data  {"dataAgenda": "2020/06/24", "idEmpresa": "5ecab500563c112a70493769", 
+"idServico": "5ee671adce25271560fb58ea", "tempoServico": "00:30"} */
     //moedeloa 4
 
     async componentDidMount() {
