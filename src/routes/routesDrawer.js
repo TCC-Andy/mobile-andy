@@ -6,7 +6,9 @@ import Perfil from '../pages/perfil'
 import Favorito from '../pages/favorito'
 import Login from '../pages/login'
 import ButtonsHome from './buttonsHome'
-import ExempploLISt from '../componentes/ex/ExFlastList'
+import Horarios from '../componentes/ex/refreshSrollView'
+import App from '../componentes/ex/refres11'
+import Project from '../componentes/ex/refres22'
 
 const Drawer = createDrawerNavigator();
 
@@ -17,7 +19,9 @@ const menuDrawer = () =>
     {/* <Drawer.Screen name="Perfil" component={Perfil} /> */}
     <Drawer.Screen name="Favorito" component={Favorito} />
     <Drawer.Screen name="SAIR" component={Login} />
-    <Drawer.Screen name="EXEMPLO" component={ExempploLISt} />
+    <Drawer.Screen name="EXEMPLO" component={Horarios} />
+    <Drawer.Screen name="refre1" component={App} />
+    <Drawer.Screen name="refre2" component={Project} />
   </Drawer.Navigator>
 
 export default menuDrawer

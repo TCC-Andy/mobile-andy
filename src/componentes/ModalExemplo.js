@@ -23,6 +23,7 @@ import ActivIndicador from './activIndicador'
 import { showError, showSuccess, showNotification, storeData } from '../utils/alertsUser'
 import ViewData from '../componentes/viewData';
 import ListagemAgenda from '../componentes/listagemAgenda';
+import ListagemAcordion from '../componentes/listagemAcordionAgenda';
 import Accordion from 'react-native-collapsible/Accordion';
 import * as Animatable from 'react-native-animatable';
 //import for the animation of Collapse and Expand
@@ -39,95 +40,35 @@ export default class ModalExemplo extends Component {
         listar: false,
         date: new Date(),
         opemTimes: false,
-    }
-    
-        
-
-    agendaDisponivel = (id_service) => {
-        Alert.alert('oiii vamo', id_service)
-    }
-
-    setSections = sections => {
-        this.setState({
-            activeSections: sections.includes(undefined) ? [] : sections,
-        });
-    };
-
-    renderHeader = (section, _, isActive) => {
-        //Accordion Header view
-        // if (isActive) {
-        //     console.log('setSelection oio ', section)
-        //     this.agendaDisponivel(section._id)
-        // }
-        return (
-            <Animatable.View
-                duration={1}
-                style={[styles.headerList, isActive ? styles.active : styles.inactive]}
-                transition="backgroundColor">
-                <View style={styles.headerTitle}>
-                    <View style={styles.nome}>
-                        <Text style={styles.headerText}>{section.nome} - {section.tempo} min</Text>
-                    </View>
-                    <View style={styles.preco}>
-                        <Text style={styles.headerText}>{section.preco} R$ </Text>
-                    </View>
-                </View>
-                <View>
-                    <Text>
-                        {section.descricao}
-                    </Text>
-                </View>
-
-                <View style={styles.btHorarios} >
-                    <Text style={styles.horarios}>
-                        Horarios Disponiveis
-                     </Text>
-                    <Text style={styles.icom}>
-                        <Icon name="angle-down" color={'#000000'} size={18} style={{ marginLeft: 50 }} />
-                    </Text>
-                </View>
-
-            </Animatable.View>
-        );
-    };
-
-    renderContent(section, _, isActive) {
-
-        console.log('testereee ------------------------------------------------------------------------------------------------------------ve ----  =||||||= ' + isActive)
-
-        //if (isActive) {
-        return (
-            <ListagemAgenda id_conpanie={section.idEmpresa} id_service={section._id} tempo={section.tempo} />
-        )
-        // } else {
-        // }
+        interruptor: false
     }
 
     listaServicos = async () => {
 
         try {
-           // var _id = await '5ecab500563c112a70493769'
+            // var _id = await '5ecab500563c112a70493769'
             let response = await api.get(`/showCompanyServices/${this.props.id_conpanie}`)
-           // console.log('sernooo----obooojjj-- ', Object.values(Object.values(response.data.servicos)))
+            console.log('se ', Object.values(Object.values(response.data.servicos)))
             if (response.data.mensagem === undefined) {
                 await this.setState({ services: response.data.servicos })
                 await this.setState({ listar: true })
+                this.render()
             } else {
 
                 // showNotification(response.data.mensagem);
             }
-            storeData('data',moment(this.state.date).format('YYYY/MM/D'))
-            console.log('dadadaddaddadd'+moment(this.state.date).format('D/MM/YYYY'))
+            storeData('data', moment(this.state.date).format('YYYY/MM/D'))
+            console.log('dadadaddaddadd' + moment(this.state.date).format('D/MM/YYYY'))
             // this.setState({ activIndicador: !this.state.activIndicador })
 
         } catch (e) {
             console.log(e)
-             showError('Falha na conexão')
+            showError('Falha na conexão')
             this.setState({ activIndicador: false })
         }
     }
 
-    handleDateAndroidChanged = () => {
+    handleDateAndroidChanged = async () => {
         DatePickerAndroid.open({
             date: this.state.date
         }).then(e => {
@@ -138,23 +79,16 @@ export default class ModalExemplo extends Component {
                 momentDate.year(e.year)
                 this.setState({ date: momentDate.toDate() })
                 this.setState({ date: momentDate.toDate() })
+                 this.setState({ interruptor: !this.state.interruptor })
                 this.listaServicos()
-             // console.log(moment(this.state.date).format('D/MM/YYYY'))
-               // storeData('data',moment(this.state.date).format('YYYY/MM/D'))
+                console.log('atualizarr  ' + moment(this.state.date).format('D/MM/YYYY'))
+                // storeData('data',moment(this.state.date).format('YYYY/MM/D'))
             }
         })
     }
-    /**refreshControl={
-    <RefreshControl
-      //refresh control used for the Pull to Refresh
-      refreshing={this.state.refreshing}
-      onRefresh={this.onRefresh.bind(this)}
-    />
-  } */
-
-
+    
     render() {
-       // console.log('inici rensder ------------id--' + this.props.id_conpanie)
+        // console.log('inici rensderdeddd ------------id--' + this.state.listar)
         if (!this.state.listar) {
             this.listaServicos()
         }
@@ -176,43 +110,35 @@ export default class ModalExemplo extends Component {
                         </TouchableOpacity>
                     </View>
                     <View style={styles.body}>
-                        {/* <ViewData /> */}
-
-
-
+                     
                         <View style={styles.card}>
-                {/* <Text> {moment(this.state.date).format('DD/MM/YYYY')}</Text> */}
-                <View style={styles.rowAgendar}>
-                    <View>
-                        <TouchableOpacity onPress={this.handleDateAndroidChanged}>
-                            <Text style={styles.textDate}>Selecione data para agendamento</Text>
-                            <Text style={styles.date}>
-                                <Icon name="calendar" color={'#000000'} size={20} style={{ marginLeft: 10 }} /> -
+                            {/* <Text> {moment(this.state.date).format('DD/MM/YYYY')}</Text> */}
+                            <View style={styles.rowAgendar}>
+                                <View>
+                                    <TouchableOpacity onPress={this.handleDateAndroidChanged}>
+                                        <Text style={styles.textDate}>Selecione data para agendamento</Text>
+                                        <Text style={styles.date}>
+                                            <Icon name="calendar" color={'#000000'} size={20} style={{ marginLeft: 10 }} /> -
                         {moment(this.state.date).format('ddd, D [de] MMMM [de] YYYY')}
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </View >
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </View >
 
 
                         <View style={styles.container}>
+
                             <ScrollView contentContainerStyle={{ paddingTop: 10 }}>
                                 <View style={styles.selectors}>
 
                                 </View>
-                                {this.state.listar &&
-                                console.log('sactvvevselectoon ' + activeSections),
-                                    <Accordion
-                                        activeSections={activeSections}
-                                        sections={this.state.services}
-                                        touchableComponent={TouchableOpacity}
-                                        expandMultiple={false}
-                                        renderHeader={this.renderHeader}
-                                        renderContent={this.renderContent}
-                                        duration={500}
-                                        onChange={this.setSections}
-                                    />
+                                {this.state.interruptor &&
+                                    <ListagemAcordion services={this.state.services} />
+                                   
+                                }
+                                {!this.state.interruptor &&
+                                    <ListagemAcordion services={this.state.services} />
                                 }
                             </ScrollView>
                         </View>
@@ -368,51 +294,3 @@ const styles = StyleSheet.create({
         flexDirection: "row"
     },
 })
-
-
-
-
-
-/*
-
-servicos: [
-            {
-                nome: 'corte de cabelo',
-                descricao: 'Sera cortado seu cabelo com maquina zero :)',
-                tempo: '10:00',
-                preco: '30:00',
-            },
-            {
-                nome: 'corte de barba',
-                descricao: 'Sera fazer a barba :)',
-                tempo: '20:00',
-                preco: '50:00',
-            },
-            {
-                nome: 'corte de cabelo',
-                descricao: 'Sera feito bigode :)',
-                tempo: '10:00',
-                preco: '30:00',
-            }
-
-        ],
-        Agenda: [{
-            _id: 1,
-            nomeFuncionario: 'gustavo',
-            HorariosOcupados: [{
-                inicio: '0',
-                cliente: 'incio',
-                fim: '08:30'
-            }, {
-                inicio: '0',
-                cliente: 'Ricardo',
-                fim: '08:30'
-            }, {
-                inicio: '0',
-                cliente: 'fim',
-                fim: '18:30'
-            },
-            ]
-        }
-        ]
-*/

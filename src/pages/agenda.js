@@ -8,6 +8,7 @@ import {
     Alert,
     ScrollView,
     TouchableOpacity,
+    RefreshControl 
 } from 'react-native'
 import { Card } from "react-native-elements";
 import AsyncStorage from '@react-native-community/async-storage';
@@ -25,7 +26,8 @@ export default class Agenda extends Component {
         date: new Date(),
         mensageErro: '',
         activIndicador: true,
-        agenda: []
+        agenda: [],
+        refreshing: false,
     }
     async componentDidMount() {
         let agenda = new Array();
@@ -59,6 +61,20 @@ export default class Agenda extends Component {
             showError('Falha na conexão');
         }
     }
+    /**refreshControl={
+    <RefreshControl
+      //refresh control used for the Pull to Refresh
+      refreshing={this.state.refreshing}
+      onRefresh={this.onRefresh.bind(this)}
+    />
+  } */
+  _onRefresh = () => {
+    this.setState({refreshing: true});
+    console.log('oiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii')
+    fetchData().then(() => {
+      this.setState({refreshing: false});
+    });
+  }
 
     render() {
         return (
@@ -70,8 +86,16 @@ export default class Agenda extends Component {
                         Horarios Agendados
                     </Text>
                 </View>
-                <ScrollView scrollEnabled={true}
-                 contentContainerStyle={styles.contentContainer}>
+                <ScrollView 
+                 refreshControl={
+                    <RefreshControl
+                      refreshing={this.state.refreshing}
+                      onRefresh={this._onRefresh}
+                    />
+                  }
+                scrollEnabled={false}
+                 contentContainerStyle={styles.contentContainer}
+                 >
 
                     {this.state.mensageErro === '' &&
                         <View>
@@ -114,7 +138,7 @@ export default class Agenda extends Component {
                         </Card>
 
                     }
-                </ScrollView>
+                </ScrollView >
             </View>
 
         )
