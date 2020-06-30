@@ -8,7 +8,7 @@ import {
     Alert,
     ScrollView,
     TouchableOpacity,
-    RefreshControl 
+    RefreshControl
 } from 'react-native'
 import { Card } from "react-native-elements";
 import AsyncStorage from '@react-native-community/async-storage';
@@ -25,12 +25,14 @@ export default class Agenda extends Component {
     state = {
         date: new Date(),
         mensageErro: '',
-        activIndicador: true,
+        activIndicador: false,
         agenda: [],
         refreshing: false,
     }
     async componentDidMount() {
+
         let agenda = new Array();
+        await this.setState({ activIndicador: !this.state.activIndicador })
         console.log('aquiiiiiiiii')
         try {
             let user = await AsyncStorage.getItem('user')
@@ -68,13 +70,44 @@ export default class Agenda extends Component {
       onRefresh={this.onRefresh.bind(this)}
     />
   } */
-  _onRefresh = () => {
-    this.setState({refreshing: true});
-    console.log('oiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii')
-    fetchData().then(() => {
-      this.setState({refreshing: false});
-    });
-  }
+
+  cancelarAgendamento = (_id) =>
+    
+        Alert.alert(
+            "Confirmação",
+            "Deseja realmente Cancelar esse horario",
+            [
+                {
+                    text: "Cancelar",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel"
+                },
+                { text: "Sim", onPress: () => this.cancelarHorario(_id) }
+            ],
+            { cancelable: false }
+        );
+
+  cancelarHorario = async (_id) => {
+
+    this.setState({ activIndicador: !this.state.activIndicador })
+    try {
+        
+        let response = await api.get(`/deleteClientSchedule/${_id}`)
+        showSuccess(response.data.mensagem);
+
+        this.setState({ activIndicador: !this.state.activIndicador })
+        await this.componentDidMount()
+    } catch (e) {
+        console.log(e)
+        showError('Falha na conexão')
+        this.setState({ activIndicador: false })
+    }
+}
+    _onRefresh = async () => {
+        await this.componentDidMount()
+        this.setState({ refreshing: true });
+        this.setState({ refreshing: false });
+    }
 
     render() {
         return (
@@ -86,32 +119,45 @@ export default class Agenda extends Component {
                         Horarios Agendados
                     </Text>
                 </View>
-                <ScrollView 
-                 refreshControl={
-                    <RefreshControl
-                      refreshing={this.state.refreshing}
-                      onRefresh={this._onRefresh}
-                    />
-                  }
-                scrollEnabled={false}
-                 contentContainerStyle={styles.contentContainer}
-                 >
+                <ScrollView
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={this.state.refreshing}
+                            onRefresh={this._onRefresh}
+                        />
+                    }
+                    scrollEnabled={false}
+                    contentContainerStyle={styles.contentContainer}
+                >
 
                     {this.state.mensageErro === '' &&
                         <View>
                             {
-                                console.log('agen lopp', this.state.agenda),
+                                //console.log('agen lopp', this.state.agenda),
                                 this.state.agenda.map(agenda => (
-                                    console.log(agenda),
+                                    // console.log(agenda),
                                     <Card containerStyle={styles.card}>
-                                        <Text style={styles.fontCard}>{agenda.nomeEmpresa}- {agenda.dataAgenda}</Text>
+
+                                        <View style={styles.iconFavorito}>
+                                            <View style={styles.viewNomeEmpresa}>
+                                            <Text style={styles.fontCard}>{agenda.nomeEmpresa}- {agenda.dataAgenda}</Text>
+                                            </View>
+                                            <View style={styles.viewbuttonFavorito}>
+                                                <TouchableOpacity style={styles.buttonFavorito}
+                                                    onPress={() => this.cancelarAgendamento(agenda._id)}>
+                                                    <Icon name="remove" color={'#FF0000'} size={20} />
+                                                </TouchableOpacity>
+                                            </View>
+                                        </View>
+
+                                        
                                         <Text style={styles.fontCard}>{agenda.nomeServico} </Text>
                                         <Text style={styles.fontCard}>Horario: {agenda.inicioServico} hrs - {agenda.fimServico} hrs </Text>
                                         <Text style={styles.fontCard}>Funcionrio: {agenda.nomeFuncionario} </Text>
                                         <Text style={styles.fontCard}>{agenda.ruaEmpresa} - {agenda.numeroEmpresa} </Text>
                                         <View>
                                             <TouchableOpacity style={styles.localizacao}
-                                             onPress={() => this.props.navigation.navigate('Localização',{empresa:agenda})}>
+                                                onPress={() => this.props.navigation.navigate('Localização', { empresa: agenda })}>
                                                 <View style={styles.iconeLocal}>
                                                     <Icon name='map-marker'
                                                         size={25} color='red' />
@@ -147,8 +193,8 @@ export default class Agenda extends Component {
 
 const styles = StyleSheet.create({
     contentContainer: {
-        paddingBottom:60,
-        paddingTop:10
+        paddingBottom: 60,
+        paddingTop: 10
     },
     container: {
         backgroundColor: 'rgba(220,220,220,1)',
@@ -174,11 +220,40 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         borderColor: '#708090'
     },
+    viewNomeEmpresa: {
+        flex: 15,
+    },
+    viewCategoria: {
+        width: Dimensions.get('window').width - 200,
+    },
+    textNomeEmpres: {
+        fontSize: 18,
+        color: '#000000'
+    },
+    iconFavorito: {
+        width: Dimensions.get('window').width - 40,
+        flexDirection: 'row',
+    },
+    viewbuttonFavorito: {
+        flex: 2,
+    },
+    buttonFavorito: {
+        width: 32,
+        height: 32,
+        borderColor: '#C0C0C0',
+        borderWidth: 1,
+        alignItems: "center",
+        // paddingRight: 5,
+        // paddingLeft: 5,
+        // left: 5,
+        borderRadius: 3,
+        justifyContent: 'center'
+    },
     localizacao: {
         flexDirection: 'row',
         // padding: 10,
         marginTop: 5,
-        marginBottom:5,
+        marginBottom: 5,
         // margin: 10,
         // height: 20,
         // width: '100%',
@@ -187,12 +262,12 @@ const styles = StyleSheet.create({
         borderColor: '#708090'
     },
     iconeLocal: {
-        left:10,
-        flex:3
+        left: 10,
+        flex: 3
     },
     viewTextLocal: {
-        justifyContent:"center",
-        flex:10
+        justifyContent: "center",
+        flex: 10
     },
     textLocal: {
         fontSize: 18,

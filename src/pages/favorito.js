@@ -8,6 +8,7 @@ import {
     Alert,
     ScrollView,
     TouchableOpacity,
+    RefreshControl
 } from 'react-native'
 import { Card } from "react-native-elements";
 import AsyncStorage from '@react-native-community/async-storage';
@@ -24,36 +25,67 @@ export default class Favorito extends Component {
     state = {
         date: new Date(),
         mensageErro: '',
-        activIndicador: true,
-        favorito: []
+        activIndicador: false,
+        favorito: [],
+        refreshing: false,
     }
     async componentDidMount() {
         let favorito = new Array();
-        console.log('aquiiiiiiiii')
+        await this.setState({ activIndicador: !this.state.activIndicador })
         try {
             let user = await AsyncStorage.getItem('user')
             var userParse = JSON.parse(user);
             var idCliente = userParse._id
 
-            
+
             let response = await api.get(`/showFavorites/${idCliente}`)
             console.log('console ag favor ->', response.data.favoritos)
             console.log('-------------------->respos ', response)
             if (response.data.favoritos.length > 0) {
                 favorito = response.data.favoritos
                 await this.setState({ favorito: favorito })
+                await this.setState({ mensageErro: '' })
                 console.log(favorito)
             } else {
-                await this.setState({ mensageErro: 'Nenhuma empresa adicionada até o momento' })
-                showNotification('Nenhuma empresa adicionada')
+                await this.setState({ mensageErro: 'Nenhuma empresa adicionada' })
             }
-             await this.setState({ activIndicador: !this.state.activIndicador })
+            await this.setState({ activIndicador: !this.state.activIndicador })
         } catch (e) {
-            console.log(e) 
+            console.log(e)
             this.setState({ activIndicador: false })
             this.setState({ mensageErro: ' Falha na conexão' })
             showError('Falha na conexão');
         }
+    }
+
+    deleteFavorito = async (idEmpresa) => {
+
+        this.setState({ activIndicador: !this.state.activIndicador })
+        try {
+            let user = await AsyncStorage.getItem('user')
+            var userParse = JSON.parse(user);
+            var idCliente = userParse._id
+            const data = {
+                idCliente: idCliente,
+                idEmpresa: idEmpresa,
+                flag: 0
+            }
+            let response = await api.post('/checkFavorite', data)
+            showSuccess(response.data.mensagem);
+
+            this.setState({ activIndicador: !this.state.activIndicador })
+            await this.componentDidMount()
+        } catch (e) {
+            console.log(e)
+            showError('Falha na conexão')
+            this.setState({ activIndicador: false })
+        }
+    }
+
+    _onRefresh = async () => {
+        await this.componentDidMount()
+        this.setState({ refreshing: true });
+        this.setState({ refreshing: false });
     }
 
     render() {
@@ -66,8 +98,15 @@ export default class Favorito extends Component {
                         Favoritos
                     </Text>
                 </View>
-                <ScrollView scrollEnabled={true}
-                 contentContainerStyle={styles.contentContainer}>
+                <ScrollView
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={this.state.refreshing}
+                            onRefresh={this._onRefresh}
+                        />
+                    }
+                    scrollEnabled={true}
+                    contentContainerStyle={styles.contentContainer}>
 
                     {this.state.mensageErro === '' &&
                         <View>
@@ -76,22 +115,35 @@ export default class Favorito extends Component {
                                 this.state.favorito.map(favorito => (
                                     console.log(favorito),
                                     <Card containerStyle={styles.card}>
-                                        <Text style={styles.fontCard}>{favorito.nomeEmpresa}- {favorito.datafavorito}</Text>
-                                        <Text style={styles.fontCard}>Categoria: {favorito.categoria} </Text>
-                                        <Text style={styles.fontCard}>{favorito.descricao} </Text>
-                                        <Text style={styles.fontCard}>{favorito.cidade} - {favorito.bairro} </Text>
-                                        <Text style={styles.fontCard}>{favorito.rua} - {favorito.numero} </Text>
-                                        <View>
-                                            <TouchableOpacity style={styles.localizacao}
-                                             onPress={() => this.props.navigation.navigate('Maps Favoritos',{empresa:favorito})}>
-                                                <View style={styles.iconeLocal}>
-                                                    <Icon name='map-marker'
-                                                        size={25} color='red' />
-                                                </View>
-                                                <View style={styles.viewTextLocal}>
-                                                    <Text style={styles.textLocal}>Localização</Text>
-                                                </View>
-                                            </TouchableOpacity>
+                                        <View style={styles.iconFavorito}>
+                                            <View style={styles.viewNomeEmpresa}>
+                                                <Text style={styles.textNomeEmpres}>{favorito.nomeEmpresa}</Text>
+                                            </View>
+                                            <View style={styles.viewbuttonFavorito}>
+                                                <TouchableOpacity style={styles.buttonFavorito}
+                                                    onPress={() => this.deleteFavorito(favorito.idEmpresa)}>
+                                                    <Icon name="heart" color={'#FA8072'} size={20} />
+                                                </TouchableOpacity>
+                                            </View>
+                                        </View>
+                                        <View >
+                                            <Text style={styles.fontCard}>Categoria: {favorito.categoria} </Text>
+                                            <Text style={styles.fontCard}>{favorito.descricao} </Text>
+                                            <Text style={styles.fontCard}>{favorito.cidade} - {favorito.bairro} </Text>
+                                            <Text style={styles.fontCard}>{favorito.rua} - {favorito.numero} </Text>
+
+                                            <View style={styles.viewCategoria}>
+                                                <TouchableOpacity style={styles.localizacao}
+                                                    onPress={() => this.props.navigation.navigate('Maps Favoritos', { empresa: favorito })}>
+                                                    <View style={styles.iconeLocal}>
+                                                        <Icon name='map-marker'
+                                                            size={25} color='red' />
+                                                    </View>
+                                                    <View style={styles.viewTextLocal}>
+                                                        <Text style={styles.textLocal}>Localização</Text>
+                                                    </View>
+                                                </TouchableOpacity>
+                                            </View>
                                         </View>
                                     </Card>
                                 ))
@@ -121,8 +173,8 @@ export default class Favorito extends Component {
 
 const styles = StyleSheet.create({
     contentContainer: {
-        paddingBottom:60,
-        paddingTop:10
+        paddingBottom: 60,
+        paddingTop: 10
     },
     container: {
         backgroundColor: 'rgba(220,220,220,1)',
@@ -139,20 +191,57 @@ const styles = StyleSheet.create({
     },
     card: {
         flexDirection: 'row',
-        padding: 10,
-        marginTop: 4,
-        margin: 10,
-        height: 185,
-        width: Dimensions.get('window').width - 20,
+        // padding: 10,
+        // marginTop: 4,
+        // margin: 10,
+        // height: 185,
+        // width: Dimensions.get('window').width - 20,
         borderBottomWidth: 5,
         borderRadius: 5,
         borderColor: '#708090'
+    },
+    header: {
+
+    },
+    viewNomeEmpresa: {
+        flex: 15,
+
+        // borderWidth: 2, borderColor: '#708090',
+    },
+    viewCategoria: {
+        width: Dimensions.get('window').width - 200,
+    },
+    textNomeEmpres: {
+        // paddingRight: 10,
+        fontSize: 18,
+        color: '#000000'
+    },
+    iconFavorito: {
+        // borderWidth:3,
+        // borderColor: '#708090',
+        width: Dimensions.get('window').width - 60,
+        flexDirection: 'row',
+    },
+    viewbuttonFavorito: {
+        flex: 2,
+    },
+    buttonFavorito: {
+        width: 32,
+        height: 32,
+        borderColor: '#C0C0C0',
+        borderWidth: 1,
+        alignItems: "center",
+        // paddingRight: 5,
+        // paddingLeft: 5,
+        // left: 5,
+        borderRadius: 3,
+        justifyContent: 'center'
     },
     localizacao: {
         flexDirection: 'row',
         // padding: 10,
         marginTop: 5,
-        marginBottom:5,
+        marginBottom: 5,
         // margin: 10,
         // height: 20,
         // width: '100%',
@@ -161,12 +250,12 @@ const styles = StyleSheet.create({
         borderColor: '#708090'
     },
     iconeLocal: {
-        left:10,
-        flex:3
+        left: 10,
+        flex: 3
     },
     viewTextLocal: {
-        justifyContent:"center",
-        flex:10
+        justifyContent: "center",
+        flex: 10
     },
     textLocal: {
         fontSize: 18,

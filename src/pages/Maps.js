@@ -53,26 +53,26 @@ export default class Maps extends Component {
 
   async componentDidMount() {
     this.setState({ activIndicador: !this.state.activIndicador })
-// console.log('catttttee goiooi ->'+this.props.route.params.categoria)
+    // console.log('catttttee goiooi ->'+this.props.route.params.categoria)
     var categoria = this.props.route.params.categoria
- 
+
 
     await api.get(`/showCategories/${categoria}`).then((response) => {
-      
+
       if (response.data.length != 0) {
 
         let places = new Array();
         response.data.forEach(data => {
 
           places.push(data);
-          
+
         });
         this.setState({ places: places })
         this.setState({ activIndicador: !this.state.activIndicador })
 
       } else {
         this.setState({ activIndicador: !this.state.activIndicador })
-         showNotification('Nenhum serviço nessa categoria no momento');
+        showNotification('Nenhum serviço nessa categoria no momento');
         return this.props.navigation.navigate('Home')
       }
     }).catch((error) => {
@@ -87,24 +87,27 @@ export default class Maps extends Component {
   showServices = async (_id) => {
     //_id = 1
     await this.setState({ id_conpanie: _id })
-    await this.setState({ showModal: true })
-    // try {
+    // await this.setState({ showModal: true })
+    try {
 
-    //   let response = await api.get(`/showCompanyServices/${_id}`)
-    //   if (response.data.mensagem === undefined) {
-    //     await this.setState({ services: response.data.servicos })
-    //     await this.setState({ showModal: true })
-    //   } else {
+      let response = await api.get(`/showCompanyServices/${_id}`)
+      if (response.data.mensagem === undefined) {
+        await this.setState({ services: response.data.servicos })
 
-    //     showNotification(response.data.mensagem);
-    //   }
-    //   this.setState({ activIndicador: !this.state.activIndicador })
+        await console.log('*/*/ ' + response.data.servicos)
+        await console.log('*/*/*/*/*/*/*/ njnjnjnjnjnjnjn')
 
-    // } catch (e) {
-    //   console.log(e)
-    //   showError('Falha na conexão')
-    //   this.setState({ activIndicador: false })
-    // }
+      } else {
+
+        showNotification(response.data.mensagem);
+      }
+      //this.setState({ activIndicador: !this.state.activIndicador })
+      await this.setState({ showModal: true })
+    } catch (e) {
+      console.log(e)
+      showError('Falha na conexão')
+      this.setState({ activIndicador: false })
+    }
   }
 
   addFavorito = async (idEmpresa) => {
@@ -121,7 +124,7 @@ export default class Maps extends Component {
       }
       let response = await api.post('/checkFavorite', data)
       showSuccess(response.data.mensagem);
-      
+
       this.setState({ activIndicador: !this.state.activIndicador })
 
     } catch (e) {
@@ -196,9 +199,17 @@ export default class Maps extends Component {
             <View style={styles.bodyCentral}>
               <View style={styles.headerTotal}>
                 <View style={styles.header}>
-                  <Text style={styles.title} >
-                    {item.nome}
-                  </Text>
+                  <View style={styles.textFavorito} >
+                    <Text style={styles.title} >
+                      {item.nome}
+                    </Text>
+                    <View style={styles.buttonFavorito}>
+                      <TouchableOpacity
+                        onPress={() => this.addFavorito(item._id)}>
+                        <Icon name="heart" color={'#FA8072'} size={20} />
+                      </TouchableOpacity >
+                    </View>
+                  </View>
 
                   <View style={styles.buttonServices}>
                     <TouchableOpacity
@@ -206,12 +217,7 @@ export default class Maps extends Component {
                       <Text style={styles.textButton}>Servicos </Text>
                     </TouchableOpacity >
                   </View>
-                  <View style={styles.buttonFavorito}>
-                    <TouchableOpacity
-                      onPress={() => this.addFavorito(item._id)}>
-                      <Icon name="star" color={'#e7a74e'} size={25} />
-                    </TouchableOpacity >
-                  </View>
+
 
                 </View>
               </View>
@@ -317,7 +323,7 @@ export default class Maps extends Component {
 
         </MapboxGL.MapView>
         <View style={styles.markerAnotacion}>
-         
+
           <FlatList
             horizontal
             scrollEnabled
@@ -425,7 +431,12 @@ const styles = StyleSheet.create({
     marginLeft: 0,
   },
   title: {
-    flex: 8,
+
+    fontSize: 20
+  },
+  textFavorito: {
+    flex: 3,
+    flexDirection: 'row',
     fontSize: 20
   },
   textButton: {
@@ -460,16 +471,18 @@ const styles = StyleSheet.create({
     flex: 1
   },
   buttonFavorito: {
-    flex: 1,
-    //left: Dimensions.get('window').width / 2 + 40,
-    // backgroundColor: '#000000',
-    alignItems: 'center',
+    borderColor: '#C0C0C0',
+    borderWidth: 1,
+     paddingRight:5,
+     paddingLeft:5,
+    left: 5,
     borderRadius: 3,
-    //width: 90,
-    paddingTop: 5,
+    justifyContent: 'center'
   },
   buttonServices: {
-    flex: 3,
+    width: '30%',
+    // alignItems:'flex-end',
+    flex: 1,
     //left: Dimensions.get('window').width / 2 + 40,
     backgroundColor: '#1E90FF',
     alignItems: 'center',

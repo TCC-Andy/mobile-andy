@@ -35,7 +35,7 @@ moment.locale('pt-BR')
 export default class ModalExemplo extends Component {
     state = {
         activIndicador: false,
-        services: [],
+        services: this.props.services,
         activeSections: [],
         listar: false,
         date: new Date(),
@@ -43,23 +43,27 @@ export default class ModalExemplo extends Component {
         interruptor: false
     }
 
-    listaServicos = async () => {
+    buscaServicos = async () => {
 
         try {
+            console.log('/*****************************************************************')
             // var _id = await '5ecab500563c112a70493769'
             let response = await api.get(`/showCompanyServices/${this.props.id_conpanie}`)
-            console.log('se ', Object.values(Object.values(response.data.servicos)))
+            console.log('servicooooooop ', Object.values(Object.values(response.data.servicos)))
             if (response.data.mensagem === undefined) {
+
                 await this.setState({ services: response.data.servicos })
                 await this.setState({ listar: true })
-                this.render()
+                await this.setState({ interruptor: !this.state.interruptor })
+                //this.render()
             } else {
 
                 // showNotification(response.data.mensagem);
             }
             storeData('data', moment(this.state.date).format('YYYY/MM/D'))
-            console.log('dadadaddaddadd' + moment(this.state.date).format('D/MM/YYYY'))
+           // console.log('dadadaddaddadd' + moment(this.state.date).format('D/MM/YYYY'))
             // this.setState({ activIndicador: !this.state.activIndicador })
+            
 
         } catch (e) {
             console.log(e)
@@ -78,20 +82,25 @@ export default class ModalExemplo extends Component {
                 momentDate.month(e.month)
                 momentDate.year(e.year)
                 this.setState({ date: momentDate.toDate() })
-                this.setState({ date: momentDate.toDate() })
-                 this.setState({ interruptor: !this.state.interruptor })
-                this.listaServicos()
-                console.log('atualizarr  ' + moment(this.state.date).format('D/MM/YYYY'))
+                console.log('atualizarr  ')
+                this.buscaServicos()
+               
+                // this.setState({ interruptor: !this.state.interruptor })
+                // this.buscaServicos()
+               
                 // storeData('data',moment(this.state.date).format('YYYY/MM/D'))
             }
         })
     }
     
-    render() {
+     render() {
+        console.log('listar ', this.state.listar)
+        console.log('servicossssss ', this.props.services)
+        
         // console.log('inici rensderdeddd ------------id--' + this.state.listar)
-        if (!this.state.listar) {
-            this.listaServicos()
-        }
+        // if (!this.state.listar) {
+        //     this.componentDidMount()
+        // }
         const { activeSections } = this.state;
         return (
             <Modal transparent={true} visible={this.props.isVisible}
@@ -132,14 +141,28 @@ export default class ModalExemplo extends Component {
                             <ScrollView contentContainerStyle={{ paddingTop: 10 }}>
                                 <View style={styles.selectors}>
 
-                                </View>
-                                {this.state.interruptor &&
+                                </View>{console.log('         inter  '+this.state.interruptor)}
+                                {!this.state.interruptor && this.state.listar && 
                                     <ListagemAcordion services={this.state.services} />
+                                    
+                                    
+                                    
+                                }
+                                {this.state.interruptor && this.state.listar &&
+                                    <ListagemAcordion services={this.state.services} />
+                                }
+                                {!this.state.listar && 
+                                   
+                                   <ListagemAcordion services={this.props.services} />
+                                   //,console.log('--false LISTATTTT---------------------------------------------------')
+                                    
+                                }
+                                {this.state.listar  &&
+                                  console.log('-- INTERRtrue---------------------------------------------------')
+                                  ,console.log(this.state.services) 
                                    
                                 }
-                                {!this.state.interruptor &&
-                                    <ListagemAcordion services={this.state.services} />
-                                }
+                                
                             </ScrollView>
                         </View>
                     </View>

@@ -30,6 +30,7 @@ MapboxGL.setAccessToken("pk.eyJ1IjoiYnJ1bm9wZWRyb3NvIiwiYSI6ImNrNmJkY2R3dDEwODkz
 
 export default class MapsParemetros extends Component {
   state = {
+    id_conpanie: null,
     place: this.props.route.params.empresa,
     showModal: false,
     activIndicador: false,
@@ -41,28 +42,10 @@ export default class MapsParemetros extends Component {
   }
 
   showServices = async (_id) => {
-    //_id = 1
-    console.log('idddddddd**********************************************************')
-    console.log('idddddddd', _id)
-    this.setState({ activIndicador: !this.state.activIndicador })
-    try {
-
-      let response = await api.get(`/showCompanyServices/${_id}`)
-      if (response.data.mensagem === undefined) {
-        console.log('sSERVICOS -----------------------------------------------------------------------------------',  response.data.servicos)
-        await this.setState({ services: response.data.servicos })
-        await this.setState({ showModal: true })
-      } else {
-
-        showNotification(response.data.mensagem);
-      }
-      this.setState({ activIndicador: !this.state.activIndicador })
-
-    } catch (e) {
-      console.log(e)
-      showError('Falha na conexão')
-      this.setState({ activIndicador: false })
-    }
+    
+    await this.setState({ id_conpanie: _id })
+    await this.setState({ showModal: true })
+    
   }
 
 
@@ -116,7 +99,7 @@ export default class MapsParemetros extends Component {
 
                   <View style={styles.buttonServices}>
                     <TouchableOpacity
-                      onPress={() => this.showServices(item._id)}>
+                      onPress={() => this.showServices(item.idEmpresa)}>
                       <Text style={styles.textButton}>Servico </Text>
                     </TouchableOpacity >
                   </View>
@@ -128,7 +111,7 @@ export default class MapsParemetros extends Component {
                 <Text>-----------------------------------------------</Text>
               </View>
               <View style={styles.description}>
-                <Text>{item.bairro} </Text>
+                <Text>{this.state.descricao} </Text>
               </View>
 
               <View style={styles.City}>
@@ -151,7 +134,7 @@ export default class MapsParemetros extends Component {
       <View style={styles.container}>
         <ActivIndicador animating={this.state.activIndicador} />
         <ModalExemplo isVisible={this.state.showModal}
-          services={this.state.services}
+          services={this.state.services} id_conpanie={this.state.id_conpanie}
           closeModal={() => this.setState({ showModal: false })} />
 
         <MapboxGL.MapView
