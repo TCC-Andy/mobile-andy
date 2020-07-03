@@ -24,8 +24,6 @@ import ActivIndicador from '../componentes/activIndicador'
 import * as Animatable from 'react-native-animatable';
 import separadorImage from '../../assets/imgs/botaoDireita.png'
 
-
-
 MapboxGL.setAccessToken("pk.eyJ1IjoiYnJ1bm9wZWRyb3NvIiwiYSI6ImNrNmJkY2R3dDEwODkzbW1yZmFvcHA2dzIifQ.0cwlHJwaGJpu9ZGfdyhkuQ");
 
 export default class MapsParemetros extends Component {
@@ -42,10 +40,29 @@ export default class MapsParemetros extends Component {
   }
 
   showServices = async (_id) => {
-    
+    //_id = 1
     await this.setState({ id_conpanie: _id })
-    await this.setState({ showModal: true })
-    
+    // await this.setState({ showModal: true })
+    try {
+
+      let response = await api.get(`/showCompanyServices/${_id}`)
+      if (response.data.mensagem === undefined) {
+        await this.setState({ services: response.data.servicos })
+
+        await console.log('*/*/ ' + response.data.servicos)
+        await console.log('*/*/*/*/*/*/*/ njnjnjnjnjnjnjn')
+
+      } else {
+
+        showNotification(response.data.mensagem);
+      }
+      //this.setState({ activIndicador: !this.state.activIndicador })
+      await this.setState({ showModal: true })
+    } catch (e) {
+      console.log(e)
+      showError('Falha na conexão')
+      this.setState({ activIndicador: false })
+    }
   }
 
 

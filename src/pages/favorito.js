@@ -8,8 +8,10 @@ import {
     Alert,
     ScrollView,
     TouchableOpacity,
-    RefreshControl
+    RefreshControl,
+    ImageBackground,
 } from 'react-native'
+import backgroundImage from '../../assets/imgs/login15.jpg'
 import { Card } from "react-native-elements";
 import AsyncStorage from '@react-native-community/async-storage';
 import api from '../service/api';
@@ -90,80 +92,82 @@ export default class Favorito extends Component {
 
     render() {
         return (
-
-            <View>
-                <ActivIndicador animating={this.state.activIndicador} />
-                <View style={styles.viewTitle}>
-                    <Text style={styles.title}>
-                        Favoritos
+            <ImageBackground source={backgroundImage}
+                style={styles.background}>
+                <View style={styles.containerPricipal}>
+                    <ActivIndicador animating={this.state.activIndicador} />
+                    <View style={styles.viewTitle}>
+                        <Text style={styles.title}>
+                            Favoritos
                     </Text>
-                </View>
-                <ScrollView
-                    refreshControl={
-                        <RefreshControl
-                            refreshing={this.state.refreshing}
-                            onRefresh={this._onRefresh}
-                        />
-                    }
-                    scrollEnabled={true}
-                    contentContainerStyle={styles.contentContainer}>
+                    </View>
+                    <ScrollView
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={this.state.refreshing}
+                                onRefresh={this._onRefresh}
+                            />
+                        }
+                        scrollEnabled={true}
+                        contentContainerStyle={styles.contentContainer}>
 
-                    {this.state.mensageErro === '' &&
-                        <View>
-                            {
-                                console.log('agen lopp', this.state.favorito),
-                                this.state.favorito.map(favorito => (
-                                    console.log(favorito),
-                                    <Card containerStyle={styles.card}>
-                                        <View style={styles.iconFavorito}>
-                                            <View style={styles.viewNomeEmpresa}>
-                                                <Text style={styles.textNomeEmpres}>{favorito.nomeEmpresa}</Text>
+                        {this.state.mensageErro === '' &&
+                            <View>
+                                {
+                                    console.log('agen lopp', this.state.favorito),
+                                    this.state.favorito.map(favorito => (
+                                        console.log(favorito),
+                                        <Card containerStyle={styles.card}>
+                                            <View style={styles.iconFavorito}>
+                                                <View style={styles.viewNomeEmpresa}>
+                                                    <Text style={styles.textNomeEmpres}>{favorito.nomeEmpresa}</Text>
+                                                </View>
+                                                <View style={styles.viewbuttonFavorito}>
+                                                    <TouchableOpacity style={styles.buttonFavorito}
+                                                        onPress={() => this.deleteFavorito(favorito.idEmpresa)}>
+                                                        <Icon name="remove" color={'#FA8072'} size={20} />
+                                                    </TouchableOpacity>
+                                                </View>
                                             </View>
-                                            <View style={styles.viewbuttonFavorito}>
-                                                <TouchableOpacity style={styles.buttonFavorito}
-                                                    onPress={() => this.deleteFavorito(favorito.idEmpresa)}>
-                                                    <Icon name="heart" color={'#FA8072'} size={20} />
-                                                </TouchableOpacity>
-                                            </View>
-                                        </View>
-                                        <View >
-                                            <Text style={styles.fontCard}>Categoria: {favorito.categoria} </Text>
-                                            <Text style={styles.fontCard}>{favorito.descricao} </Text>
-                                            <Text style={styles.fontCard}>{favorito.cidade} - {favorito.bairro} </Text>
-                                            <Text style={styles.fontCard}>{favorito.rua} - {favorito.numero} </Text>
+                                            <View >
+                                                <Text style={styles.fontCard}>Categoria: {favorito.categoria} </Text>
+                                                <Text style={styles.fontCard}>{favorito.descricao} </Text>
+                                                <Text style={styles.fontCard}>{favorito.cidade} - {favorito.bairro} </Text>
+                                                <Text style={styles.fontCard}>{favorito.rua} - {favorito.numero} </Text>
 
-                                            <View style={styles.viewCategoria}>
-                                                <TouchableOpacity style={styles.localizacao}
-                                                    onPress={() => this.props.navigation.navigate('Maps Favoritos', { empresa: favorito })}>
-                                                    <View style={styles.iconeLocal}>
-                                                        <Icon name='map-marker'
-                                                            size={25} color='red' />
-                                                    </View>
-                                                    <View style={styles.viewTextLocal}>
-                                                        <Text style={styles.textLocal}>Localização</Text>
-                                                    </View>
-                                                </TouchableOpacity>
+                                                <View style={styles.viewCategoria}>
+                                                    <TouchableOpacity style={styles.localizacao}
+                                                        onPress={() => this.props.navigation.navigate('Maps Favoritos', { empresa: favorito })}>
+                                                        <View style={styles.iconeLocal}>
+                                                            <Icon name='map-marker'
+                                                                size={25} color='red' />
+                                                        </View>
+                                                        <View style={styles.viewTextLocal}>
+                                                            <Text style={styles.textLocal}>Localização</Text>
+                                                        </View>
+                                                    </TouchableOpacity>
+                                                </View>
                                             </View>
-                                        </View>
-                                    </Card>
-                                ))
-                            }
-                        </View>
-                    }
-                    {console.log("msg erroo ", this.state.mensageErro),
-                        this.state.mensageErro !== '' &&
-
-                        <Card containerStyle={styles.card}>
-                            <View style={styles.viewErro}>
-                                <Text style={styles.erro}>
-                                    {this.state.mensageErro}
-                                </Text>
+                                        </Card>
+                                    ))
+                                }
                             </View>
-                        </Card>
+                        }
+                        {console.log("msg erroo ", this.state.mensageErro),
+                            this.state.mensageErro !== '' &&
 
-                    }
-                </ScrollView>
-            </View>
+                            <Card containerStyle={styles.card}>
+                                <View style={styles.viewErro}>
+                                    <Text style={styles.erro}>
+                                        {this.state.mensageErro}
+                                    </Text>
+                                </View>
+                            </Card>
+
+                        }
+                    </ScrollView>
+                </View>
+            </ImageBackground>
 
         )
     }
@@ -172,6 +176,15 @@ export default class Favorito extends Component {
 */
 
 const styles = StyleSheet.create({
+    background: {
+        width: '100%',
+        height: Dimensions.get('window').height,
+    },
+    containerPricipal: {
+        backgroundColor: 'rgba(0,0,0, 0.1)',
+        width: '100%',
+        height: Dimensions.get('window').height,
+    },
     contentContainer: {
         paddingBottom: 60,
         paddingTop: 10
@@ -180,7 +193,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(220,220,220,1)',
     },
     viewTitle: {
-        backgroundColor: '#808080',
+        backgroundColor: 'rgba(0,0,0,0.2)',
         flexDirection: 'row',
         marginHorizontal: 10,
         height: 40,
@@ -198,7 +211,8 @@ const styles = StyleSheet.create({
         // width: Dimensions.get('window').width - 20,
         borderBottomWidth: 5,
         borderRadius: 5,
-        borderColor: '#708090'
+        borderColor: '#708090',
+        backgroundColor: 'rgba(255,255,255,0.5)',
     },
     header: {
 
@@ -231,9 +245,6 @@ const styles = StyleSheet.create({
         borderColor: '#C0C0C0',
         borderWidth: 1,
         alignItems: "center",
-        // paddingRight: 5,
-        // paddingLeft: 5,
-        // left: 5,
         borderRadius: 3,
         justifyContent: 'center'
     },
@@ -267,7 +278,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 25,
-        color: '#FFFFFF'
+        color: '#000000'
     },
     viewErro: {
         flexDirection: 'row',

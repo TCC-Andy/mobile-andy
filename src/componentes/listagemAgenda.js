@@ -32,6 +32,8 @@ export default class listagemAgenda extends Component {
         activIndicador: true,
         agenda: [],
         mensageErro: '',
+        horario: moment().format('LT'),
+        data: moment().format("YYYY/MM/DD"),
     }
 
     delay = async (ms) => {
@@ -51,6 +53,7 @@ export default class listagemAgenda extends Component {
                 idServico: this.props.id_service,
                 tempoServico: this.props.tempo
             }
+            console.log('console di=====================dddddddd ->', data)
            // console.log(data)
             // const data = {
             //     idEmpresa: '5ecab500563c112a70493769',
@@ -108,8 +111,8 @@ export default class listagemAgenda extends Component {
                 inicioServico: horario.inicioServico,
                 fimServico: horario.fimServico,
             }
-           // console.log('userrrrrrruse 22222222r',user)
-          //  console.log('dadosss->', data)
+            console.log('userrrrrrruse 22222222----------------------------------------------------------------r')
+            console.log('dadosss->', data)
             let response = await api.post('/createSchedule', data)
           //  console.log('criar agenda->', response.data)
             if (response.data.mensagem === undefined) {
@@ -133,6 +136,9 @@ export default class listagemAgenda extends Component {
         return (
             <TouchableOpacity style={styles.viewHorarios} onPress={() => this.alertConfirmacao(horario, array)} >
                 <View style={styles.horarios} >
+                {console.log(' data'+this.state.data.toString()+' '+ array.dataServico.toString())}
+                    {console.log(' data'+(this.state.data.toString() === array.dataServico.toString()))}
+                    {console.log((this.state.horario.toString() < horario.inicioServico.toString()))}
                     <Text>
                         {horario.inicioServico}
                     </Text>
@@ -142,7 +148,7 @@ export default class listagemAgenda extends Component {
     }
 
     render() {
-       
+       console.log('---------horasas-------------------',this.state.horario)
         return (
 
             <View>
@@ -151,13 +157,13 @@ export default class listagemAgenda extends Component {
                     <View>
                         {
                             
-                            this.state.agenda.map((agenda, indice, array) => (
+                            this.state.agenda.map((agen, indice, array) => (
                                 <View style={styles.container}>
                                     <Text style={styles.title}>
-                                        Funcionário {agenda.nome}
+                                        Funcionário {agen.nome}
                                     </Text>
                                     <ScrollView horizontal={true}>
-                                        {agenda.horariosDisponiveis.map(horario => this.horariosDisponivel(horario, agenda))}
+                                        {agen.horariosDisponiveis.map(horario => this.horariosDisponivel(horario, agen))}
                                     </ScrollView>
                                 </View>
                             ))

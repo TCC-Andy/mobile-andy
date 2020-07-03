@@ -15,13 +15,13 @@ const Drawer = createDrawerNavigator();
 
 const menuDrawer = () =>
   <Drawer.Navigator>
-    <Drawer.Screen name="ButtonsHome" component={ButtonsHome} />
+    <Drawer.Screen name="Home" component={ButtonsHome} />
     {/* <Drawer.Screen name="Perfil" component={Perfil} /> */}
-    <Drawer.Screen name="Favorito" component={Favorito} />
+    <Drawer.Screen name="Termo de uso" component={App} />
     <Drawer.Screen name="SAIR" component={Login} />
-    <Drawer.Screen name="EXEMPLO" component={Horarios} />
+    {/* <Drawer.Screen name="EXEMPLO" component={Horarios} />
     <Drawer.Screen name="refre1" component={App} />
-    <Drawer.Screen name="refre2" component={Project} />
+    <Drawer.Screen name="refre2" component={Project} /> */}
   </Drawer.Navigator>
 
 export default menuDrawer

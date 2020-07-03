@@ -46,6 +46,7 @@ export default class ModalExemplo extends Component {
     buscaServicos = async () => {
 
         try {
+            await storeData('data', moment(this.state.date).format('YYYY/MM/D'))
             console.log('/*****************************************************************')
             // var _id = await '5ecab500563c112a70493769'
             let response = await api.get(`/showCompanyServices/${this.props.id_conpanie}`)
@@ -60,7 +61,7 @@ export default class ModalExemplo extends Component {
 
                 // showNotification(response.data.mensagem);
             }
-            storeData('data', moment(this.state.date).format('YYYY/MM/D'))
+           
            // console.log('dadadaddaddadd' + moment(this.state.date).format('D/MM/YYYY'))
             // this.setState({ activIndicador: !this.state.activIndicador })
             
@@ -82,13 +83,13 @@ export default class ModalExemplo extends Component {
                 momentDate.month(e.month)
                 momentDate.year(e.year)
                 this.setState({ date: momentDate.toDate() })
-                console.log('atualizarr  ')
+                console.log('atualizarr ---------------------------- ')
                 this.buscaServicos()
                
                 // this.setState({ interruptor: !this.state.interruptor })
                 // this.buscaServicos()
                
-                // storeData('data',moment(this.state.date).format('YYYY/MM/D'))
+                 storeData('data',moment(momentDate.toDate()).format('YYYY/MM/D'))
             }
         })
     }

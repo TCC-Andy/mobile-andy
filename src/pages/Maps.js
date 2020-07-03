@@ -471,14 +471,15 @@ const styles = StyleSheet.create({
     flex: 1
   },
   buttonFavorito: {
+    width: 32,
+    height: 32,
+    left: 5 ,
     borderColor: '#C0C0C0',
     borderWidth: 1,
-     paddingRight:5,
-     paddingLeft:5,
-    left: 5,
+    alignItems: "center",
     borderRadius: 3,
     justifyContent: 'center'
-  },
+},
   buttonServices: {
     width: '30%',
     // alignItems:'flex-end',

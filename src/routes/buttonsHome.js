@@ -13,9 +13,9 @@ const Tab = createBottomTabNavigator();
 const menuTab = () =>
     <Tab.Navigator tabBarOptions={{
         activeTintColor: '#800000',
-        activeBackgroundColor: '#A9A9A9',
+        activeBackgroundColor: '#FFFFFF',
         inactiveTintColor: '#000000',
-        inactiveBackgroundColor: '#DCDCDC',
+        inactiveBackgroundColor: 'rgba(176,224,230, 1)',
     }}>
         <Tab.Screen name="Home" component={Home}
         options={{

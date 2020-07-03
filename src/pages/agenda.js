@@ -8,8 +8,10 @@ import {
     Alert,
     ScrollView,
     TouchableOpacity,
-    RefreshControl
+    RefreshControl,
+    ImageBackground,
 } from 'react-native'
+import backgroundImage from '../../assets/imgs/login15.jpg'
 import { Card } from "react-native-elements";
 import AsyncStorage from '@react-native-community/async-storage';
 import api from '../service/api';
@@ -50,6 +52,7 @@ export default class Agenda extends Component {
             if (response.data.schedule.length > 0) {
                 agenda = response.data.schedule
                 await this.setState({ agenda: agenda })
+                await this.setState({ mensageErro: '' })
                 console.log(agenda)
             } else {
                 await this.setState({ mensageErro: 'Não foi reallizado nenhum agendamento até o momento' })
@@ -111,8 +114,9 @@ export default class Agenda extends Component {
 
     render() {
         return (
-
-            <View>
+<ImageBackground source={backgroundImage}
+                style={styles.background}>
+            <View style={styles.containerPricipal}>
                 <ActivIndicador animating={this.state.activIndicador} />
                 <View style={styles.viewTitle}>
                     <Text style={styles.title}>
@@ -155,7 +159,7 @@ export default class Agenda extends Component {
                                         <Text style={styles.fontCard}>Horario: {agenda.inicioServico} hrs - {agenda.fimServico} hrs </Text>
                                         <Text style={styles.fontCard}>Funcionrio: {agenda.nomeFuncionario} </Text>
                                         <Text style={styles.fontCard}>{agenda.ruaEmpresa} - {agenda.numeroEmpresa} </Text>
-                                        <View>
+                                        <View style={styles.viewCategoria}>
                                             <TouchableOpacity style={styles.localizacao}
                                                 onPress={() => this.props.navigation.navigate('Localização', { empresa: agenda })}>
                                                 <View style={styles.iconeLocal}>
@@ -186,12 +190,22 @@ export default class Agenda extends Component {
                     }
                 </ScrollView >
             </View>
+            </ImageBackground>
 
         )
     }
 }
 
 const styles = StyleSheet.create({
+    background: {
+        width: '100%',
+        height: Dimensions.get('window').height,
+    },
+    containerPricipal:{
+        backgroundColor: 'rgba(0,0,0, 0.1)',
+        width: '100%',
+        height: Dimensions.get('window').height,
+    },
     contentContainer: {
         paddingBottom: 60,
         paddingTop: 10
@@ -200,7 +214,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(220,220,220,1)',
     },
     viewTitle: {
-        backgroundColor: '#808080',
+        backgroundColor: 'rgba(0,0,0,0.2)',
         flexDirection: 'row',
         marginHorizontal: 10,
         height: 40,
@@ -210,15 +224,16 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     card: {
-        flexDirection: 'row',
-        padding: 10,
-        marginTop: 4,
-        margin: 10,
-        height: 185,
-        width: Dimensions.get('window').width - 20,
+         flexDirection: 'row',
+        // padding: 10,
+        // marginTop: 4,
+        // margin: 10,
+        // height: 185,
+        // width: Dimensions.get('window').width - 20,
         borderBottomWidth: 5,
         borderRadius: 5,
-        borderColor: '#708090'
+        borderColor: '#708090',
+        backgroundColor: 'rgba(255,255,255,0.5)',
     },
     viewNomeEmpresa: {
         flex: 15,
@@ -235,7 +250,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     viewbuttonFavorito: {
-        flex: 2,
+        flex: 3,
     },
     buttonFavorito: {
         width: 32,
@@ -279,7 +294,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 25,
-        color: '#FFFFFF'
+        color: '#000000'
     },
     viewErro: {
         flexDirection: 'row',

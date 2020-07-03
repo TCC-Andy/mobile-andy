@@ -101,12 +101,15 @@ export default class Perfil extends Component {
             <ImageBackground source={backgroundImage}
                 style={styles.background}>
                 <ScrollView>
+                <View style={styles.viewTitle}>
+                            <Text style={styles.subtitle}>
+                                Dados do Usuario {this.state.name}
+                            </Text>
+                        </View>
                     <View style={styles.formContainer}>
-                        <StatusBar barStyle="dark-content" />
+                        {/* <StatusBar barStyle="dark-content" /> */}
                         <ActivIndicador animating={this.state.activIndicador} />
-                        <Text style={styles.subtitle}>
-                            Dados do Usuario {this.state.name}
-                        </Text>
+                        
 
                         <AuthInput icon='user' placeholder='Nome'
                             value={this.state.name}
@@ -178,14 +181,24 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     subtitle: {
-        color: '#FFF',
-        fontSize: 20,
-        textAlign: 'center',
-        marginBottom: 0
+        color: '#000000',
+        fontSize: 25,
+        // textAlign: 'center',
+        // marginBottom: 0
+    },
+    viewTitle: {
+        backgroundColor: 'rgba(0,0,0,0.2)',
+        flexDirection: 'row',
+        marginHorizontal: 10,
+        height: 40,
+        width: Dimensions.get('window').width,
+        justifyContent: 'center',
+        right: 10,
+        justifyContent: 'center',
     },
     formContainer: {
         paddingTop: '5%',
-        backgroundColor: 'rgba(0,0,0, 0.5)',
+        backgroundColor: 'rgba(0,0,0, 0.1)',
         padding: 50,
         width: '100%',
         height: Dimensions.get('window').height,

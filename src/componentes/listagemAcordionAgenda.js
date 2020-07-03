@@ -99,7 +99,7 @@ export default class ListagemAcordion extends Component {
 
 
     render() {console.log('--------------------------------------------------------------------------------------r---')
-        console.log('jjjjj ---'+this.props.services)
+       // console.log('jjjjj ---'+this.props.services)
         const { activeSections } = this.state;
         return (
 
