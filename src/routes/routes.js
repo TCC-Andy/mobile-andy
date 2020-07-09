@@ -27,7 +27,7 @@ const menuStackLogin =
           headerShown: true,
           headerTintColor: '#FFFFFF',
           headerStyle: {
-            backgroundColor: '#808080'
+            backgroundColor: 'rgba(0,0,0, 0.8)'
           }
         }} />
       <Stack.Screen name="Localização" component={MapsParemetros}
@@ -35,7 +35,7 @@ const menuStackLogin =
           headerShown: true,
           headerTintColor: '#FFFFFF',
           headerStyle: {
-            backgroundColor: '#808080'
+            backgroundColor: 'rgba(0,0,0, 0.8)'
           }
         }} />
         <Stack.Screen name="Maps Favoritos" component={MapsFavoritos}
@@ -43,7 +43,7 @@ const menuStackLogin =
           headerShown: true,
           headerTintColor: '#FFFFFF',
           headerStyle: {
-            backgroundColor: '#808080'
+            backgroundColor: 'rgba(0,0,0, 0.8)'
           }
         }} />
     </Stack.Navigator>

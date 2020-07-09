@@ -214,7 +214,7 @@ export default class Maps extends Component {
                   <View style={styles.buttonServices}>
                     <TouchableOpacity
                       onPress={() => this.showServices(item._id)}>
-                      <Text style={styles.textButton}>Servicos </Text>
+                      <Text style={styles.textButton}>Serviços </Text>
                     </TouchableOpacity >
                   </View>
 
@@ -222,31 +222,21 @@ export default class Maps extends Component {
                 </View>
               </View>
 
-              <View>
-                <Text>-----------------------------------------------</Text>
+              <View style={{ flexDirection: 'row' }}>
+                <View style={{ backgroundColor: 'black', height: 2, flex: 1, alignSelf: 'center', marginTop: 10 }} />
               </View>
-
-
-              {/* <View style={styles.evaluation}>
-                <Text style={styles.textEvaluation}>Avaliação  <Icon name="star" color={'#e7a74e'} size={15} />
-                  <Icon name="star" color={'#e7a74e'} size={15} />
-                  <Icon name="star-half-o" color={'#e7a74e'} size={15} />
-                  <Icon name="star-o" color={'#e7a74e'} size={15} />
-                  <Icon name="star-o" color={'#e7a74e'} size={15} />
-                </Text>
-              </View> */}
 
               <View style={styles.description}>
-                <Text>{item.descricao} </Text>
+                <Text style={{fontSize:17}}>{item.descricao} </Text>
               </View>
-
-              <View style={styles.City}>
-                <Text>{item.cidade} - {item.bairro}</Text>
-              </View>
-
+              <Text>Contato: {item.telefone}</Text>
               <View style={styles.footer}>
-                <Text>{item.rua}-{item.numero}</Text>
+                <Text>{item.rua} - {item.numero} </Text>
+                <View style={styles.City}>
+                  <Text>{item.bairro} - {item.cidade}</Text>
+                </View>
               </View>
+
             </View>
           </View>
 
@@ -362,7 +352,7 @@ const styles = StyleSheet.create({
     flex: 2,
   },
   markerAnotacion: {
-    // padding: '2%',
+    backgroundColor: 'rgba(175,238,238, 0.4)',
     flex: 1
   },
   annotationContainer: {
@@ -416,18 +406,17 @@ const styles = StyleSheet.create({
   },
   description: {
     flex: 1,
-    marginBottom: 10,
+    marginTop: 8,
   },
   city: {
     flex: 1,
     //  flex: 1,
-    marginTop: 0,
+    marginTop: 5,
     marginLeft: 0,
   },
   footer: {
     flex: 1,
-    //    flex: 1,
-    marginTop: 0,
+    marginBottom: 20,
     marginLeft: 0,
   },
   title: {
@@ -473,22 +462,25 @@ const styles = StyleSheet.create({
   buttonFavorito: {
     width: 32,
     height: 32,
-    left: 5 ,
+    left: 5,
     borderColor: '#C0C0C0',
     borderWidth: 1,
     alignItems: "center",
     borderRadius: 3,
     justifyContent: 'center'
-},
+  },
   buttonServices: {
     width: '30%',
     // alignItems:'flex-end',
     flex: 1,
     //left: Dimensions.get('window').width / 2 + 40,
-    backgroundColor: '#1E90FF',
+    backgroundColor: 'rgba(30,144,255,0.4)',
+    borderColor: 'rgba(30,144,255,0.5)',
+    borderWidth: 3,
     alignItems: 'center',
     borderRadius: 3,
     //width: 90,
+    alignItems: 'center',
     paddingBottom: 5,
   },
   titleView: {

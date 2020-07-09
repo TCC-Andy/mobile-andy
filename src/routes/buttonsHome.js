@@ -20,7 +20,7 @@ const menuTab = () =>
         <Tab.Screen name="Home" component={Home}
         options={{
             tabBarVisible: true,
-            tabBarLabel: 'Home',
+            tabBarLabel: 'Inicio',
             tabBarIcon: ({ color, size }) => (
                 <Icon name="home" color={'#000000'} size={40} />
             )

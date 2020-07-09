@@ -15,7 +15,7 @@ const Drawer = createDrawerNavigator();
 
 const menuDrawer = () =>
   <Drawer.Navigator>
-    <Drawer.Screen name="Home" component={ButtonsHome} />
+    <Drawer.Screen name="Inicio" component={ButtonsHome} />
     {/* <Drawer.Screen name="Perfil" component={Perfil} /> */}
     <Drawer.Screen name="Termo de uso" component={App} />
     <Drawer.Screen name="SAIR" component={Login} />

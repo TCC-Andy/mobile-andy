@@ -120,7 +120,7 @@ export default class Agenda extends Component {
                 <ActivIndicador animating={this.state.activIndicador} />
                 <View style={styles.viewTitle}>
                     <Text style={styles.title}>
-                        Horarios Agendados
+                    Horários Agendados
                     </Text>
                 </View>
                 <ScrollView
@@ -156,8 +156,8 @@ export default class Agenda extends Component {
 
                                         
                                         <Text style={styles.fontCard}>{agenda.nomeServico} </Text>
-                                        <Text style={styles.fontCard}>Horario: {agenda.inicioServico} hrs - {agenda.fimServico} hrs </Text>
-                                        <Text style={styles.fontCard}>Funcionrio: {agenda.nomeFuncionario} </Text>
+                                        <Text style={styles.fontCard}>Horário: {agenda.inicioServico} min - {agenda.fimServico} min </Text>
+                                        <Text style={styles.fontCard}>Funcionário: {agenda.nomeFuncionario} </Text>
                                         <Text style={styles.fontCard}>{agenda.ruaEmpresa} - {agenda.numeroEmpresa} </Text>
                                         <View style={styles.viewCategoria}>
                                             <TouchableOpacity style={styles.localizacao}
