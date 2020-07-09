@@ -41,11 +41,7 @@ export default class Home extends Component {
                                     behavior={null}>
                                     <View style={styles.viewSearch}>
                                         <Text style={styles.categoria}>Categorias</Text>
-                                        {/* <SearchBar containerStyle={{ backgroundColor: 'white' }}
-                                            placeholder="Procurar..."
-                                            onChangeText={this.updateSearch}
-                                            value={this.state.search}
-                                        /> */}
+                                        
                                     </View>
                                 </KeyboardAvoidingView>
                             </View>
