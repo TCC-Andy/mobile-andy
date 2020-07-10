@@ -23,6 +23,7 @@ import { showError, showSuccess, showNotification } from '../utils/alertsUser'
 import ActivIndicador from '../componentes/activIndicador'
 import * as Animatable from 'react-native-animatable';
 import separadorImage from '../../assets/imgs/botaoDireita.png'
+import AsyncStorage from '@react-native-community/async-storage';
 
 MapboxGL.setAccessToken("pk.eyJ1IjoiYnJ1bm9wZWRyb3NvIiwiYSI6ImNrNmJkY2R3dDEwODkzbW1yZmFvcHA2dzIifQ.0cwlHJwaGJpu9ZGfdyhkuQ");
 
@@ -65,8 +66,6 @@ export default class MapsParemetros extends Component {
     }
   }
 
-
-
   alterCoordenadas = (place) => {
     let camera = null
 
@@ -76,6 +75,30 @@ export default class MapsParemetros extends Component {
     }
     this.setState({ camera })
   }
+
+  deleteFavorito = async (idEmpresa) => {
+showNotification(idEmpresa)
+    this.setState({ activIndicador: !this.state.activIndicador })
+    try {
+        let user = await AsyncStorage.getItem('user')
+        var userParse = JSON.parse(user);
+        var idCliente = userParse._id
+        const data = {
+            idCliente: idCliente,
+            idEmpresa: idEmpresa,
+            flag: 0
+        }
+        let response = await api.post('/checkFavorite', data)
+        showSuccess(response.data.mensagem);
+
+        this.setState({ activIndicador: !this.state.activIndicador })
+        
+    } catch (e) {
+        console.log(e)
+        showError('Falha na conexão')
+        this.setState({ activIndicador: false })
+    }
+}
 
 
   renderAnnotations2(place) {
@@ -108,19 +131,27 @@ export default class MapsParemetros extends Component {
 
           <View style={styles.entreButuns}>
             <View style={styles.bodyCentral}>
+
               <View style={styles.headerTotal}>
                 <View style={styles.header}>
-                  <Text style={styles.title} >
-                    {item.nomeEmpresa}
-                  </Text>
+                  <View style={styles.textFavorito} >
+                    <Text style={styles.title} >
+                      {item.nomeEmpresa}
+                    </Text>
+                    <View style={styles.buttonFavorito}>
+                      <TouchableOpacity
+                        onPress={() => this.deleteFavorito(item.idEmpresa)}>
+                        <Icon name="heart" color={'#FA8072'} size={20} />
+                      </TouchableOpacity >
+                    </View>
+                  </View>
 
                   <View style={styles.buttonServices}>
                     <TouchableOpacity
                       onPress={() => this.showServices(item.idEmpresa)}>
-                      <Text style={styles.textButton}>Servico </Text>
+                      <Text style={styles.textButton}>Serviços </Text>
                     </TouchableOpacity >
                   </View>
-
                 </View>
               </View>
 

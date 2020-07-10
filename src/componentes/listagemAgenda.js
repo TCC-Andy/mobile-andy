@@ -52,7 +52,8 @@ export default class listagemAgenda extends Component {
                 dataAgenda: JSON.parse(dataGet),
                 idServico: this.props.id_service,
                 tempoServico: this.props.tempo,
-                horaAtual:moment().format('LT')
+                horaAtual: moment().format('LT'), 
+                hoje: moment().format("YYYY/MM/DD")
             }
             console.log('console di=====================dddddddd ->', data)
            
@@ -107,13 +108,15 @@ export default class listagemAgenda extends Component {
             console.log('dadosss->', data)
             let response = await api.post('/createSchedule', data)
           //  console.log('criar agenda->', response.data)
-            if (response.data.mensagem === undefined) {
+            if (response.data.status === 200) {
                 // await this.setState({ agenda: response.data.agenda })
                 showSuccess('Agendado com sucesso')
+                this.componentDidMount()
+                
             } else {
                 this.setState({ mensageErro: response.data.mensagem })
             }
-            this.setState({ activIndicador: !this.state.activIndicador })
+            //this.setState({ activIndicador: !this.state.activIndicador })
         } catch (e) {
             console.log(e)
             this.setState({ activIndicador: false })

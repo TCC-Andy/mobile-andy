@@ -111,28 +111,21 @@ export default class MapsParemetros extends Component {
                     {item.nomeEmpresa}
                   </Text>
 
-                  {/* <View style={styles.buttonServices}>
-                    <TouchableOpacity
-                      onPress={() => this.showServices(item._id)}>
-                      <Text style={styles.textButton}>Servicos </Text>
-                    </TouchableOpacity >
-                  </View> */}
-
                 </View>
               </View>
 
               <View style={{ flexDirection: 'row' }}>
-                <View style={{ backgroundColor: 'black', height: 2, flex: 1, alignSelf: 'center', marginTop: 10 }} />
+                <View style={{ backgroundColor: 'black', height: 2, flex: 1, alignSelf: 'center', marginTop: -30 }} />
               </View>
 
               <View style={styles.description}>
-                <Text style={{ fontSize: 17 }}>{item.descricaoEmpresa} </Text>
+                <Text style={{ fontSize: 19 }}>{item.descricaoServico} </Text>
               </View>
-              <Text>Contato: {item.telefoneEmpresa}</Text>
+              
               <View style={styles.footer}>
-                <Text>{item.ruaEmpresa} - {item.numeroEmpresa} </Text>
+                <Text style={{ fontSize: 18 }}>{item.ruaEmpresa} - {item.numeroEmpresa} </Text>
                 <View style={styles.City}>
-                  <Text>{item.bairroEmpresa} - {item.cidadeEmpresa}</Text>
+                  <Text style={{ fontSize: 18 }}>{item.bairroEmpresa} - {item.cidadeEmpresa}</Text>
                 </View>
               </View>
             </View>
@@ -253,7 +246,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     flex: 1,
-    marginBottom: 20,
+    marginBottom: 10,
     marginLeft: 0,
   },
   title: {

@@ -33,7 +33,7 @@ export default function App() {
       <View style={styles.containerPricipal}>
         <View style={styles.viewTitle}>
           <Text style={styles.title}>
-            Horarios Agendados
+            Termo de uso
                     </Text>
         </View>
         <ScrollView

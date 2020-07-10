@@ -52,6 +52,20 @@ export default class Perfil extends Component {
             showNotification('Falha na conexão');
         }
     }
+    _storeData = async (userSet) => {
+
+        try {
+            var user = JSON.stringify(userSet);
+            await AsyncStorage.setItem('user', user);
+
+            //this.setState({ activIndicador: !this.state.activIndicador })
+            
+        } catch (error) {
+            console.log(error)
+            this.setState({ activIndicador: !this.state.activIndicador })
+            showError('Falha ao iniciar uma nova sessao')
+        }
+    }
 
     signup = async () => {
         this.setState({ activIndicador: !this.state.activIndicador })
@@ -62,20 +76,28 @@ export default class Perfil extends Component {
             senha: this.state.password,
             status: 1
         };
-        // console.log('id client ',this.state.idCliente)
+        console.log('id client ',this.state.idCliente)
 
         await api.put(`/updateUser/${this.state.idCliente}`, data).then((response) => {
-            //console.log('responseee '+response.data.email)
-            if (response.data.email === this.state.email) {
+            console.log('responseee '+Object.values(response.data.usuario))
+
+            if (response.data.status === 200) {
 
                 this.setState({ activIndicador: !this.state.activIndicador })
                 this.setState({ flag: !this.state.flag })
-                return showSuccess('Atualizado com sucesso');
-                //return showSuccess(response.data.menssagem);
+                const user = {
+                    _id: response.data.usuario._id,
+                    name: response.data.usuario.nome,
+                    surname: response.data.usuario.sobrenome,
+                    email: response.data.usuario.email,
+                }
+
+                this._storeData(user);
+                return showSuccess(response.data.mensagem);
             } else {
                 this.setState({ activIndicador: !this.state.activIndicador })
-                return showSuccess('Não foi possivel atualizar');
-                //return showNotification(response.data.menssagem);
+                // return showSuccess('Não foi possivel atualizar');
+                return showNotification(response.data.mensagem);
             }
         }).catch((error) => {
             console.log(error)
