@@ -47,11 +47,7 @@ export default class ListagemAcordion extends Component {
     };
 
     renderHeader = (section, _, isActive) => {
-        //Accordion Header view
-        // if (isActive) {
-        //     console.log('setSelection oio ', section)
-        //     this.agendaDisponivel(section._id)
-        // }
+        
         return (
             <Animatable.View
                 duration={1}
@@ -85,21 +81,14 @@ export default class ListagemAcordion extends Component {
     };
 
     renderContent(section, _, isActive) {
-
-        // console.log('testereee ------------------------------------------------------------------------------------------------------------ve ----  =||||||= ' + isActive)
-
-        //if (isActive) {
         return (
             <ListagemAgenda id_conpanie={section.idEmpresa} id_service={section._id} tempo={section.tempo} />
         )
-        // } else {
-        // }
     }
 
 
 
-    render() {console.log('--------------------------------------------------------------------------------------r---')
-       // console.log('jjjjj ---'+this.props.services)
+    render() {
         const { activeSections } = this.state;
         return (
 
@@ -135,7 +124,6 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 15,
-        // height:  Dimensions.get('window').height - 300
         marginTop: 10,
         borderWidth: 5,
         borderRadius: 3,
@@ -266,94 +254,3 @@ const styles = StyleSheet.create({
         flexDirection: "row"
     },
 })
-
-/*
-{rowData.Agenda.forEach(nomeFuncionario => {
-
-        <Text>{nomeFuncionario}</Text>
-        {this.agendaDisponivel(rowData.Agenda[0])}
-})}
-
-
-
-servicos: [
-            {
-                nome: 'corte de cabelo',
-                descricao: 'Sera cortado seu cabelo com maquina zero :)',
-                tempo: '10:00',
-                preco: '30:00',
-            },
-            {
-                nome: 'corte de barba',
-                descricao: 'Sera fazer a barba :)',
-                tempo: '20:00',
-                preco: '50:00',
-            },
-            {
-                nome: 'corte de cabelo',
-                descricao: 'Sera feito bigode :)',
-                tempo: '10:00',
-                preco: '30:00',
-            }
-
-        ],
-        Agenda: [{
-            _id: 1,
-            nomeFuncionario: 'gustavo',
-            HorariosOcupados: [{
-                inicio: '0',
-                cliente: 'incio',
-                fim: '08:30'
-            }, {
-                inicio: '0',
-                cliente: 'Ricardo',
-                fim: '08:30'
-            }, {
-                inicio: '0',
-                cliente: 'fim',
-                fim: '18:30'
-            },
-            ]
-        }
-        ]
-*/
-   // return (
-
-        //     <View>
-        //         {console.log("flast list", this.state.agenda)}
-        //         <FlatList
-        //             horizontal={false}
-        //             data={this.state.agenda}
-        //             renderItem={({ item: rowData }) => {
-
-        //                 return (
-        //                     <View>
-        //                         <Text>
-        //                             flast.......
-        //                         {rowData.nomeFuncionario}
-
-        //                         </Text>
-        //                         {this.agendaDisponivel(rowData.HorariosOcupados)}
-        //                     </View>
-
-        //                 );
-        //             }}
-        //             keyExtractor={(item, index) => index}
-        //         />
-        //     </View>
-
-        //     // <View style={styles.container}>
-        //     //     <Text>TESTE</Text>
-        //     //     <Text>
-        //     //         oiii agenda
-        //     //         id compania {this.props.id_conpanie}
-        //     //         id cliente {this.state.id_cliente}
-        //     //         id services {this.props.id_sevice}
-        //     //         id data {this.props.data}
-        //     //         {this.agendaDisponivel()}
-
-        //     //     </Text>
-
-        //     // </View>
-        // )
-

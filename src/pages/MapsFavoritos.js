@@ -77,9 +77,9 @@ export default class MapsParemetros extends Component {
     this.setState({ camera })
   }
 
-  
+
   renderAnnotations2(place) {
-    
+
     return (
       <MapboxGL.PointAnnotation
         ref={p => (this.place = p)}
@@ -97,15 +97,15 @@ export default class MapsParemetros extends Component {
     )
   }
 
-  renderItem = ( item ) => (
-    
+  renderItem = (item) => (
+
     <View
       style={styles.card}
     >
       <View style={styles.body}>
-        
+
         <View style={styles.services}>
-       
+
           <View style={styles.entreButuns}>
             <View style={styles.bodyCentral}>
               <View style={styles.headerTotal}>
@@ -124,20 +124,21 @@ export default class MapsParemetros extends Component {
                 </View>
               </View>
 
-              <View>
-                <Text>-----------------------------------------------</Text>
+              <View style={{ flexDirection: 'row' }}>
+                <View style={{ backgroundColor: 'black', height: 2, flex: 1, alignSelf: 'center', marginTop: 10 }} />
               </View>
+
               <View style={styles.description}>
-                <Text>{this.state.descricao} </Text>
+                <Text style={{ fontSize: 17 }}>{item.descricao} </Text>
               </View>
-
-              <View style={styles.City}>
-                <Text>{item.cidade} - {item.bairro}</Text>
-              </View>
-
+              <Text>Contato: {item.telefone}</Text>
               <View style={styles.footer}>
-                <Text>{item.rua}-{item.numero}-</Text>
+                <Text>{item.rua} - {item.numero} </Text>
+                <View style={styles.City}>
+                  <Text>{item.bairro} - {item.cidade}</Text>
+                </View>
               </View>
+
             </View>
           </View>
         </View>
@@ -160,7 +161,7 @@ export default class MapsParemetros extends Component {
           showUserLocation={true}
           styleURL={MapboxGL.StyleURL.stret}
           attributionPosition={{ top: 8, left: 8 }}
-          logoEnabled={false} 
+          logoEnabled={false}
         >
 
           <MapboxGL.Camera
@@ -192,7 +193,7 @@ const styles = StyleSheet.create({
     flex: 2,
   },
   markerAnotacion: {
-    // padding: '2%',
+    backgroundColor: 'rgba(175,238,238, 0.4)',
     flex: 1
   },
   annotationContainer: {
@@ -246,22 +247,26 @@ const styles = StyleSheet.create({
   },
   description: {
     flex: 1,
-    marginBottom: 10,
+    marginTop: 8,
   },
   city: {
     flex: 1,
     //  flex: 1,
-    marginTop: 0,
+    marginTop: 5,
     marginLeft: 0,
   },
   footer: {
     flex: 1,
-    //    flex: 1,
-    marginTop: 0,
+    marginBottom: 20,
     marginLeft: 0,
   },
   title: {
-    flex: 2,
+
+    fontSize: 20
+  },
+  textFavorito: {
+    flex: 3,
+    flexDirection: 'row',
     fontSize: 20
   },
   textButton: {
@@ -295,13 +300,28 @@ const styles = StyleSheet.create({
   icone: {
     flex: 1
   },
+  buttonFavorito: {
+    width: 32,
+    height: 32,
+    left: 5,
+    borderColor: '#C0C0C0',
+    borderWidth: 1,
+    alignItems: "center",
+    borderRadius: 3,
+    justifyContent: 'center'
+  },
   buttonServices: {
+    width: '30%',
+    // alignItems:'flex-end',
     flex: 1,
     //left: Dimensions.get('window').width / 2 + 40,
-    backgroundColor: '#1E90FF',
+    backgroundColor: 'rgba(30,144,255,0.4)',
+    borderColor: 'rgba(30,144,255,0.5)',
+    borderWidth: 3,
     alignItems: 'center',
     borderRadius: 3,
     //width: 90,
+    alignItems: 'center',
     paddingBottom: 5,
   },
   titleView: {

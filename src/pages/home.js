@@ -63,7 +63,7 @@ export default class Home extends Component {
                                     </Animatable.View>
                                     <Animatable.View
                                         animation="zoomInDown" duration={3000} style={styles.icon2}>
-                                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Maps', { categoria: 'cabelereiro' })}>
+                                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Maps', { categoria: 'salaoBeleza' })}>
                                             <Avatar
                                                 size="xlarge" rounded
                                                 source={{
@@ -78,7 +78,7 @@ export default class Home extends Component {
                                 <View style={styles.row2}>
                                     <Animatable.View
                                         animation="zoomInDown" duration={3000} style={styles.icon3}>
-                                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Maps', { categoria: 'mecanico' })}>
+                                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Maps', { categoria: 'mecanica' })}>
                                             <Avatar
                                                 size="xlarge" rounded
                                                 source={{

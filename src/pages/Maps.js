@@ -53,7 +53,6 @@ export default class Maps extends Component {
 
   async componentDidMount() {
     this.setState({ activIndicador: !this.state.activIndicador })
-    // console.log('catttttee goiooi ->'+this.props.route.params.categoria)
     var categoria = this.props.route.params.categoria
 
 
@@ -87,7 +86,6 @@ export default class Maps extends Component {
   showServices = async (_id) => {
     //_id = 1
     await this.setState({ id_conpanie: _id })
-    // await this.setState({ showModal: true })
     try {
 
       let response = await api.get(`/showCompanyServices/${_id}`)
@@ -101,7 +99,6 @@ export default class Maps extends Component {
 
         showNotification(response.data.mensagem);
       }
-      //this.setState({ activIndicador: !this.state.activIndicador })
       await this.setState({ showModal: true })
     } catch (e) {
       console.log(e)
@@ -122,8 +119,9 @@ export default class Maps extends Component {
         idEmpresa: idEmpresa,
         flag: 1
       }
+      console.log('=-=-=-=-=-=-=-=--=-= dadod '+Object.values(data))
       let response = await api.post('/checkFavorite', data)
-      showSuccess(response.data.mensagem);
+      showNotification(response.data.mensagem);
 
       this.setState({ activIndicador: !this.state.activIndicador })
 
@@ -155,7 +153,6 @@ export default class Maps extends Component {
         id={place._id}
         key={place._id}
         coordinate={place.coordenadas.map(coor => parseFloat(coor))}
-        //onDeselected={() => this.myscrollToIndex(index)}
         onSelected={() => this.alterarPosicao(place, index)}
       >
         <View style={styles.annotationFill} >
@@ -179,8 +176,6 @@ export default class Maps extends Component {
               onPress={() => this.alterarPosicao(item, index - 1)}>
 
               <View style={styles.icone}>
-                {/* <Icon name='long-arrow-left'
-                size={13} color='black' /> */}
               </View>
               <View style={styles.espacamento}></View>
               <View style={styles.icone}>
@@ -189,8 +184,6 @@ export default class Maps extends Component {
               </View>
               <View style={styles.espacamento}></View>
               <View style={styles.icone}>
-                {/* <Icon name='long-arrow-left'
-                size={13} color='black' /> */}
               </View>
 
             </TouchableOpacity >
@@ -227,7 +220,7 @@ export default class Maps extends Component {
               </View>
 
               <View style={styles.description}>
-                <Text style={{fontSize:17}}>{item.descricao} </Text>
+                <Text style={{ fontSize: 17 }}>{item.descricao} </Text>
               </View>
               <Text>Contato: {item.telefone}</Text>
               <View style={styles.footer}>
@@ -244,8 +237,6 @@ export default class Maps extends Component {
             <TouchableOpacity style={styles.buttonProximo}
               onPress={() => this.alterarPosicao(item, index + 1)}>
               <View style={styles.icone}>
-                {/* <Icon name='long-arrow-right'
-                  size={13} color='black' /> */}
               </View>
               <View style={styles.espacamento}></View>
               <View style={styles.icone}>
@@ -254,8 +245,6 @@ export default class Maps extends Component {
               </View>
               <View style={styles.espacamento}></View>
               <View style={styles.icone}>
-                {/* <Icon name='long-arrow-right'
-                  size={13} color='black' /> */}
               </View>
 
             </TouchableOpacity>
@@ -267,7 +256,6 @@ export default class Maps extends Component {
 
   );
   itemSeparatorComponent = (item, data) => {
-    console.log("separeator ", data, " itmm", item)
     return (
       <View></View>
     )
@@ -279,7 +267,6 @@ export default class Maps extends Component {
   myscrollToIndex = (index) => {
 
     this.setState({ index: index });
-    //Alert.alert(this.state.index.toString()
     this.flatListRef.scrollToIndex({ animated: true, index: index });
   };
   render() {
@@ -334,8 +321,6 @@ export default class Maps extends Component {
             renderItem={this.renderItem}
             extraData={this.state.index}
             keyExtractor={this._keyExtractor}
-          //getItemLayout={this.getItemLayout}
-          // ItemSeparatorComponent={this.itemSeparatorComponent}
           />
 
         </View>
@@ -490,33 +475,3 @@ const styles = StyleSheet.create({
     fontSize: 30,
   }
 });
-
-/*
-state = {
-    viewport: {
-      width: 400,
-      height: 400,
-      latitude: 37.7577,
-      longitude: -122.4376,
-      zoom: 8
-    },
-    camera: {
-      coordenadas: [-49.219982, -25.455471],
-      zoom: 12
-    },
-    places: [
-
-      {
-        id: '3',
-        title: 'Faculdade de Pinhais',
-        cidade:'Pinhais',
-        bairro:'Nao sei o bairro',
-        rua:'Av Camilo de lelis',
-        complemento:'Predio',
-        numero:'1151',
-        description: 'Um local bem localizado em Pinhais',
-        coordenadas: [-49.18858051, -25.44435969],
-      }
-    ]
-  }
-*/

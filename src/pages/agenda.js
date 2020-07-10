@@ -43,7 +43,7 @@ export default class Agenda extends Component {
 
             const data = {
                 idCliente: idCliente,
-                dataAgenda: moment(this.state.date).format('YYYY/MM/D'),
+                dataAgenda: moment(this.state.date).format('YYYY/MM/DD'),
             }
             console.log('data  ', data)
             let response = await api.post('/showClientCurrentSchedule', data)
@@ -56,7 +56,7 @@ export default class Agenda extends Component {
                 console.log(agenda)
             } else {
                 await this.setState({ mensageErro: 'Não foi reallizado nenhum agendamento até o momento' })
-                showNotification('Nenhum agendamento até o momento')
+                //showNotification('Nenhum agendamento até o momento')
             }
             await this.setState({ activIndicador: !this.state.activIndicador })
         } catch (e) {
@@ -66,13 +66,6 @@ export default class Agenda extends Component {
             showError('Falha na conexão');
         }
     }
-    /**refreshControl={
-    <RefreshControl
-      //refresh control used for the Pull to Refresh
-      refreshing={this.state.refreshing}
-      onRefresh={this.onRefresh.bind(this)}
-    />
-  } */
 
   cancelarAgendamento = (_id) =>
     
@@ -176,7 +169,7 @@ export default class Agenda extends Component {
                             }
                         </View>
                     }
-                    {console.log("msg erroo ", this.state.mensageErro),
+                    {
                         this.state.mensageErro !== '' &&
 
                         <Card containerStyle={styles.card}>

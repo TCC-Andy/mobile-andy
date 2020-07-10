@@ -46,26 +46,20 @@ export default class ModalExemplo extends Component {
     buscaServicos = async () => {
 
         try {
-            await storeData('data', moment(this.state.date).format('YYYY/MM/D'))
-            console.log('/*****************************************************************')
-            // var _id = await '5ecab500563c112a70493769'
+            await storeData('data', moment(this.state.date).format('YYYY/MM/DD'))
             let response = await api.get(`/showCompanyServices/${this.props.id_conpanie}`)
-            console.log('servicooooooop ', Object.values(Object.values(response.data.servicos)))
+
             if (response.data.mensagem === undefined) {
 
                 await this.setState({ services: response.data.servicos })
                 await this.setState({ listar: true })
                 await this.setState({ interruptor: !this.state.interruptor })
-                //this.render()
+                
             } else {
 
-                // showNotification(response.data.mensagem);
+                 showNotification(response.data.mensagem);
             }
            
-           // console.log('dadadaddaddadd' + moment(this.state.date).format('D/MM/YYYY'))
-            // this.setState({ activIndicador: !this.state.activIndicador })
-            
-
         } catch (e) {
             console.log(e)
             showError('Falha na conexão')
@@ -83,25 +77,14 @@ export default class ModalExemplo extends Component {
                 momentDate.month(e.month)
                 momentDate.year(e.year)
                 this.setState({ date: momentDate.toDate() })
-                console.log('atualizarr ---------------------------- ')
                 this.buscaServicos()
                
-                // this.setState({ interruptor: !this.state.interruptor })
-                // this.buscaServicos()
-               
-                 storeData('data',moment(momentDate.toDate()).format('YYYY/MM/D'))
+                 storeData('data',moment(momentDate.toDate()).format('YYYY/MM/DD'))
             }
         })
     }
     
      render() {
-        console.log('listar ', this.state.listar)
-        console.log('servicossssss ', this.props.services)
-        
-        // console.log('inici rensderdeddd ------------id--' + this.state.listar)
-        // if (!this.state.listar) {
-        //     this.componentDidMount()
-        // }
         const { activeSections } = this.state;
         return (
             <Modal transparent={true} visible={this.props.isVisible}
@@ -186,8 +169,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.3)'
     },
     container: {
+        backgroundColor: 'rgba(175,238,238, 0.4)',
         flex: 15,
-        // height:  Dimensions.get('window').height - 300
         marginTop: 10,
         borderWidth: 5,
         borderRadius: 3,
