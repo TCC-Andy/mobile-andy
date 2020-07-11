@@ -36,6 +36,7 @@ const initialState = {
     stageNew: false,
     activIndicador: false,
     opemResetPass: false,
+    msg:'Senha deverá ter no mínimo 6 caracter'
 }
 
 export default class Login extends Component {
@@ -58,7 +59,7 @@ export default class Login extends Component {
             this.setState({ activIndicador: !this.state.activIndicador })
             showError('Falha ao iniciar uma nova sessao')
         }
-    }
+    } 
     _retrieData = async () => {
         try {
             const userGet = await AsyncStorage.getItem('user');
@@ -159,7 +160,6 @@ export default class Login extends Component {
         validations.push(this.state.password && this.state.password.length >= 6)
 
         if (this.state.stageNew) {
-            validations.push(this.state.name && this.state.name.trim().length >= 3)
             validations.push(this.state.password === this.state.confirnPassword)
         }
 
@@ -253,6 +253,7 @@ export default class Login extends Component {
                                 style={styles.input} secureTextEntry={true}
                                 onChangeText={confirnPassword => this.setState({ confirnPassword })} />
                         }
+                        <Text style={{fontSize:11, marginLeft:10,color:'#FF0000'}}>{validForm ? '' : this.state.msg}</Text>
                         <Animatable.View animation="fadeInUpBig" duration={2000}>
                             <TouchableOpacity onPress={this.signinOrSignup}
                                 disabled={!validForm}>

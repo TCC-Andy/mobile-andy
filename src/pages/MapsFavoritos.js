@@ -77,7 +77,6 @@ export default class MapsParemetros extends Component {
   }
 
   deleteFavorito = async (idEmpresa) => {
-showNotification(idEmpresa)
     this.setState({ activIndicador: !this.state.activIndicador })
     try {
         let user = await AsyncStorage.getItem('user')

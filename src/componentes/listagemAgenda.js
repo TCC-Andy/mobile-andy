@@ -52,11 +52,11 @@ export default class listagemAgenda extends Component {
                 dataAgenda: JSON.parse(dataGet),
                 idServico: this.props.id_service,
                 tempoServico: this.props.tempo,
-                horaAtual: moment().format('LT'), 
+                horaAtual: moment().format('LT'),
                 hoje: moment().format("YYYY/MM/DD")
             }
             console.log('console di=====================dddddddd ->', data)
-           
+
             let response = await api.post('/showDataSchedule', data)
             if (response.data.mensagem === undefined) {
                 await this.setState({ agenda: response.data.agenda })
@@ -73,7 +73,7 @@ export default class listagemAgenda extends Component {
     }
 
     alertConfirmacao = (horario, array) =>
-    
+
         Alert.alert(
             "Confirmação",
             "Deseja realmente fazer Agendamendo",
@@ -104,19 +104,20 @@ export default class listagemAgenda extends Component {
                 inicioServico: horario.inicioServico,
                 fimServico: horario.fimServico,
             }
-            console.log('userrrrrrruse 22222222----------------------------------------------------------------r')
+            console.log('-agendamentoooooo --------------------------------------------------------r')
             console.log('dadosss->', data)
             let response = await api.post('/createSchedule', data)
-          //  console.log('criar agenda->', response.data)
+            //  console.log('criar agenda->', response.data)
             if (response.data.status === 200) {
                 // await this.setState({ agenda: response.data.agenda })
                 showSuccess('Agendado com sucesso')
                 this.componentDidMount()
-                
+
             } else {
                 this.setState({ mensageErro: response.data.mensagem })
+                this.setState({ activIndicador: false })
             }
-            //this.setState({ activIndicador: !this.state.activIndicador })
+
         } catch (e) {
             console.log(e)
             this.setState({ activIndicador: false })
@@ -129,7 +130,7 @@ export default class listagemAgenda extends Component {
     horariosDisponivel(horario, array) {
         return (
             <TouchableOpacity style={styles.viewHorarios} onPress={() => this.alertConfirmacao(horario, array)} >
-                <View style={styles.horarios} >                
+                <View style={styles.horarios} >
                     <Text>
                         {horario.inicioServico}
                     </Text>
@@ -139,7 +140,7 @@ export default class listagemAgenda extends Component {
     }
 
     render() {
-       
+
         return (
 
             <View>
@@ -147,7 +148,7 @@ export default class listagemAgenda extends Component {
                 {this.state.mensageErro == '' &&
                     <View>
                         {
-                            
+
                             this.state.agenda.map((agen, indice, array) => (
                                 <View style={styles.container}>
                                     <Text style={styles.title}>
@@ -156,6 +157,9 @@ export default class listagemAgenda extends Component {
                                     <ScrollView horizontal={true}>
                                         {agen.horariosDisponiveis.map(horario => this.horariosDisponivel(horario, agen))}
                                     </ScrollView>
+                                    <Text style={{fontSize:12, marginLeft:20,marginBottom:5,color:'#FF0000'}}>
+                                        {agen.horariosDisponiveis.length === 0 ? 'Não possível encontrar Horarios para essa data' : ''}
+                                    </Text>
                                 </View>
                             ))
                         }
@@ -184,15 +188,15 @@ export default class listagemAgenda extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'rgba(220,220,220,1)',
+        backgroundColor: 'rgba(255,255,255,1)',
     },
     containerErro: {
-        backgroundColor: 'rgba(220,220,220,1)',
-        height:80
+        backgroundColor: 'rgba(255,165,0,0.2)',
+        height: 80
     },
     msgErro: {
         margin: 10,
-        marginTop:30,
+        marginTop: 30,
         fontSize: 15,
     },
     title: {

@@ -20,11 +20,13 @@ import Image from "react-native-elements";
 import { Card } from "react-native-elements";
 import AsyncStorage from '@react-native-community/async-storage';
 import api from '../service/api';
-import { showError, showSuccess, showNotification } from '../utils/alertsUser'
+import { showError, showSuccess, showNotification, storeData } from '../utils/alertsUser'
 import ActivIndicador from '../componentes/activIndicador'
 import * as Animatable from 'react-native-animatable';
 import separadorImage from '../../assets/imgs/botaoDireita.png'
-
+import moment from 'moment'
+import 'moment/locale/pt-br'
+moment.locale('pt-BR')
 
 
 MapboxGL.setAccessToken("pk.eyJ1IjoiYnJ1bm9wZWRyb3NvIiwiYSI6ImNrNmJkY2R3dDEwODkzbW1yZmFvcHA2dzIifQ.0cwlHJwaGJpu9ZGfdyhkuQ");
@@ -81,10 +83,10 @@ export default class Maps extends Component {
       return this.props.navigation.navigate('Home')
       //  showError('Falha na conexão')
     });
+    storeData('data', moment().format("YYYY/MM/DD"))
   }
 
   showServices = async (_id) => {
-    //_id = 1
     await this.setState({ id_conpanie: _id })
     try {
 
@@ -119,7 +121,7 @@ export default class Maps extends Component {
         idEmpresa: idEmpresa,
         flag: 1
       }
-      console.log('=-=-=-=-=-=-=-=--=-= dadod '+Object.values(data))
+      console.log('=-=-=-=-=-=-=-=--=-= dadod ' + Object.values(data))
       let response = await api.post('/checkFavorite', data)
       showNotification(response.data.mensagem);
 

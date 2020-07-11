@@ -58,7 +58,7 @@ export default class ListagemAcordion extends Component {
                         <Text style={styles.headerText}>{section.nome} - {section.tempo} min</Text>
                     </View>
                     <View style={styles.preco}>
-                        <Text style={styles.headerText}>{section.preco} R$ </Text>
+                        <Text style={styles.headerText}>{section.preco.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })} R$ </Text>
                     </View>
                 </View>
                 <View>
@@ -85,8 +85,6 @@ export default class ListagemAcordion extends Component {
             <ListagemAgenda id_conpanie={section.idEmpresa} id_service={section._id} tempo={section.tempo} />
         )
     }
-
-
 
     render() {
         const { activeSections } = this.state;
