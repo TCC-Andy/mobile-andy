@@ -116,14 +116,14 @@ export default class Agenda extends Component {
                     Horários Agendados
                     </Text>
                 </View>
-                <ScrollView
+                <ScrollView 
                     refreshControl={
                         <RefreshControl
                             refreshing={this.state.refreshing}
                             onRefresh={this._onRefresh}
                         />
                     }
-                    scrollEnabled={false}
+                    scrollEnabled={true}
                     contentContainerStyle={styles.contentContainer}
                 >
 
