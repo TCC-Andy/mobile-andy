@@ -16,19 +16,14 @@ function showNotification(msg) {
 }
 
     async function storeData (typeObj, objSet){
-    console.log('oi storeData')
-
-    console.log(objSet);
     try {
         var obj = JSON.stringify(objSet);
         await AsyncStorage.setItem(typeObj, obj);
-        console.log(obj);
         return 1;
     } catch (error) {
         console.log(err)
         showError('Falha ao iniciar uma nova sessao')
     }
-    console.log('tchau storeData')
     return 0;
 }
 
@@ -38,14 +33,10 @@ async function retrieData (typeObj){
         const objGet = await AsyncStorage.getItem(typeObj);
     
         if (objGet !== null) {
-            // Converte este json para objeto
-             obj = JSON.parse(objGet);
-            
+             obj = JSON.parse(objGet);            
         }
-        console.log('ritrii  ->'+obj)
         return objGetobjGet;
     } catch (error) {
-        console.log('eroooo'+error.message);
         return 0;
     }
 };

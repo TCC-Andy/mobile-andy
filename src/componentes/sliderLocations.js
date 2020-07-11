@@ -10,7 +10,6 @@ export default class SliderLocations extends Component {
     data: this.props.data,
     showModal: false,
   }
-  // height: Dimensions.get('window').height/2-50 
   render() {
     const t = Dimensions.get('window').width;
     return (
@@ -78,8 +77,6 @@ export default class SliderLocations extends Component {
               <ModalExemplo isVisible={this.state.showModal}
                 closeModal={() => this.setState({ showModal: false })} />
             </Card>
-
-
           );
         }}
         keyExtractor={(item, index) => index}  
@@ -120,12 +117,10 @@ const styles = StyleSheet.create({
     marginLeft: 0,
   },
   city: {
-    //  flex: 1,
     marginTop: 0,
     marginLeft: 0,
   },
   footer: {
-    //    flex: 1,
     marginTop: 0,
     marginLeft: 0,
   },

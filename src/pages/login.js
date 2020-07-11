@@ -50,8 +50,6 @@ export default class Login extends Component {
         try {
             var user = JSON.stringify(userSet);
             await AsyncStorage.setItem('user', user);
-
-            this._retrieData()
             this.setState({ activIndicador: !this.state.activIndicador })
             return this.props.navigation.navigate('Home')
         } catch (error) {
@@ -62,12 +60,7 @@ export default class Login extends Component {
     } 
     _retrieData = async () => {
         try {
-            const userGet = await AsyncStorage.getItem('user');
-
-            if (userGet !== null) {
-                // Converte este json para objeto
-                //var user = JSON.parse(userGet);
-            }
+            const userGet = await AsyncStorage.getItem('user');    
         } catch (error) {
             console.log(error);
         }
@@ -86,7 +79,6 @@ export default class Login extends Component {
         this.setState({ activIndicador: !this.state.activIndicador })
         const data = {
             email: this.state.email,
-
         };
         await api.post('/sendPassReset', data).then((response) => {
             if (response.data.status === 200) {
@@ -133,7 +125,6 @@ export default class Login extends Component {
         }
         await api.post('/authenticateUser', data).then((response) => {
             if (response.data.status === 200) {
-                console.log("resdponse ", response)
                 const user = {
                     _id: response.data.usuario._id,
                     name: response.data.usuario.nome,
@@ -359,16 +350,12 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     buttonText: {
-        // padding: 5,
         textAlign: "center",
         color: '#0000FF',
         fontSize: 20,
-        // backgroundColor: 'rgba(128,128,128, 0.5)',
         alignContent: 'center',
         borderColor: '#0000FF',
-        //color: '#FFFFFF',
          borderBottomWidth: 2,
-        // borderRadius: 4,
     },
     btResetPass: {
         alignContent: "center",

@@ -41,20 +41,16 @@ export default class MapsParemetros extends Component {
   }
 
   showServices = async (_id) => {
-    //_id = 1
     this.setState({ activIndicador: !this.state.activIndicador })
     try {
-
       let response = await api.get(`/showCompanyServices/${_id}`)
       if (response.data.mensagem === undefined) {
         await this.setState({ services: response.data.servicos })
         await this.setState({ showModal: true })
       } else {
-
         showNotification(response.data.mensagem);
       }
       this.setState({ activIndicador: !this.state.activIndicador })
-
     } catch (e) {
       console.log(e)
       showError('Falha na conexão')
@@ -74,9 +70,7 @@ export default class MapsParemetros extends Component {
     this.setState({ camera })
   }
 
-
   renderAnnotations2(place) {
-    console.log('data ------- render anoticionn---------------------------' + place)
     return (
       <MapboxGL.PointAnnotation
         ref={p => (this.place = p)}
@@ -95,14 +89,11 @@ export default class MapsParemetros extends Component {
   }
 
   renderItem = (item) => (
-    console.log('item ', item),
     <View
       style={styles.card}
     >
       <View style={styles.body}>
-
         <View style={styles.services}>
-
           <View style={styles.entreButuns}>
             <View style={styles.bodyCentral}>
               <View style={styles.headerTotal}>
@@ -110,18 +101,14 @@ export default class MapsParemetros extends Component {
                   <Text style={styles.title} >
                     {item.nomeEmpresa}
                   </Text>
-
                 </View>
               </View>
-
               <View style={{ flexDirection: 'row' }}>
                 <View style={{ backgroundColor: 'black', height: 2, flex: 1, alignSelf: 'center', marginTop: -30 }} />
               </View>
-
               <View style={styles.description}>
                 <Text style={{ fontSize: 19 }}>{item.descricaoServico} </Text>
-              </View>
-              
+              </View>             
               <View style={styles.footer}>
                 <Text style={{ fontSize: 18 }}>{item.ruaEmpresa} - {item.numeroEmpresa} </Text>
                 <View style={styles.City}>
@@ -133,7 +120,6 @@ export default class MapsParemetros extends Component {
         </View>
       </View>
     </View>
-
   );
 
   render() {
@@ -143,7 +129,6 @@ export default class MapsParemetros extends Component {
         <ModalExemplo isVisible={this.state.showModal}
           services={this.state.services}
           closeModal={() => this.setState({ showModal: false })} />
-
         <MapboxGL.MapView
           ref={m => (this.map = m)}
           style={styles.containerMaps}
@@ -152,7 +137,6 @@ export default class MapsParemetros extends Component {
           attributionPosition={{ top: 8, left: 8 }}
           logoEnabled={false}
         >
-
           <MapboxGL.Camera
             centerCoordinate={this.state.camera.coordenadas.map(coor => parseFloat(coor))}
             zoomLevel={this.state.camera.zoom}
@@ -200,7 +184,6 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
   viewAnnotation: {
-    // paddingLeft: -20,
     paddingBottom: 20,
     backgroundColor: 'rgba(255, 255, 255, 0.6)'
   },
@@ -240,7 +223,6 @@ const styles = StyleSheet.create({
   },
   city: {
     flex: 1,
-    //  flex: 1,
     marginTop: 5,
     marginLeft: 0,
   },
@@ -301,15 +283,12 @@ const styles = StyleSheet.create({
   },
   buttonServices: {
     width: '30%',
-    // alignItems:'flex-end',
     flex: 1,
-    //left: Dimensions.get('window').width / 2 + 40,
     backgroundColor: 'rgba(30,144,255,0.4)',
     borderColor: 'rgba(30,144,255,0.5)',
     borderWidth: 3,
     alignItems: 'center',
     borderRadius: 3,
-    //width: 90,
     alignItems: 'center',
     paddingBottom: 5,
   },

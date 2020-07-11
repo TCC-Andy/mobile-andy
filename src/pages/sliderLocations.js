@@ -10,7 +10,6 @@ export default class SliderLocations extends Component {
     data: this.props.data,
     showModal: false,
   }
-  // height: Dimensions.get('window').height/2-50 
   render() {
     const t = Dimensions.get('window').width;
     return (

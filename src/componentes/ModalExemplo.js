@@ -125,26 +125,15 @@ export default class ModalExemplo extends Component {
                             <ScrollView contentContainerStyle={{ paddingTop: 10 }}>
                                 <View style={styles.selectors}>
 
-                                </View>{console.log('         inter  '+this.state.interruptor)}
+                                </View>
                                 {!this.state.interruptor && this.state.listar && 
                                     <ListagemAcordion services={this.state.services} />
-                                    
-                                    
-                                    
                                 }
                                 {this.state.interruptor && this.state.listar &&
                                     <ListagemAcordion services={this.state.services} />
                                 }
-                                {!this.state.listar && 
-                                   
-                                   <ListagemAcordion services={this.props.services} />
-                                   //,console.log('--false LISTATTTT---------------------------------------------------')
-                                    
-                                }
-                                {this.state.listar  &&
-                                  console.log('-- INTERRtrue---------------------------------------------------')
-                                  ,console.log(this.state.services) 
-                                   
+                                {!this.state.listar &&                                 
+                                   <ListagemAcordion services={this.props.services} />                                    
                                 }
                                 
                             </ScrollView>
@@ -266,9 +255,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         borderWidth: 1,
         borderColor: 'rgba(0,0,0,0.7)',
-        // marginLeft: 15,
         borderRadius: 3,
-        //width: 140,
         paddingLeft: 5,
         paddingRight: 5,
         paddingTop: 3,
@@ -295,7 +282,6 @@ const styles = StyleSheet.create({
         marginTop: 5,
         borderWidth: 2,
         borderColor: 'rgba(0,0,0,0.7)',
-        //textAlign: 'center',
     },
     rowAgendar: {
         flexDirection: "row"

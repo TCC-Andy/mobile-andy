@@ -104,10 +104,6 @@ export default class ListagemAcordion extends Component {
             </View>
 
         );
-
-
-
-
     }
 }
 
@@ -217,9 +213,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         borderWidth: 1,
         borderColor: 'rgba(0,0,0,0.7)',
-        // marginLeft: 15,
         borderRadius: 3,
-        //width: 140,
         paddingLeft: 5,
         paddingRight: 5,
         paddingTop: 3,
@@ -246,7 +240,6 @@ const styles = StyleSheet.create({
         marginTop: 5,
         borderWidth: 2,
         borderColor: 'rgba(0,0,0,0.7)',
-        //textAlign: 'center',
     },
     rowAgendar: {
         flexDirection: "row"

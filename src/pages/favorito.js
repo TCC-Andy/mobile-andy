@@ -41,13 +41,10 @@ export default class Favorito extends Component {
 
 
             let response = await api.get(`/showFavorites/${idCliente}`)
-            console.log('console ag favor ->', response.data.favoritos)
-            console.log('-------------------->respos ', response)
             if (response.data.favoritos.length > 0) {
                 favorito = response.data.favoritos
                 await this.setState({ favorito: favorito })
                 await this.setState({ mensageErro: '' })
-                console.log(favorito)
             } else {
                 await this.setState({ mensageErro: 'Nenhuma empresa adicionada' })
             }
@@ -110,13 +107,9 @@ export default class Favorito extends Component {
                         }
                         scrollEnabled={true}
                         contentContainerStyle={styles.contentContainer}>
-
                         {this.state.mensageErro === '' &&
                             <View>
-                                {
-                                    console.log('agen lopp', this.state.favorito),
-                                    this.state.favorito.map(favorito => (
-                                        console.log(favorito),
+                                { this.state.favorito.map(favorito => (
                                         <Card containerStyle={styles.card}>
                                             <View style={styles.iconFavorito}>
                                                 <View style={styles.viewNomeEmpresa}>
@@ -153,8 +146,7 @@ export default class Favorito extends Component {
                                 }
                             </View>
                         }
-                        {console.log("msg erroo ", this.state.mensageErro),
-                            this.state.mensageErro !== '' &&
+                        {this.state.mensageErro !== '' &&
 
                             <Card containerStyle={styles.card}>
                                 <View style={styles.viewErro}>
@@ -163,7 +155,6 @@ export default class Favorito extends Component {
                                     </Text>
                                 </View>
                             </Card>
-
                         }
                     </ScrollView>
                 </View>
@@ -171,9 +162,7 @@ export default class Favorito extends Component {
 
         )
     }
-}/*
-
-*/
+}
 
 const styles = StyleSheet.create({
     background: {
@@ -204,11 +193,6 @@ const styles = StyleSheet.create({
     },
     card: {
         flexDirection: 'row',
-        // padding: 10,
-        // marginTop: 4,
-        // margin: 10,
-        // height: 185,
-        // width: Dimensions.get('window').width - 20,
         borderBottomWidth: 5,
         borderRadius: 5,
         borderColor: '#708090',
@@ -219,20 +203,15 @@ const styles = StyleSheet.create({
     },
     viewNomeEmpresa: {
         flex: 15,
-
-        // borderWidth: 2, borderColor: '#708090',
     },
     viewCategoria: {
         width: Dimensions.get('window').width - 200,
     },
     textNomeEmpres: {
-        // paddingRight: 10,
         fontSize: 18,
         color: '#000000'
     },
     iconFavorito: {
-        // borderWidth:3,
-        // borderColor: '#708090',
         width: Dimensions.get('window').width - 60,
         flexDirection: 'row',
     },
@@ -250,12 +229,8 @@ const styles = StyleSheet.create({
     },
     localizacao: {
         flexDirection: 'row',
-        // padding: 10,
         marginTop: 5,
         marginBottom: 5,
-        // margin: 10,
-        // height: 20,
-        // width: '100%',
         borderWidth: 5,
         borderRadius: 5,
         borderColor: '#708090'
@@ -305,39 +280,3 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0,255,0,1)',
     }
 })
-
-/*
-favorito: [{
-    idServico:1,
-    idFuncionario: 1,
-    nomeFuncionario: 'gustavo',
-    nomeCliente: 'incio',
-    idCliente:1,
-    inicioServico: '08:00',
-    fimServico: '08:30',
-    datafavorito:'10/12/20',
-    status:1
-},
-{
-    idServico:1,
-    idFuncionario: 1,
-    nomeFuncionario: 'vinicius',
-    nomeCliente: 'incio',
-    idCliente:1,
-    inicioServico: '17:00',
-    fimServico: '17:10',
-    datafavorito:'05/12/20',
-    status:1
-},
-{
-    idServico:1,
-    idFuncionario: 1,
-    nomeFuncionario: 'drew',
-    nomeCliente: 'incio',
-    idCliente:1,
-    inicioServico: '12:00',
-    fimServico: '13:30',
-    datafavorito:'05/11/20',
-    status:1
-}]
-*/

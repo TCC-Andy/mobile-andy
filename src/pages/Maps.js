@@ -93,10 +93,6 @@ export default class Maps extends Component {
       let response = await api.get(`/showCompanyServices/${_id}`)
       if (response.data.mensagem === undefined) {
         await this.setState({ services: response.data.servicos })
-
-        await console.log('*/*/ ' + response.data.servicos)
-        await console.log('*/*/*/*/*/*/*/ njnjnjnjnjnjnjn')
-
       } else {
 
         showNotification(response.data.mensagem);
@@ -121,7 +117,6 @@ export default class Maps extends Component {
         idEmpresa: idEmpresa,
         flag: 1
       }
-      console.log('=-=-=-=-=-=-=-=--=-= dadod ' + Object.values(data))
       let response = await api.post('/checkFavorite', data)
       showNotification(response.data.mensagem);
 
@@ -167,7 +162,6 @@ export default class Maps extends Component {
   }
 
   renderItem = ({ item, index }) => (
-    console.log('item ' + this.state.places.length + ' indez x' + index),
     <View
       style={styles.card}
     >
@@ -307,24 +301,16 @@ export default class Maps extends Component {
             horizontal
             scrollEnabled
             automaticallyAdjustContentInsets={true}
-            onScroll={(e) => { console.log('onScroll', e.nativeEvent); console.log("indexx", this.state.index) }}
+            onScroll={(e) => { console.log(this.state.index) }}
             ref={(ref) => { this.flatListRef = ref; }}
             pagingEnabled={true}
             onMomentumScrollEnd={(e) => {
-              // let posicao = (e.nativeEvent.contentOffset.x > 0)
-              //   ? e.nativeEvent.contentOffset.x / Dimensions.get('window').width
-              //   : 0;
-              // console.log('passssouuuuu alter coordenadas')
-              //   if (posicao > 0 && posicao < this.state.places.length) {
-              //     this.alterCoordenadas(this.state.places[posicao])
-              //   }
             }}
             data={this.state.places}
             renderItem={this.renderItem}
             extraData={this.state.index}
             keyExtractor={this._keyExtractor}
           />
-
         </View>
       </View>
     )
@@ -357,7 +343,6 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
   viewAnnotation: {
-    // paddingLeft: -20,
     paddingBottom: 20,
     backgroundColor: 'rgba(255, 255, 255, 0.6)'
   },
@@ -397,7 +382,6 @@ const styles = StyleSheet.create({
   },
   city: {
     flex: 1,
-    //  flex: 1,
     marginTop: 5,
     marginLeft: 0,
   },
@@ -458,15 +442,12 @@ const styles = StyleSheet.create({
   },
   buttonServices: {
     width: '30%',
-    // alignItems:'flex-end',
     flex: 1,
-    //left: Dimensions.get('window').width / 2 + 40,
     backgroundColor: 'rgba(30,144,255,0.4)',
     borderColor: 'rgba(30,144,255,0.5)',
     borderWidth: 3,
     alignItems: 'center',
     borderRadius: 3,
-    //width: 90,
     alignItems: 'center',
     paddingBottom: 5,
   },

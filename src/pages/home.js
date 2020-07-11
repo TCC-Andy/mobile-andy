@@ -154,8 +154,6 @@ const styles = StyleSheet.create({
     categoria:{
         fontSize: 23,
         left:20,
-       // color: 'white'
-
     },
     iconBar: {
         flexDirection: 'row',
@@ -172,8 +170,6 @@ const styles = StyleSheet.create({
     },
     icon1: {
         flex: 1,
-        //flexDirection: 'row',
-      //  backgroundColor: 'white',
         alignItems: 'flex-end',
         justifyContent: 'center',
         
@@ -181,36 +177,27 @@ const styles = StyleSheet.create({
     icon2: {
         flex: 1,
         flexDirection: 'row',
-       // backgroundColor: 'white',
         alignItems: 'center',
         justifyContent: 'center',
     },
     icon3: {
         flex: 1,
         flexDirection: 'row',
-       // backgroundColor: 'white',
         alignItems: 'center',
         justifyContent: 'center',
     },
     icon4: {
         flex: 1,
         flexDirection: 'row',
-       // backgroundColor: 'white',
         alignItems: 'center',
         justifyContent: 'center',
-        //  marginRight: 10,
     },
     row1: {
         flex: 1,
         flexDirection: 'row',
-        //backgroundColor: 'rgba(0,0,0, 0.5)',
     },
     row2: {
         flex: 1,
         flexDirection: 'row',
-        // backgroundColor: 'rgba(0,0,0, 0.5)',
-
     },
-
-
 });

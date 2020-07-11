@@ -41,23 +41,15 @@ export default class MapsParemetros extends Component {
   }
 
   showServices = async (_id) => {
-    //_id = 1
-    await this.setState({ id_conpanie: _id })
-    // await this.setState({ showModal: true })
-    try {
 
+    await this.setState({ id_conpanie: _id })
+    try {
       let response = await api.get(`/showCompanyServices/${_id}`)
       if (response.data.mensagem === undefined) {
         await this.setState({ services: response.data.servicos })
-
-        await console.log('*/*/ ' + response.data.servicos)
-        await console.log('*/*/*/*/*/*/*/ njnjnjnjnjnjnjn')
-
       } else {
-
         showNotification(response.data.mensagem);
       }
-      //this.setState({ activIndicador: !this.state.activIndicador })
       await this.setState({ showModal: true })
     } catch (e) {
       console.log(e)
@@ -68,7 +60,6 @@ export default class MapsParemetros extends Component {
 
   alterCoordenadas = (place) => {
     let camera = null
-
     camera = {
       coordenadas: place.coordenadas,
       zoom: 15
@@ -89,9 +80,7 @@ export default class MapsParemetros extends Component {
         }
         let response = await api.post('/checkFavorite', data)
         showSuccess(response.data.mensagem);
-
-        this.setState({ activIndicador: !this.state.activIndicador })
-        
+        this.setState({ activIndicador: !this.state.activIndicador })       
     } catch (e) {
         console.log(e)
         showError('Falha na conexão')
@@ -125,12 +114,9 @@ export default class MapsParemetros extends Component {
       style={styles.card}
     >
       <View style={styles.body}>
-
         <View style={styles.services}>
-
           <View style={styles.entreButuns}>
             <View style={styles.bodyCentral}>
-
               <View style={styles.headerTotal}>
                 <View style={styles.header}>
                   <View style={styles.textFavorito} >
@@ -144,7 +130,6 @@ export default class MapsParemetros extends Component {
                       </TouchableOpacity >
                     </View>
                   </View>
-
                   <View style={styles.buttonServices}>
                     <TouchableOpacity
                       onPress={() => this.showServices(item.idEmpresa)}>
@@ -153,11 +138,9 @@ export default class MapsParemetros extends Component {
                   </View>
                 </View>
               </View>
-
               <View style={{ flexDirection: 'row' }}>
                 <View style={{ backgroundColor: 'black', height: 2, flex: 1, alignSelf: 'center', marginTop: 10 }} />
               </View>
-
               <View style={styles.description}>
                 <Text style={{ fontSize: 17 }}>{item.descricao} </Text>
               </View>
@@ -168,13 +151,11 @@ export default class MapsParemetros extends Component {
                   <Text>{item.bairro} - {item.cidade}</Text>
                 </View>
               </View>
-
             </View>
           </View>
         </View>
       </View>
     </View>
-
   );
 
   render() {
@@ -241,7 +222,6 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
   viewAnnotation: {
-    // paddingLeft: -20,
     paddingBottom: 20,
     backgroundColor: 'rgba(255, 255, 255, 0.6)'
   },
@@ -281,7 +261,6 @@ const styles = StyleSheet.create({
   },
   city: {
     flex: 1,
-    //  flex: 1,
     marginTop: 5,
     marginLeft: 0,
   },
@@ -342,15 +321,12 @@ const styles = StyleSheet.create({
   },
   buttonServices: {
     width: '30%',
-    // alignItems:'flex-end',
     flex: 1,
-    //left: Dimensions.get('window').width / 2 + 40,
     backgroundColor: 'rgba(30,144,255,0.4)',
     borderColor: 'rgba(30,144,255,0.5)',
     borderWidth: 3,
     alignItems: 'center',
     borderRadius: 3,
-    //width: 90,
     alignItems: 'center',
     paddingBottom: 5,
   },

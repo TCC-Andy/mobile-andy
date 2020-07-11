@@ -40,7 +40,6 @@ export default class Perfil extends Component {
             let user = await AsyncStorage.getItem('user')
             var userParse = JSON.parse(user);
             var idCliente = userParse._id
-            console.log('id clientddde  ', userParse)
             await this.setState({ idCliente: userParse._id })
             await this.setState({ name: userParse.name })
             await this.setState({ surname: userParse.surname })
@@ -56,10 +55,7 @@ export default class Perfil extends Component {
 
         try {
             var user = JSON.stringify(userSet);
-            await AsyncStorage.setItem('user', user);
-
-            //this.setState({ activIndicador: !this.state.activIndicador })
-            
+            await AsyncStorage.setItem('user', user);            
         } catch (error) {
             console.log(error)
             this.setState({ activIndicador: !this.state.activIndicador })
@@ -76,13 +72,9 @@ export default class Perfil extends Component {
             senha: this.state.password,
             status: 1
         };
-        console.log('id client ',this.state.idCliente)
 
         await api.put(`/updateUser/${this.state.idCliente}`, data).then((response) => {
-            console.log('responseee '+Object.values(response.data.usuario))
-
             if (response.data.status === 200) {
-
                 this.setState({ activIndicador: !this.state.activIndicador })
                 this.setState({ flag: !this.state.flag })
                 const user = {
@@ -91,12 +83,10 @@ export default class Perfil extends Component {
                     surname: response.data.usuario.sobrenome,
                     email: response.data.usuario.email,
                 }
-
                 this._storeData(user);
                 return showSuccess(response.data.mensagem);
             } else {
                 this.setState({ activIndicador: !this.state.activIndicador })
-                // return showSuccess('Não foi possivel atualizar');
                 return showNotification(response.data.mensagem);
             }
         }).catch((error) => {
@@ -111,12 +101,8 @@ export default class Perfil extends Component {
         validations.push(this.state.email && this.state.email.includes('@'))
         validations.push(this.state.email && this.state.email.includes('.'))
         validations.push(this.state.password && this.state.password.length >= 6)
-
-
         validations.push(this.state.name && this.state.name.trim().length >= 3)
         validations.push(this.state.password === this.state.confirnPassword)
-
-
         const validForm = validations.reduce((t, a) => t && a)
 
         return (
@@ -130,14 +116,11 @@ export default class Perfil extends Component {
                         </View>
                     <View style={styles.formContainer}>
                         {/* <StatusBar barStyle="dark-content" /> */}
-                        <ActivIndicador animating={this.state.activIndicador} />
-                        
-
+                        <ActivIndicador animating={this.state.activIndicador} /> 
                         <AuthInput icon='user' placeholder='Nome'
                             value={this.state.name}
                             style={styles.input}
                             onChangeText={name => this.setState({ name })} editable={this.state.flag} />
-
 
                         <AuthInput icon='user' placeholder='Sobrenome'
                             value={this.state.surname}
@@ -205,8 +188,6 @@ const styles = StyleSheet.create({
     subtitle: {
         color: '#000000',
         fontSize: 25,
-        // textAlign: 'center',
-        // marginBottom: 0
     },
     viewTitle: {
         backgroundColor: 'rgba(0,0,0,0.2)',
@@ -224,7 +205,6 @@ const styles = StyleSheet.create({
         padding: 50,
         width: '100%',
         height: Dimensions.get('window').height,
-
     },
     input: {
         marginTop: 30,

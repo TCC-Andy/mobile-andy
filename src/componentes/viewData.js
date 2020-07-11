@@ -31,27 +31,6 @@ export default class ViewData extends Component {
         opemTimes: false,
     }
 
-    // async componentDidMount() {
-
-    //     try {
-    //         console.log('foi no bancioooooo ------------------------------------')
-    //         let dataGet = await AsyncStorage.getItem('data');
-
-    //        // console.log(data)
-    //         const data = {
-    //             idEmpresa: '5ecab500563c112a70493769',
-    //             dataAgenda: '2020/06/20',
-    //             idServico: '5ee67341ce25271560fb58eb',
-    //             tempoServico: '00:30'
-    //         }
-    //         let response = await api.post('/showDataSchedule', data)
-    //       //  console.log('console dir ->', response.data)
-           
-    //     } catch (e) {
-    //         console.log(e)
-    //     }
-    // }
-
     handleDateAndroidChanged = () => {
         DatePickerAndroid.open({
             date: this.state.date
@@ -72,7 +51,6 @@ export default class ViewData extends Component {
         storeData('data',moment(this.state.date).format('YYYY/MM/D'))
         return (
             <View style={styles.card}>
-                {/* <Text> {moment(this.state.date).format('DD/MM/YYYY')}</Text> */}
                 <View style={styles.rowAgendar}>
                     <View>
                         <TouchableOpacity onPress={this.handleDateAndroidChanged}>
@@ -104,7 +82,6 @@ const styles = StyleSheet.create({
         marginTop: 5,
         borderWidth: 2,
         borderColor: 'rgba(0,0,0,0.7)',
-        //textAlign: 'center',
     },
     rowAgendar: {
         flexDirection: "row"

@@ -92,22 +92,15 @@ const menuStack = menuStackLogin
 const userGet = null
 
 async () => {
-  console.log("/////////")
   try {
-    console.log(" rtooooocaaodosakdosak  routeeeeeesss  retrieveData")
     userGet = await AsyncStorage.getItem('user');
   } catch (error) {
-    console.log(error.message);
+    console.log(error);
   }
-  console.log(" routeeeeeesss tchau  _retrieveData")
 }
 
 if (userGet !== null) {
-  console.log("  routeeeeeesss !== null_retrieveData", userGet);
   menuStack = menuStackHome
-} else {
-  console.log("else == null_retrieveData", userGet);
-
 }
 export default App = () => menuStack
 

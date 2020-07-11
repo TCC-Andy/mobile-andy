@@ -45,7 +45,6 @@ export default class listagemAgenda extends Component {
     async componentDidMount() {
 
         try {
-            console.log('foi no bancioooooo ------------------------------------')
             let dataGet = await AsyncStorage.getItem('data');
             const data = {
                 idEmpresa: this.props.id_conpanie,
@@ -55,7 +54,6 @@ export default class listagemAgenda extends Component {
                 horaAtual: moment().format('LT'),
                 hoje: moment().format("YYYY/MM/DD")
             }
-            console.log('console di=====================dddddddd ->', data)
 
             let response = await api.post('/showDataSchedule', data)
             if (response.data.mensagem === undefined) {
@@ -104,12 +102,8 @@ export default class listagemAgenda extends Component {
                 inicioServico: horario.inicioServico,
                 fimServico: horario.fimServico,
             }
-            console.log('-agendamentoooooo --------------------------------------------------------r')
-            console.log('dadosss->', data)
             let response = await api.post('/createSchedule', data)
-            //  console.log('criar agenda->', response.data)
             if (response.data.status === 200) {
-                // await this.setState({ agenda: response.data.agenda })
                 showSuccess('Agendado com sucesso')
                 this.componentDidMount()
 
@@ -179,10 +173,6 @@ export default class listagemAgenda extends Component {
             </View>
 
         );
-
-
-
-
     }
 }
 

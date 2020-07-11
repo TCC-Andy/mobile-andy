@@ -35,7 +35,6 @@ export default class Agenda extends Component {
 
         let agenda = new Array();
         await this.setState({ activIndicador: !this.state.activIndicador })
-        console.log('aquiiiiiiiii')
         try {
             let user = await AsyncStorage.getItem('user')
             var userParse = JSON.parse(user);
@@ -45,18 +44,13 @@ export default class Agenda extends Component {
                 idCliente: idCliente,
                 dataAgenda: moment(this.state.date).format('YYYY/MM/DD'),
             }
-            console.log('data  ', data)
             let response = await api.post('/showClientCurrentSchedule', data)
-            console.log('console ag horas ->', response.data)
-            console.log('------------------------------------------------>msdg ', response.data.schedule.length)
             if (response.data.schedule.length > 0) {
                 agenda = response.data.schedule
                 await this.setState({ agenda: agenda })
                 await this.setState({ mensageErro: '' })
-                console.log(agenda)
             } else {
                 await this.setState({ mensageErro: 'Não foi reallizado nenhum agendamento até o momento' })
-                //showNotification('Nenhum agendamento até o momento')
             }
             await this.setState({ activIndicador: !this.state.activIndicador })
         } catch (e) {
@@ -126,13 +120,10 @@ export default class Agenda extends Component {
                     scrollEnabled={true}
                     contentContainerStyle={styles.contentContainer}
                 >
-
                     {this.state.mensageErro === '' &&
                         <View>
                             {
-                                //console.log('agen lopp', this.state.agenda),
                                 this.state.agenda.map(agenda => (
-                                    // console.log(agenda),
                                     <Card containerStyle={styles.card}>
 
                                         <View style={styles.iconFavorito}>
@@ -146,8 +137,6 @@ export default class Agenda extends Component {
                                                 </TouchableOpacity>
                                             </View>
                                         </View>
-
-                                        
                                         <Text style={styles.fontCard}>{agenda.nomeServico} </Text>
                                         <Text style={styles.fontCard}>Horário: {agenda.inicioServico} min - {agenda.fimServico} min </Text>
                                         <Text style={styles.fontCard}>Funcionário: {agenda.nomeFuncionario} </Text>
@@ -184,7 +173,6 @@ export default class Agenda extends Component {
                 </ScrollView >
             </View>
             </ImageBackground>
-
         )
     }
 }
@@ -218,11 +206,6 @@ const styles = StyleSheet.create({
     },
     card: {
          flexDirection: 'row',
-        // padding: 10,
-        // marginTop: 4,
-        // margin: 10,
-        // height: 185,
-        // width: Dimensions.get('window').width - 20,
         borderBottomWidth: 5,
         borderRadius: 5,
         borderColor: '#708090',
@@ -251,20 +234,13 @@ const styles = StyleSheet.create({
         borderColor: '#C0C0C0',
         borderWidth: 1,
         alignItems: "center",
-        // paddingRight: 5,
-        // paddingLeft: 5,
-        // left: 5,
         borderRadius: 3,
         justifyContent: 'center'
     },
     localizacao: {
         flexDirection: 'row',
-        // padding: 10,
         marginTop: 5,
         marginBottom: 5,
-        // margin: 10,
-        // height: 20,
-        // width: '100%',
         borderWidth: 5,
         borderRadius: 5,
         borderColor: '#708090'
@@ -303,7 +279,6 @@ const styles = StyleSheet.create({
         paddingLeft: 7,
         paddingRight: 7,
         height: 60,
-
     },
     horarios: {
         alignItems: "center",
@@ -314,39 +289,3 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0,255,0,1)',
     }
 })
-
-/*
-Agenda: [{
-    idServico:1,
-    idFuncionario: 1,
-    nomeFuncionario: 'gustavo',
-    nomeCliente: 'incio',
-    idCliente:1,
-    inicioServico: '08:00',
-    fimServico: '08:30',
-    dataAgenda:'10/12/20',
-    status:1
-},
-{
-    idServico:1,
-    idFuncionario: 1,
-    nomeFuncionario: 'vinicius',
-    nomeCliente: 'incio',
-    idCliente:1,
-    inicioServico: '17:00',
-    fimServico: '17:10',
-    dataAgenda:'05/12/20',
-    status:1
-},
-{
-    idServico:1,
-    idFuncionario: 1,
-    nomeFuncionario: 'drew',
-    nomeCliente: 'incio',
-    idCliente:1,
-    inicioServico: '12:00',
-    fimServico: '13:30',
-    dataAgenda:'05/11/20',
-    status:1
-}]
-*/
